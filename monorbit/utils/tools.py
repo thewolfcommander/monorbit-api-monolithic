@@ -1,6 +1,12 @@
 import random
 import string
+from django.utils import timezone
 from django.utils.text import slugify
+
+
+def label_gen(prefix):
+    date = timezone.now()
+    return "{}-{}{}{}{}{}{}".format(prefix, date.year, date.month, date.day, date.hour, date.minute, date.second)
 
 
 def random_number_generator():

@@ -64,6 +64,7 @@ class Network(models.Model):
     )
     rating = models.DecimalField(default=5.0, max_digits=2, decimal_places=1)
     no_of_reviews = models.IntegerField(null=True, blank=True, default=0)
+    registered_stores = models.IntegerField(null=True, blank=True, default=1)
     
     # Documents Details
     gst = models.CharField(max_length=255, null=True, blank=True)
@@ -151,6 +152,7 @@ class NetworkOperationLocation(models.Model):
 class NetworkReview(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
+    by = models.ForeignKey(acc_models.User, on_delete=models.CASCADE)
     rating = models.DecimalField(default=5.0, max_digits=2, decimal_places=1)
     comment = models.TextField(null=True, blank=True)
     is_spam = models.BooleanField(default=False)
@@ -159,3 +161,37 @@ class NetworkReview(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+    
+def instance_id_generator(sender, instance, **kwargs):
+    if not instance.id:
+        instance.id = tools.random_string_generator(12).upper()
+
+
+def image_label_generator(sender, instance, **kwargs):
+    if not instance.label:
+        instance.label = tools.label_gen("IMG")
+
+def video_label_generator(sender, instance, **kwargs):
+    if not instance.label:
+        instance.label = tools.label_gen("VID")
+
+def document_label_generator(sender, instance, **kwargs):
+    if not instance.label:
+        instance.label = tools.label_gen("DOC")
+
+
+pre_save.connect(instance_id_generator, sender=NetworkCategory)
+pre_save.connect(instance_id_generator, sender=NetworkType)
+pre_save.connect(instance_id_generator, sender=Network)
+pre_save.connect(instance_id_generator, sender=NetworkImage)
+pre_save.connect(instance_id_generator, sender=NetworkVideo)
+pre_save.connect(instance_id_generator, sender=NetworkDocument)
+pre_save.connect(instance_id_generator, sender=NetworkOperationLocation)
+pre_save.connect(instance_id_generator, sender=NetworkOperationTiming)
+pre_save.connect(instance_id_generator, sender=NetworkReview)
+
+pre_save.connect(image_label_generator, sender=NetworkImage)
+pre_save.connect(video_label_generator, sender=NetworkVideo)
+pre_save.connect(document_label_generator, sender=NetworkDocument)
