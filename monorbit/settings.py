@@ -10,6 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import datetime
+from datetime import timedelta
+from decouple import config
+import json_logging
+import logging
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,10 +25,10 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f$s@gkr!%!bxu^0sfj1w4a_x&a$dpn(0bk)&@grvlmn)mmh5&l'
+SECRET_KEY = config('SECRET_KEY', 'SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -92,6 +97,19 @@ DATABASES = {
 }
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DB_NAME', 'DB_NAME'),
+#         'USER': config('DB_USER', 'DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD', 'DB_PASSWORD'),
+#         'HOST': config('DB_HOST', 'DB_HOST'),
+#         'PORT': 5432,
+#     }
+# }
+
+LOG_FILE = BASE_DIR / config('LOG_FILE', 'LOG_FILE')
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -116,16 +134,111 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
+
+REST_FRAMEWORK = {
+
+    'PAGE_SIZE': 20,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication'
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ],
+    'DEFAULT_PARSER_CLASSES': (
+       'rest_framework.parsers.JSONParser',
+       'rest_framework.parsers.FormParser',
+       'rest_framework.parsers.MultiPartParser',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_ENCODE_HANDLER':
+    'rest_framework_jwt.utils.jwt_encode_handler',
+
+    'JWT_DECODE_HANDLER':
+    'rest_framework_jwt.utils.jwt_decode_handler',
+
+    'JWT_PAYLOAD_HANDLER':
+    'rest_framework_jwt.utils.jwt_payload_handler',
+
+    'JWT_PAYLOAD_GET_USER_ID_HANDLER':
+    'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler',
+
+    'JWT_RESPONSE_PAYLOAD_HANDLER':
+    'rest_framework_jwt.utils.jwt_response_payload_handler',
+
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_GET_USER_SECRET_KEY': None,
+    'JWT_PUBLIC_KEY': None,
+    'JWT_PRIVATE_KEY': None,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LEEWAY': 0,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUDIENCE': None,
+    'JWT_ISSUER': None,
+
+    'JWT_ALLOW_REFRESH': False,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_AUTH_COOKIE': None,
+
+}
+
+
+json_logging.ENABLE_JSON_LOGGING = True
+json_logging.__init()
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.FileHandler(filename=LOG_FILE))
+
+ATOMIC_REQUESTS = True
+
+
+
+"""
+S3 Settings for bucket storage
+"""
+ACCESS_KEY = config('S3_ACCESS_KEY', 'S3_ACCESS_KEY')
+SECRET_KEY = config('S3_SECRET_KEY', 'S3_SECRET_KEY')
+BUCKET_NAME = config('S3_BUCKET_NAME', 'S3_BUCKET_NAME')
+
+
+"""
+SES Settings for AWS
+"""
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_ACCESS_KEY_ID = config('SES_ACCESS_KEY', 'SES_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = config('SES_SECRET_KEY', 'SES_SECRET_KEY')
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = config('SMTP_SERVER', 'SMTP_SERVER')
+EMAIL_PORT = config('SMTP_PORT', 'SMTP_PORT')
+EMAIL_HOST_USER = config('SMTP_USERNAME', 'SMTP_USERNAME')
+EMAIL_HOST_PASSWORD = config('SMTP_PASSWORD', 'SMTP_PASSWORD')

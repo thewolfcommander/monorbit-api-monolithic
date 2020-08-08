@@ -1,5 +1,5 @@
 import uuid
-
+from datetime import datetime, timedelta
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager
 from django.conf import settings
 from django.core.validators import EmailValidator, RegexValidator
@@ -9,7 +9,6 @@ from django.utils import timezone
 
 from monorbit.utils import tools, validators
 
-phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
 
 class CustomUserManager(BaseUserManager):
@@ -25,7 +24,7 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(self, email, mobile_number, password, **extra_fields):
         user = self.create_user(email, mobile_number, password, **extra_fields)
-        user.hash_token = tools.random_string_generator(112)
+        user.hash_token = tools.random_string_generator(35)
         user.is_admin=True
         user.is_superuser = True
         user.save(using=self._db)
@@ -53,15 +52,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text="This will be the user email",
         null=True,
         blank=True,
-        error_messages={'required': 'Please provide your email address.', 'unique': 'An account with this email exist.'}
     )
-    mobile_number = models.CharField(validators=[phone_regex,], unique=True, primary_key=True, max_length=17, blank=True, help_text="This will be the user phone number")
+    country_code = models.IntegerField(default=91, null=True, blank=True)
+    mobile_number = models.CharField(unique=True, primary_key=True, max_length=10, blank=True, help_text="This will be the user phone number", error_messages={'required': 'Please provide your mobile number.', 'unique': 'An account with this mobile number exist.', 'invalid': 'Mobile number should be valid'})
     gender = models.CharField(max_length=30, null=True, blank=True, choices=GENDER_CHOICES, default='Male')
     dob = models.CharField(max_length=100, null=True, blank=True, default="22-01-2000")
     registration_reference = models.CharField(max_length=255, null=True, blank=True, default="None")    
     city = models.CharField(max_length=255, null=True, blank=True)
     pincode = models.CharField(max_length=10, null=True, blank=True)
     network_created = models.IntegerField(default=0, null=True, blank=True)
+    otp_sent = models.IntegerField(default=0, null=True, blank=True)
     
     # Different Flags
     is_consumer = models.BooleanField(default=True, help_text="This will determine whether the user is a consumer")
@@ -102,3 +102,45 @@ def first_time_user_initializers(sender, instance, **kwargs):
 
     
 pre_save.connect(first_time_user_initializers, sender=User)
+
+
+
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=10, null=True, blank=True)
+    expiry = models.DateTimeField(default=datetime.now()+timedelta(minutes=60), null=True, blank=True)
+    created = models.DateTimeField(default=datetime.now(), null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
+class EmailVerifyOTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    otp = models.CharField(max_length=10, null=True, blank=True)
+    expiry = models.DateTimeField(default=datetime.now()+timedelta(minutes=30), null=True, blank=True)
+    created = models.DateTimeField(default=datetime.now(), null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
+class PasswordUpdateToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
+def password_reset_token_reciever(sender, instance, **kwargs):
+    instance.token = tools.random_number_generator(111111, 999999)
+
+def email_verify_otp_reciever(sender, instance, **kwargs):
+    instance.otp = tools.random_number_generator(111111, 999999)
+
+def password_update_token_reciever(sender, instance, **kwargs):
+    instance.token = tools.random_string_generator(25)
+
+pre_save.connect(password_reset_token_reciever, sender=PasswordResetToken)
+pre_save.connect(email_verify_otp_reciever, sender=EmailVerifyOTP)
+pre_save.connect(password_update_token_reciever, sender=PasswordUpdateToken)

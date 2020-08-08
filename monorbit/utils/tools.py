@@ -9,9 +9,8 @@ def label_gen(prefix):
     return "{}-{}{}{}{}{}{}".format(prefix, date.year, date.month, date.day, date.hour, date.minute, date.second)
 
 
-def random_number_generator():
-    main_num = random.randint(1066545465, 6454635465) + random.randint(3066445465, 9786287465)
-    print(main_num)
+def random_number_generator(start, end):
+    main_num = random.randint(start, end)
     return main_num
 
 
