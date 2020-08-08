@@ -4,4 +4,7 @@ from rest_framework import permissions
 class IsOwner(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
-        return obj == request.user
+        if request.user.is_active and request.user.is_archived:
+            return obj == request.user
+        else:
+            return False

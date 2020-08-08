@@ -333,3 +333,10 @@ class LogoutView(APIView):
                 "message": str(exc),
                 "status": False
             }, status=400)
+
+        
+class DeleteAccount(generics.UpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    serializer_class = acc_serializers.UserDeleteSerializer
+    queryset = acc_models.User.objects.all()
+    lookup_field = 'mobile_number'

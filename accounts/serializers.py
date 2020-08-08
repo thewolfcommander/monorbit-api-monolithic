@@ -127,4 +127,20 @@ class UserInfoSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class UserDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = acc_models.User
+        fields = [
+            'is_active',
+            'is_archived',
+        ]
+
+    def update(self, instance, validated_data):
+        instance.is_active = False
+        instance.full_name = False
+        instance.save()
+
+        return instance
         
