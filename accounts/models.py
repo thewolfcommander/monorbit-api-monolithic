@@ -19,12 +19,12 @@ class CustomUserManager(BaseUserManager):
 
         user = self.model(mobile_number=mobile_number, email=email, *extra_fields)
         user.set_password(password)
+        user.hash_token = tools.random_number_generator(111111111111, 99999999999)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, email, mobile_number, password, **extra_fields):
         user = self.create_user(email, mobile_number, password, **extra_fields)
-        user.hash_token = tools.random_string_generator(35)
         user.is_admin=True
         user.is_superuser = True
         user.save(using=self._db)
@@ -98,7 +98,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 def first_time_user_initializers(sender, instance, **kwargs):
     if not instance.hash_token:
-        instance.token = tools.random_string_generator(112)
+        instance.token = tools.random_number_generator(111111111111, 99999999999)
 
     
 pre_save.connect(first_time_user_initializers, sender=User)

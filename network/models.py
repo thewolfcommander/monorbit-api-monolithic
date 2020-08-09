@@ -86,6 +86,26 @@ class Network(models.Model):
     def __str__(self):
         return str(self.id)
 
+    @property
+    def images(self):
+        return self.networkimage_set.all()
+
+    @property
+    def videos(self):
+        return self.networkvideo_set.all()
+
+    @property
+    def documents(self):
+        return self.networkdocument_set.all()
+
+    @property
+    def timings(self):
+        return self.networkoperationtiming_set.all()
+
+    @property
+    def locations(self):
+        return self.networkoperationlocation_set.all()
+
     
 class NetworkImage(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
@@ -182,8 +202,6 @@ def document_label_generator(sender, instance, **kwargs):
         instance.label = tools.label_gen("DOC")
 
 
-pre_save.connect(instance_id_generator, sender=NetworkCategory)
-pre_save.connect(instance_id_generator, sender=NetworkType)
 pre_save.connect(instance_id_generator, sender=Network)
 pre_save.connect(instance_id_generator, sender=NetworkImage)
 pre_save.connect(instance_id_generator, sender=NetworkVideo)

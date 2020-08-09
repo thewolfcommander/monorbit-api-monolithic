@@ -143,4 +143,18 @@ class UserDeleteSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-        
+
+    
+class UpdatePasswordSerializer(serializers.Serializer):
+    model = acc_models.User
+    new_password = serializers.CharField(required=True)
+
+
+class UserMiniSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = acc_models.User
+        fields = [
+            'mobile_number',
+            'full_name',
+            'email',
+        ]

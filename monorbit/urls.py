@@ -8,4 +8,5 @@ urlpatterns = [
 
     # API
     path('api/v1/accounts/', include('accounts.urls')),
+    path('api/v1/network/', include('network.urls')),
 ]
