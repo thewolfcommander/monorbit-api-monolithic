@@ -1,3 +1,4 @@
+import random
 import uuid
 from datetime import datetime, timedelta
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager
@@ -19,7 +20,8 @@ class CustomUserManager(BaseUserManager):
 
         user = self.model(mobile_number=mobile_number, email=email, *extra_fields)
         user.set_password(password)
-        user.hash_token = tools.random_number_generator(111111111111, 99999999999)
+        string = "MONO{}".format(str(mobile_number))
+        user.hash_token = tools.label_gen(string)
         user.save(using=self._db)
         return user
 
@@ -98,7 +100,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 def first_time_user_initializers(sender, instance, **kwargs):
     if not instance.hash_token:
-        instance.token = tools.random_number_generator(111111111111, 99999999999)
+        string = "MONO{}".format(str(instance.mobile_number))
+        instance.token = tools.label_gen(string)
 
     
 pre_save.connect(first_time_user_initializers, sender=User)

@@ -85,7 +85,8 @@ class RegisterView(APIView):
                 otp_obj = acc_models.EmailVerifyOTP.objects.create(user=usr)
                 usr.otp_sent += 1
                 usr.set_password(password)
-                usr.hash_token = tools.random_number_generator(111111111111, 99999999999)
+                string = "MONO{}".format(str(serializer.validated_data['mobile_number']))
+                usr.hash_token = tools.label_gen(string)
                 usr.save()
                 data = {
                     'status': True,
