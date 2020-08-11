@@ -64,6 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     pincode = models.CharField(max_length=10, null=True, blank=True)
     network_created = models.IntegerField(default=0, null=True, blank=True)
     otp_sent = models.IntegerField(default=0, null=True, blank=True)
+    password_otp_sent = models.IntegerField(default=0, null=True, blank=True)
     
     # Different Flags
     is_consumer = models.BooleanField(default=True, help_text="This will determine whether the user is a consumer")
@@ -136,10 +137,10 @@ class PasswordUpdateToken(models.Model):
 
 
 def password_reset_token_reciever(sender, instance, **kwargs):
-    instance.token = tools.random_number_generator(111111, 999999)
+    instance.token = tools.random_number_generator(1111, 9999)
 
 def email_verify_otp_reciever(sender, instance, **kwargs):
-    instance.otp = tools.random_number_generator(111111, 999999)
+    instance.otp = tools.random_number_generator(1111, 9999)
 
 def password_update_token_reciever(sender, instance, **kwargs):
     instance.token = tools.random_string_generator(25)

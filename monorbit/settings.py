@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     # Our owned apps
     'accounts',
     'network',
+    'product_catalog',
 ]
 
 MIDDLEWARE = [

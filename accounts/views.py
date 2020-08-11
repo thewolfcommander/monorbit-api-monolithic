@@ -229,10 +229,10 @@ class ResendMobileVerifyOTPView(APIView):
                 return Response(data, status=200)
 
             elif user.is_mobile_verified == False and user.otp_sent <= 3:
-                otp = models.EmailVerifyOTP.objects.filter(user=user)
+                otp = acc_models.EmailVerifyOTP.objects.filter(user=user)
                 if otp.exists():
                     otp.delete()
-                otp = models.EmailVerifyOTP.objects.create(user=user)
+                otp = acc_models.EmailVerifyOTP.objects.create(user=user)
                 data = {
                     'status': True,
                     'otp': otp.otp,
@@ -282,6 +282,156 @@ class ResendMobileVerifyOTPView(APIView):
             data = {
                 'status': False,
                 "message": "Invalid Mobile Number"
+            }
+            return Response(data, status=400)
+
+        return Response(data={
+            'message': "Something unusual happened. Please try again later.",
+            'status': False
+        }, status=400)
+
+
+ 
+class ForgotPasswordView(APIView):
+    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        mobile_number = request.data.get('mobile_number')
+        if mobile_number is None:
+            data = {
+                'status': False,
+                "message": "Invalid Mobile Number"
+            }
+            return Response(data, status=400)
+
+        
+        
+        usr_obj = acc_models.User.objects.filter(mobile_number=mobile_number, is_active=True)
+        if user.exists():
+            user = usr_obj.first()
+
+            if user.password_otp_sent <= 3:
+                otp = acc_models.PasswordResetToken.objects.filter(user=user)
+                if otp.exists():
+                    otp.delete()
+                otp = acc_models.PasswordResetToken.objects.create(user=user)
+                user.password_otp_sent += 1
+                user.save()
+                data = {
+                    'status': True,
+                    'otp': otp.otp,
+                    'message': "OTP Sent successfully"
+                }
+                return Response(data, status=200)
+                # subject = "No Reply | Encap OTP to verify email | Link will expire in 30 minutes"
+                # from_email = "encapsummary@gmail.com"
+                # to_email = user.email
+                # message = """
+                # Hi user,
+                # Here's your otp to verify the email. Enter this otp to the application.
+                # Warning: Do not share this with anyone
+                # OTP - {}
+                # The otp will expire in 30 minutes.
+                # Regards, Encapsummary
+                # """.format(otp.otp)
+                # try:
+                #     send_mail(
+                #         subject,
+                #         message,
+                #         from_email,
+                #         [to_email,]
+                #     )
+                #     user.otp_sent += 1
+                #     user.save()
+                #     data = {
+                #         'status': True,
+                #         'otp': otp.otp,
+                #         'message': 'OTP Sent Successfully'
+                #     }
+                #     return Response(data, status=400)
+                # except:
+                #     otp.delete()
+                #     data = {
+                #         'status': False,
+                #         'message': 'Can\'t send otp'
+                #     }
+                    # return Response(data, status=400)
+            else:
+                data = {
+                    'status': False,
+                    'message': 'You have requested maximum otp limit'
+                }
+                return Response(data, status=400)
+        else:
+            data = {
+                'status': False,
+                "message": "No User related with this mobile number."
+            }
+            return Response(data, status=400)
+
+        return Response(data={
+            'message': "Something unusual happened. Please try again later.",
+            'status': False
+        }, status=400)
+
+    
+class ResetPasswordView(APIView):
+    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        mobile_number = request.data.get('mobile_number')
+        otp = request.data.get('otp')
+        new_password = request.data.get('new_password')
+        if mobile_number is None:
+            data = {
+                'status': False,
+                "message": "Mobile Number should be provided"
+            }
+            return Response(data, status=400)
+        usr_obj = acc_models.User.objects.filter(mobile_number=mobile_number, is_active=True)
+        if user.exists():
+            user = usr_obj.first()
+            otp_obj = acc_models.PasswordResetToken.objects.filter(user=user)
+            if otp_obj.exists():
+                if otp_obj.expiry < timezone.now():
+                    return Response(data={
+                        'message': "Invalid OTP. OTP Expired",
+                        'status': False
+                    }, status=400)
+                elif otp_obj.expiry >= timezone.now():
+                    if otp_obj.otp == otp:
+                        user.set_password(new_password)
+                        user.save()
+                        otp_obj.delete()
+                        data = {
+                            'status': True,
+                            'message': "Password reset successfull"
+                        }
+                        return Response(data, status=200)
+                    else:
+                        data = {
+                            'status': False,
+                            'message': "Invalid OTP"
+                        }
+                        return Response(data, status=400)
+                else:
+                    data = {
+                        'status': False,
+                        'message': "Invalid OTP"
+                    }
+                    return Response(data, status=400)
+            else:
+                data = {
+                    'status': False,
+                    'message': "Invalid OTP"
+                }
+                return Response(data, status=400)
+        else:
+            data = {
+                'status': False,
+                "message": "No User related with this mobile number."
             }
             return Response(data, status=400)
 

@@ -9,6 +9,13 @@ def label_gen(prefix):
     return "{}{}{}{}{}{}{}".format(prefix, date.year, date.month, date.day, date.hour, date.minute, date.second)
 
 
+def short_url_id_gen():
+    string = "QERWTYUEPOAPIJBJHBXGVXC"
+    num = random.randint(0, 18)
+    date = timezone.now()
+    return "{}{}{}{}".format(string[num], string[num+1], date.minute, date.second)
+
+
 def random_number_generator(start, end):
     main_num = random.randint(start, end)
     return main_num

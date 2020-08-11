@@ -43,6 +43,7 @@ class Network(models.Model):
     This is the base network which a business have to create. Inside this network, varioud store comes
     """
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    urlid = models.CharField(max_length=255, unique=True, blank=True)
     user = models.ForeignKey(acc_models.User, on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey(NetworkCategory, on_delete=models.CASCADE, null=True, blank=True)
     network_type = models.ForeignKey(NetworkType, on_delete=models.CASCADE, null=True, blank=True)
@@ -201,8 +202,15 @@ def document_label_generator(sender, instance, **kwargs):
     if not instance.label:
         instance.label = tools.label_gen("DOC")
 
+    
+def network_url_id_generator(sender, instance, **kwargs):
+    if not instance.urlid:
+        instance.urlid = tools.short_url_id_gen()
+        print("A network created having URL ID - {}".format(instance.urlid))
+
 
 pre_save.connect(instance_id_generator, sender=Network)
+pre_save.connect(network_url_id_generator, sender=Network)
 pre_save.connect(instance_id_generator, sender=NetworkImage)
 pre_save.connect(instance_id_generator, sender=NetworkVideo)
 pre_save.connect(instance_id_generator, sender=NetworkDocument)
