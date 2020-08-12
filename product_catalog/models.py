@@ -236,7 +236,7 @@ class ProductReview(models.Model):
 
 def instance_id_generator(sender, instance, **kwargs):
     if not instance.id:
-        instance.id = tools.random_string_generator(12).upper()
+        instance.id = tools.random_string_generator(9).upper()
 
 def image_label_generator(sender, instance, **kwargs):
     if not instance.label:
