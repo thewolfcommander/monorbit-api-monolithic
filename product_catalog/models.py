@@ -256,7 +256,7 @@ def product_datainit_generator(sender, instance, **kwargs):
         instance.slug = tools.unique_slug_generator(instance)
     if not instance.item_code:
         instance.item_code = tools.label_gen(instance.network.id)
-    instance.discount_percent = float(instance.mrp) - (float(instance.nsp)/float(instance.mrp))*100
+    instance.discount_percent = ((float(instance.mrp)-float(instance.nsp))/float(instance.mrp))*100
 
 
 pre_save.connect(instance_id_generator, sender=ProductDefaultSubCategory)
