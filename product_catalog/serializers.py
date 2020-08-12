@@ -248,7 +248,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             for i in extras:
                 ProductExtra.objects.create(**i, product=product)
 
-        return network
+        return product
 
 
 class ProductUpdateSerializer(serializers.ModelSerializer):
@@ -391,7 +391,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
                 j.price_change = i.get('price_change', j.price_change)
                 j.save()
 
-        return network
+        return instance
 
 
 class ProductShowSerializer(serializers.ModelSerializer):
