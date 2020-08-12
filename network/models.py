@@ -187,7 +187,7 @@ class NetworkReview(models.Model):
     
 def instance_id_generator(sender, instance, **kwargs):
     if not instance.id:
-        instance.id = tools.random_string_generator(12).upper()
+        instance.id = tools.random_string_generator(8).upper()
 
 
 def image_label_generator(sender, instance, **kwargs):
