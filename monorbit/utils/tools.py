@@ -8,6 +8,10 @@ def label_gen(prefix):
     date = timezone.now()
     return "{}{}{}{}{}{}{}".format(prefix, date.year, date.month, date.day, date.hour, date.minute, date.second)
 
+def item_code_generator(network):
+    date = timezone.now()
+    return "{}{}{}{}".format(network, date. date.hour, date.minute, date.second)
+
 
 def short_url_id_gen():
     string = "QERWTYUEPOAPIJBJHBXGVXC"
@@ -23,7 +27,6 @@ def random_number_generator(start, end):
 
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
-
 
 
 def unique_slug_generator(instance, new_slug=None):
