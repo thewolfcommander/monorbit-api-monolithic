@@ -162,13 +162,13 @@ class ProductExtraShowSerializer(serializers.ModelSerializer):
 
 
 class ProductCreateSerializer(serializers.ModelSerializer):
-    images = ProductImageShowSerializer(many=True, required=True)
-    videos = ProductVideoShowSerializer(many=True, required=True)
-    documents = ProductDocumentShowSerializer(many=True, required=True)
-    tags = ProductTagShowSerializer(many=True, required=True)
-    sizes = ProductSizeShowSerializer(many=True, required=True)
-    specifications = ProductSpecificationShowSerializer(many=True, required=True)
-    extras = ProductExtraShowSerializer(many=True, required=True)
+    images = ProductImageShowSerializer(many=True, required=False)
+    videos = ProductVideoShowSerializer(many=True, required=False)
+    documents = ProductDocumentShowSerializer(many=True, required=False)
+    tags = ProductTagShowSerializer(many=True, required=False)
+    sizes = ProductSizeShowSerializer(many=True, required=False)
+    specifications = ProductSpecificationShowSerializer(many=True, required=False)
+    extras = ProductExtraShowSerializer(many=True, required=False)
     class Meta:
         model = Product
         fields = [
@@ -252,13 +252,13 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
 
 class ProductUpdateSerializer(serializers.ModelSerializer):
-    images = ProductImageShowSerializer(many=True, required=True)
-    videos = ProductVideoShowSerializer(many=True, required=True)
-    documents = ProductDocumentShowSerializer(many=True, required=True)
-    tags = ProductTagShowSerializer(many=True, required=True)
-    sizes = ProductSizeShowSerializer(many=True, required=True)
-    specifications = ProductSpecificationShowSerializer(many=True, required=True)
-    extras = ProductExtraShowSerializer(many=True, required=True)
+    images = ProductImageShowSerializer(many=True, required=False)
+    videos = ProductVideoShowSerializer(many=True, required=False)
+    documents = ProductDocumentShowSerializer(many=True, required=False)
+    tags = ProductTagShowSerializer(many=True, required=False)
+    sizes = ProductSizeShowSerializer(many=True, required=False)
+    specifications = ProductSpecificationShowSerializer(many=True, required=False)
+    extras = ProductExtraShowSerializer(many=True, required=False)
     class Meta:
         model = Product
         fields = [
