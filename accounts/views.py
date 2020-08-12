@@ -56,10 +56,16 @@ class LoginView(APIView):
                     'status': False
                 }, status=400)
             except:
-                return Response(data={
-                    'message': "{} - Error".format(str(serializer.errors['mobile_number'][0])),
-                    'status': False
-                }, status=400)
+                if "mobile_number" in serializer.errors:
+                    return Response(data={
+                        'message': "{} - Error".format(str(serializer.errors['mobile_number'][0])),
+                        'status': False
+                    }, status=400)
+                else:
+                    return Response(data={
+                        'message': "{} - Error".format(str(serializer.errors['password'][0])),
+                        'status': False
+                    }, status=400)
         else:
             return Response(data={
                 'message': "Some unknown Error occured. Please try again later.", 
