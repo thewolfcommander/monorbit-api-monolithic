@@ -66,18 +66,19 @@ class ProductCustomSubCategoryCreateSerializer(serializers.ModelSerializer):
         model = ProductCustomSubCategory
         fields = [
             'id',
-            'category'
+            'category',
             'name',
             'image'
         ]
 
 
 class ProductCustomSubCategoryShowSerializer(serializers.ModelSerializer):
+    category = ProductCustomCategorySerializer(read_only=True)
     class Meta:
         model = ProductCustomSubCategory
         fields = [
             'id',
-            'category'
+            'category',
             'name',
             'image'
         ]
