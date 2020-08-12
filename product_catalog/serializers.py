@@ -50,7 +50,6 @@ class ProductDefaultSubCategoryCreateSerializer(serializers.ModelSerializer):
 
     
 class ProductDefaultSubCategoryShowSerializer(serializers.ModelSerializer):
-    category = ProductDefaultCategoryShowSerializer(read_only=True)
     class Meta:
         model = ProductDefaultSubCategory
         fields = [
