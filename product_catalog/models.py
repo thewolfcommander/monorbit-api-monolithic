@@ -86,7 +86,7 @@ class Product(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     item_code = models.CharField(max_length=112, unique=True, blank=True)
     name = models.CharField(max_length=255, null=True, blank=True)
-    slug = models.CharField(max_length=255, null=True, blank=True)
+    slug = models.CharField(max_length=255, null=True, blank=True, unique=True)
     brand_name = models.CharField(max_length=255, null=True, blank=True)
     barcode = models.CharField(max_length=255, null=True, blank=True)
     thumbnail_image = models.URLField(null=True, blank=True, default="https://content.monorbit.com/images/placeholder.png")
