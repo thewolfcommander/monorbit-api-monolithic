@@ -211,7 +211,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         images = validated_data.pop('images', None)
         videos = validated_data.pop('videos', None)
         documents = validated_data.pop('documents', None)
-        tagss = validated_data.pop('tags', None)
+        tags = validated_data.pop('tags', None)
         sizes = validated_data.pop('sizes', None)
         specifications = validated_data.pop('specifications', None)
         extras = validated_data.pop('extras', None)
