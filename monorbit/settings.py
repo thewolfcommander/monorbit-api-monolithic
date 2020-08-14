@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # Our owned apps
     'accounts',
+    'cart',
     'network',
     'product_catalog',
 ]

@@ -8,6 +8,7 @@ urlpatterns = [
 
     # API
     path('api/v1/accounts/', include('accounts.urls')),
+    path('api/v1/cart/', include('cart.urls')),
     path('api/v1/network/', include('network.urls')),
     path('api/v1/catalog/product/', include('product_catalog.urls')),
 ]

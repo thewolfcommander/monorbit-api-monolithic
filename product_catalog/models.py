@@ -94,6 +94,7 @@ class Product(models.Model):
     nsp = models.DecimalField(default=0.00, max_digits=12, decimal_places=2, help_text="Net Selling Price - The price at which they offer")
     discount_percent = models.DecimalField(default=0.00, max_digits=12, decimal_places=2, help_text="dp = nsp/mrp * 100")
     tax = models.DecimalField(default=0.00, max_digits=12, decimal_places=2, help_text="Tax on the Product")
+    shipping = models.DecimalField(default=0.00, max_digits=12, decimal_places=2, help_text="Shipping charge for the product")
     quantity_per_measurement = models.IntegerField(default=1, null=True, blank=True)
     short_description = models.TextField(null=True, blank=True)
     rating = models.DecimalField(default=5.0, max_digits=2, decimal_places=1)
