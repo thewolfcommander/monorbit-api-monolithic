@@ -114,10 +114,11 @@ class RegisterView(APIView):
                     'status': False
                 }, status=400)
             except:
-                return Response(data={
-                    'message': "{} - Error".format(str(serializer.errors['mobile_number'][0])),
-                    'status': False
-                }, status=400)
+                for i in serializer.errors:
+                    return Response(data={
+                        'message': "{} - Error in {}".format(str(serializer.errors[i][0]), str(i)),
+                        'status': False
+                    }, status=400)
         else:
             return Response(data={
                 'message': "Some unknown Error occured. Please try again later.", 
