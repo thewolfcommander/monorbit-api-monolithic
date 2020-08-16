@@ -32,7 +32,7 @@ urlpatterns = [
     path('product/tag/create/', CreateProductTag.as_view()),
     path('product/specification/create/', CreateProductSpecification.as_view()),
     path('product/size/create/', CreateProductSize.as_view()),
-    path('product/image/create/', CreateProductImage.as_view()),
+    path('product/extra/create/', CreateProductExtra.as_view()),
 
     path('product/review/create/', CreateProductReview.as_view()),
     path('product/review/all/', ListProductReview.as_view()),
