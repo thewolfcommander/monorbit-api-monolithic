@@ -9,5 +9,5 @@ urlpatterns = [
     path('delete-user/<slug:mobile_number>/', DeleteAccount.as_view(), name='delete_user'),
     path('register/', RegisterView.as_view(), name='register_view'),
     path('verify-mobile/', VerifyOTPView.as_view(), name='verify_mobile'),
-    path('resend-mobile-otp/', VerifyOTPView.as_view(), name='resend_mobile_otp'),
+    path('resend-mobile-otp/', ResendMobileVerifyOTPView.as_view(), name='resend_mobile_otp'),
 ]
