@@ -225,7 +225,7 @@ class ResendMobileVerifyOTPView(APIView):
 
         
         
-        usr_obj = acc_models.User.objects.filter(mobile_number=mobile_number, is_active=True)
+        user = acc_models.User.objects.filter(mobile_number=mobile_number, is_active=True)
         if user.exists():
             user = usr_obj.first()
             if user.is_mobile_verified:
