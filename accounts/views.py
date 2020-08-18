@@ -402,13 +402,13 @@ class ResetPasswordView(APIView):
             user = usr_obj.first()
             otp_obj = acc_models.PasswordResetToken.objects.filter(user=user)
             if otp_obj.exists():
-                if otp_obj.expiry < timezone.now():
+                if otp_obj.first().expiry < timezone.now():
                     return Response(data={
                         'message': "Invalid OTP. OTP Expired",
                         'status': False
                     }, status=400)
-                elif otp_obj.expiry >= timezone.now():
-                    if otp_obj.token == otp:
+                elif otp_obj.first().expiry >= timezone.now():
+                    if otp_obj.first().token == otp:
                         user.set_password(new_password)
                         user.save()
                         otp_obj.delete()
