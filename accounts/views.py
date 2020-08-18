@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.utils import timezone
 from rest_framework import generics, permissions, authentication
 from rest_framework.views import APIView, status, Response
@@ -154,12 +152,12 @@ class VerifyOTPView(APIView):
                 }, status=200)
             if otp_obj.exists():
                 otp_obj = otp_obj.first()
-                if otp_obj.expiry < datetime.now():
+                if otp_obj.expiry < timezone.now():
                     return Response(data={
                         'message': "Invalid OTP. OTP Expired",
                         'status': False
                     }, status=400)
-                elif otp_obj.expiry >= datetime.now():
+                elif otp_obj.expiry >= timezone.now():
                     if otp_obj.otp == otp:
                         token = jwt_encode_handler(jwt_payload_handler(usr_obj))
                         usr_obj.is_logged_in = True
