@@ -459,7 +459,7 @@ class GetUserInfo(generics.RetrieveUpdateAPIView):
 
 
 class RefreshToken(APIView):
-    permission_classes = (permissions.IsAuthenticated)
+    permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request, format=None):
         try:
@@ -475,7 +475,7 @@ class RefreshToken(APIView):
 
     
 class LogoutView(APIView):
-    permission_classes = (permissions.IsAuthenticated)
+    permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request, format=None):
         try:
