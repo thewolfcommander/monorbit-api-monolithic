@@ -398,7 +398,7 @@ class ResetPasswordView(APIView):
             }
             return Response(data, status=400)
         usr_obj = acc_models.User.objects.filter(mobile_number=mobile_number, is_active=True)
-        if usr.exists():
+        if usr_obj.exists():
             user = usr_obj.first()
             otp_obj = acc_models.PasswordResetToken.objects.filter(user=user)
             if otp_obj.exists():
