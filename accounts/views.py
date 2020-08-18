@@ -398,7 +398,7 @@ class ResetPasswordView(APIView):
             }
             return Response(data, status=400)
         usr_obj = acc_models.User.objects.filter(mobile_number=mobile_number, is_active=True)
-        if user.exists():
+        if usr.exists():
             user = usr_obj.first()
             otp_obj = acc_models.PasswordResetToken.objects.filter(user=user)
             if otp_obj.exists():
@@ -408,7 +408,7 @@ class ResetPasswordView(APIView):
                         'status': False
                     }, status=400)
                 elif otp_obj.expiry >= timezone.now():
-                    if otp_obj.otp == otp:
+                    if otp_obj.token == otp:
                         user.set_password(new_password)
                         user.save()
                         otp_obj.delete()
