@@ -315,7 +315,7 @@ class ForgotPasswordView(APIView):
         
         
         usr_obj = acc_models.User.objects.filter(mobile_number=mobile_number, is_active=True)
-        if user.exists():
+        if usr_obj.exists():
             user = usr_obj.first()
 
             if user.password_otp_sent <= 3:
