@@ -327,7 +327,7 @@ class ForgotPasswordView(APIView):
                 user.save()
                 data = {
                     'status': True,
-                    'otp': otp.otp,
+                    'otp': otp.token,
                     'message': "OTP Sent successfully"
                 }
                 return Response(data, status=200)
