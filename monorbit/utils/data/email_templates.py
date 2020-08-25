@@ -18,20 +18,25 @@ def forgot_otp_message(otp):
     return """
                 Hi,
 
-                Thanks for using Monorbit Platform! Please enter the OTP given below in order to reset your Monorbit Account Password. We know that it hurts when you lost the password of such an amazing platform. But don't worry we are always here for you.
+                Thanks for using Monorbit Platform! We know that it hurts when you lost the password of such an amazing platform. But don't worry we are always here for you. Please enter the OTP given below in order to reset your Monorbit Account Password.
 
                 OTP - {}
                 This OTP is valid for 10 minutes only.
 
-                If you  request, please disregard this email.
+                If you haven't requested the OTP for resetting your password, please disregard this email.
 
                 Happy Business!
                 The Monions
-                """.format(str(otp))
+                """.format(str(otp))            
+
 
 templates = [
     {
-        "subject": "Hi! please verify your email on Monorbit Platform",
+        "subject": "Hi! Please verify your email on Monorbit Platform",
         "from_email": "no-reply@monorbit.com",
-    }
+    },
+    {
+        "subject": "Hi! Please reset your password using this OTP on Monorbit Platform",
+        "from_email": "account-support@monorbit.com",
+    },
 ]
