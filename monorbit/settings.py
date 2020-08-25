@@ -261,3 +261,24 @@ EMAIL_HOST = config('SMTP_SERVER', 'SMTP_SERVER')
 EMAIL_PORT = config('SMTP_PORT', 'SMTP_PORT')
 EMAIL_HOST_USER = config('SMTP_USERNAME', 'SMTP_USERNAME')
 EMAIL_HOST_PASSWORD = config('SMTP_PASSWORD', 'SMTP_PASSWORD')
+
+
+
+"""
+Sentry Setup
+
+Docs : https://docs.sentry.io/platforms/python/django/?_ga=2.983862.60821945.1598358892-1072562326.1598358892
+"""
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn=config('SENTRY_DSN'),
+    integrations=[DjangoIntegration()],
+    traces_sample_rate = 1.0,  # It will catch both error and performance. To reduce performance alerts, make it b/w 0 and 1
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)

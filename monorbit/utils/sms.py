@@ -11,12 +11,15 @@ client = Client(account_sid, auth_token)
 
 
 def send(body, to_phone):
-    message = client.messages.create(
+    try:
+        message = client.messages.create(
                      body=body,
                      from_=phone_number,
                      to=to_phone
                  )
-    return message.sid
+        return message.sid
+    except:
+        return "Error occured in sending OTP."
 
 
 def verify_mobile(mobile_number, otp):
