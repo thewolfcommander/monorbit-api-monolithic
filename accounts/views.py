@@ -7,7 +7,7 @@ from rest_framework_jwt.utils import jwt_encode_handler, jwt_payload_handler
 from . import models as acc_models
 from .permissions import IsOwner
 from . import serializers as acc_serializers
-from monorbit.utils import tools
+from monorbit.utils import tools, sms
 
 
 class LoginView(APIView):
@@ -94,11 +94,13 @@ class RegisterView(APIView):
                 string = "MONO{}".format(str(serializer.validated_data['mobile_number']))
                 usr.hash_token = tools.label_gen(string)
                 usr.save()
+                mobile = "+91{}".format(str(serializer.validated_data['mobile_number']))
+                sms.verify_mobile(mobile_number=mobile, otp=otp_obj.otp)
                 data = {
                     'status': True,
                     "message": "OTP Sent to Mobile Number",
                     "otp": otp_obj.otp,
-                    'mobile_number': serializer.validated_data['mobile_number'],
+                    'mobile_number': mobile,
                 }
                 return Response(data=data, status=201)
             else:
@@ -240,6 +242,7 @@ class ResendMobileVerifyOTPView(APIView):
                 if otp.exists():
                     otp.delete()
                 otp = acc_models.EmailVerifyOTP.objects.create(user=user)
+                sms.verify_mobile(mobile_number=mobile_number, otp=otp.otp)
                 data = {
                     'status': True,
                     'otp': otp.otp,
@@ -325,6 +328,7 @@ class ForgotPasswordView(APIView):
                 otp = acc_models.PasswordResetToken.objects.create(user=user)
                 user.password_otp_sent += 1
                 user.save()
+                sms.verify_mobile(mobile_number=mobile_number, otp=otp.token)
                 data = {
                     'status': True,
                     'otp': otp.token,
