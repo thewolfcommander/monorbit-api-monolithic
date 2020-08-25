@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'accounts',
     'addresses',
     'cart',
+    'job_profiles',
     'network',
     'product_catalog',
 ]
@@ -249,10 +250,12 @@ BUCKET_NAME = config('S3_BUCKET_NAME', 'S3_BUCKET_NAME')
 """
 SES Settings for AWS
 """
-EMAIL_BACKEND = 'django_ses.SESBackend'
+# EMAIL_BACKEND = 'django_ses.SESBackend'
 AWS_ACCESS_KEY_ID = config('SES_ACCESS_KEY', 'SES_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = config('SES_SECRET_KEY', 'SES_SECRET_KEY')
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = config('SMTP_SERVER', 'SMTP_SERVER')
 EMAIL_PORT = config('SMTP_PORT', 'SMTP_PORT')
