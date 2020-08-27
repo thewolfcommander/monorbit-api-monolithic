@@ -9,6 +9,7 @@ urlpatterns = [
 
     path('delivery-boy/vehicle/', ListCreateDeliveryBoyVehicle.as_view()),
     path('delivery-boy/vehicle/<slug:id>/', UpdateDeliveryBoyVehicle.as_view()),
+    
     path('delivery-boy/all/', ListDeliveryBoys.as_view()),
     path('delivery-boy/create/', CreateDeliveryBoys.as_view()),
     path('delivery-boy/update/<slug:id>/', UpdateDeliveryBoy.as_view()),
