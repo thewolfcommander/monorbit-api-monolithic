@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'cart',
     'job_profiles',
     'network',
+    'premium',
     'product_catalog',
 ]
 

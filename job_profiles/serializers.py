@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from accounts.serializers import UserMiniSerializer
 from job_profiles.models import (
     JobProfile,
     DeliveryBoy,
@@ -14,17 +15,17 @@ from job_profiles.models import (
 
 
 class JobProfileSerializer(serializers.ModelSerializer):
+    user = UserMiniSerializer(read_only=True, required=False)
     class Meta:
         model = JobProfile
         fields = [
             'id',
-            'auth_token',
+            'user',
             'alt_email',
             'alt_phone_number',
             'photo_url',
             'adhaar_card',
-            'address_1',
-            'address_2',
+            'address',
             'landmark',
             'city',
             'state',
@@ -38,6 +39,15 @@ class JobProfileSerializer(serializers.ModelSerializer):
             'added',
             'updated'
         ]
+    
+    def create(self, validated_data):
+        request = self.context['request']
+        user = request.user
+        try:
+            instance = JobProfile.objects.create(**validated_data, user=user)
+        except:
+            instance = JobProfile.objects.get(user=user)
+        return instance
 
     
 class DeliveryBoyVehicleSerializer(serializers.ModelSerializer):
@@ -86,8 +96,8 @@ class DeliveryBoyShowSerializer(serializers.ModelSerializer):
             profile.alt_phone_number = job.get('alt_phone_number', profile.alt_phone_number)
             profile.photo_url = job.get('photo_url', profile.photo_url)
             profile.adhaar_card = job.get('adhaar_card', profile.adhaar_card)
-            profile.address_1 = job.get('address_1', profile.address_1)
-            profile.address_2 = job.get('address_2', profile.address_2)
+            profile.address = job.get('address', profile.address)
+            
             profile.landmark = job.get('landmark', profile.landmark)
             profile.city = job.get('city', profile.city)
             profile.state = job.get('state', profile.state)
@@ -195,8 +205,8 @@ class PermanentEmployeeShowSerializer(serializers.ModelSerializer):
             profile.alt_phone_number = job.get('alt_phone_number', profile.alt_phone_number)
             profile.photo_url = job.get('photo_url', profile.photo_url)
             profile.adhaar_card = job.get('adhaar_card', profile.adhaar_card)
-            profile.address_1 = job.get('address_1', profile.address_1)
-            profile.address_2 = job.get('address_2', profile.address_2)
+            profile.address = job.get('address', profile.address)
+            
             profile.landmark = job.get('landmark', profile.landmark)
             profile.city = job.get('city', profile.city)
             profile.state = job.get('state', profile.state)
@@ -336,8 +346,8 @@ class FreelancerShowSerializer(serializers.ModelSerializer):
             profile.alt_phone_number = job.get('alt_phone_number', profile.alt_phone_number)
             profile.photo_url = job.get('photo_url', profile.photo_url)
             profile.adhaar_card = job.get('adhaar_card', profile.adhaar_card)
-            profile.address_1 = job.get('address_1', profile.address_1)
-            profile.address_2 = job.get('address_2', profile.address_2)
+            profile.address = job.get('address', profile.address)
+            
             profile.landmark = job.get('landmark', profile.landmark)
             profile.city = job.get('city', profile.city)
             profile.state = job.get('state', profile.state)

@@ -75,6 +75,7 @@ class Network(models.Model):
     # Flags
     is_verified = models.BooleanField(default=False, help_text="This is for verification of uploaded documents")
     is_active = models.BooleanField(default=True)
+    is_premium = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     is_spam = models.BooleanField(default=False)
     is_video = models.BooleanField(default=False)

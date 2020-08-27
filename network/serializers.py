@@ -93,6 +93,7 @@ class CreateNetworkSerializer(serializers.ModelSerializer):
             'alt_email',
             'images',
             'videos',
+            'is_premium',
             'documents',
             'locations',
             'timings'
@@ -178,6 +179,7 @@ class ShowNetworkSerializer(serializers.ModelSerializer):
             'registered_stores',
             'is_verified',
             'is_active',
+            'is_premium',
             'is_spam',
             'is_video',
             'is_document',
@@ -223,6 +225,7 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
             'is_verified',
             'is_archived',
             'is_active',
+            'is_premium',
             'is_spam',
             'is_video',
             'is_document',

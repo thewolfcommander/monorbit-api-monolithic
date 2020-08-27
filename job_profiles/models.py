@@ -13,7 +13,7 @@ class JobProfile(models.Model):
     This will be the common model for all the job profiles viz. Delivery Boy, Permanent Job Profiles, and Freelancers. They all have to create a common job profile.
     """
     id  = models.CharField(max_length=50, primary_key=True, unique=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     alt_email = models.EmailField(
         max_length=255, 
         validators=[EmailValidator, validators.custom_email_validator], 
@@ -273,7 +273,7 @@ class FreelancerFile(models.Model):
 
 def pre_save_id_receiver(sender, instance, **kwargs):
     if not instance.id:
-        instance.id = tools.random_string_generator(30)
+        instance.id = tools.random_string_generator(9)
 
 pre_save.connect(pre_save_id_receiver, sender=JobProfile)
 pre_save.connect(pre_save_id_receiver, sender=DeliveryBoy)
