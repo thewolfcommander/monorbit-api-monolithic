@@ -526,7 +526,7 @@ class ProductReviewCreateSerializer(serializers.ModelSerializer):
         model = ProductReview
         fields = [
             'id',
-            'network',
+            'product',
             'rating',
             'comment',
         ]
