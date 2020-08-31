@@ -112,10 +112,10 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('DB_NAME', 'DB_NAME'),
-#         'USER': config('DB_USER', 'DB_USER'),
-#         'PASSWORD': config('DB_PASSWORD', 'DB_PASSWORD'),
-#         'HOST': config('DB_HOST', 'DB_HOST'),
+#         'NAME': config('HEROKU_DB_NAME', 'HEROKU_DB_NAME'),
+#         'USER': config('HEROKU_DB_USER', 'HEROKU_DB_USER'),
+#         'PASSWORD': config('HEROKU_DB_PASSWORD', 'HEROKU_DB_PASSWORD'),
+#         'HOST': config('HEROKU_DB_HOST', 'HEROKU_DB_HOST'),
 #         'PORT': 5432,
 #     }
 # }

@@ -40,7 +40,6 @@ class ProductEntryShowSerializer(serializers.ModelSerializer):
 
     
 class ProductEntryTinySerializer(serializers.ModelSerializer):
-    product = ProductShowSerializer(read_only=True)
     class Meta:
         model = ProductEntry
         fields = [
@@ -82,21 +81,19 @@ class CartCreateSerializer(serializers.ModelSerializer):
             try:
                 instance = Cart.objects.get(user=user, is_active=True)
                 if products is not None:
+                    print(products)
                     for p in products:
                         pd = p.get('product')
                         quan = p.get('quantity')
+                        print(pd)
                         try:
-                            pd = Product.objects.get(id=pd)
-                            try:
-                                pe = ProductEntry.objects.get(product=pd, cart=instance)
-                                pe.delete()
-                                pe = ProductEntry.objects.create(**p, cart=instance)
-                            except:
-                                pe = ProductEntry.objects.create(**p, cart=instance)
-                            count += 1
-                            sub_total = sub_total + float(pe.cost)
-                        except Product.DoesNotExist:
-                            pass
+                            pe = ProductEntry.objects.get(product=pd, cart=instance)
+                            pe.delete()
+                            pe = ProductEntry.objects.create(**p, cart=instance)
+                        except:
+                            pe = ProductEntry.objects.create(**p, cart=instance)
+                        count += 1
+                        sub_total = sub_total + float(pe.cost)
                 else:
                     shipping = 0.00
 
