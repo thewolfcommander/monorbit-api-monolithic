@@ -19,6 +19,7 @@ class ProductEntryCreateSerializer(serializers.ModelSerializer):
         instance = ProductEntry.objects.create(**validated_data)
         instance.cart.count += 1
         instance.cart.sub_total = float(instance.cart.sub_total) + float(instance.cost)
+        instance.cart.total = (float(instance.cart.sub_total) + float(instance.cart.shipping)) - float(instance.cart.discount)
         instance.cart.save()
 
         return instance
