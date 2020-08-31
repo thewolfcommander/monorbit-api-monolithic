@@ -35,7 +35,7 @@ class UpdateProductEntry(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
-            isntance.cart.count -= 1
+            instance.cart.count -= 1
             instance.cart.sub_total = float(instance.cart.sub_total) - float(instance.cost)
             instance.cart.total = (float(instance.cart.sub_total) + float(instance.cart.shipping)) - float(instance.cart.discount)
             instance.cart.save()
