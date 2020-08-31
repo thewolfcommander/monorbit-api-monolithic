@@ -80,6 +80,8 @@ class CartCreateSerializer(serializers.ModelSerializer):
         if user is not None:
             try:
                 instance = Cart.objects.get(user=user, is_active=True)
+                count = instance.count
+                sub_total = float(instance.sub_total)
                 if products is not None:
                     print(products)
                     for p in products:
