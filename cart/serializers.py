@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Cart, ProductEntry
 from accounts.serializers import UserMiniSerializer
 from product_catalog.serializers import ProductShowSerializer
+from product_catalog.models import Product
 
 
 class ProductEntryCreateSerializer(serializers.ModelSerializer):
@@ -85,13 +86,17 @@ class CartCreateSerializer(serializers.ModelSerializer):
                         pd = p.get('product')
                         quan = p.get('quantity')
                         try:
-                            pe = ProductEntry.objects.get(product=pd, cart=instance)
-                            pe.delete()
-                            pe = ProductEntry.objects.create(**p, cart=instance)
-                        except:
-                            pe = ProductEntry.objects.create(**p, cart=instance)
-                        count += 1
-                        sub_total = sub_total + float(pe.cost)
+                            pd = Product.objects.get(id=pd)
+                            try:
+                                pe = ProductEntry.objects.get(product=pd, cart=instance)
+                                pe.delete()
+                                pe = ProductEntry.objects.create(**p, cart=instance)
+                            except:
+                                pe = ProductEntry.objects.create(**p, cart=instance)
+                            count += 1
+                            sub_total = sub_total + float(pe.cost)
+                        except Product.DoesNotExist:
+                            pass
                 else:
                     shipping = 0.00
 
