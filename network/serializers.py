@@ -57,7 +57,8 @@ class NetworkOperationTimingShowSerializer(serializers.ModelSerializer):
         fields = [
             'day',
             'opening',
-            'closing'
+            'closing',
+            'status'
         ]
 
     
@@ -291,6 +292,7 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
                 j.day = i.get('day', j.day)
                 j.opeing = i.get('opening', j.opening)
                 j.closing = i.get('closing', j.closing)
+                j.status = i.get('status', j.status)
                 j.save()
 
         if locations is not None:

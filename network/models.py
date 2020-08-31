@@ -156,6 +156,7 @@ class NetworkOperationTiming(models.Model):
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
     day = models.CharField(max_length=255, null=True, blank=True)
     opening = models.CharField(max_length=25, null=True, blank=True)
+    status = models.BooleanField(default=True)
     closing = models.CharField(max_length=25, null=True, blank=True)
 
     def __str__(self):

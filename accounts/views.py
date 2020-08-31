@@ -9,6 +9,9 @@ from .permissions import IsOwner
 from . import serializers as acc_serializers
 from monorbit.utils import tools, sms
 
+def expiration_delta():
+    return timezone.now() + timezone.timedelta(minutes=10)
+
 
 class LoginView(APIView):
     """
@@ -154,12 +157,12 @@ class VerifyOTPView(APIView):
                 }, status=200)
             if otp_obj.exists():
                 otp_obj = otp_obj.first()
-                if otp_obj.expiry < timezone.now():
+                if timezone.now() > (otp_obj.created + timezone.timedelta(minutes=10)):
                     return Response(data={
                         'message': "Invalid OTP. OTP Expired",
                         'status': False
                     }, status=400)
-                elif otp_obj.expiry >= timezone.now():
+                elif timezone.now() <= (otp_obj.created + timezone.timedelta(minutes=10)):
                     if otp_obj.otp == otp:
                         token = jwt_encode_handler(jwt_payload_handler(usr_obj))
                         usr_obj.is_logged_in = True
@@ -406,12 +409,12 @@ class ResetPasswordView(APIView):
             user = usr_obj.first()
             otp_obj = acc_models.PasswordResetToken.objects.filter(user=user)
             if otp_obj.exists():
-                if otp_obj.first().expiry < timezone.now():
+                if timezone.now() > (otp_obj.first().created + timezone.timedelta(minutes=10)):
                     return Response(data={
                         'message': "Invalid OTP. OTP Expired",
                         'status': False
                     }, status=400)
-                elif otp_obj.first().expiry >= timezone.now():
+                elif timezone.now() <= (otp_obj.first().created + timezone.timedelta(minutes=10)):
                     if otp_obj.first().token == otp:
                         user.set_password(new_password)
                         user.save()

@@ -70,7 +70,7 @@ class CartCreateSerializer(serializers.ModelSerializer):
         discount = 0.00
         if user is not None:
             try:
-                instance = Cart.objects.get(user=user, active=True)
+                instance = Cart.objects.get(user=user, is_active=True)
                 if products is not None:
                     for p in products:
                         pd = p.get('product')
@@ -83,6 +83,8 @@ class CartCreateSerializer(serializers.ModelSerializer):
                             pe = ProductEntry.objects.create(**p, cart=instance)
                         count += 1
                         sub_total = sub_total + float(pe.cost)
+                else:
+                    shipping = 0.00
 
                 total = (sub_total + shipping) - discount
                 instance.sub_total = sub_total
@@ -98,13 +100,16 @@ class CartCreateSerializer(serializers.ModelSerializer):
                     total=total, 
                     shipping=shipping,
                     count=count,
-                    active=True
+                    is_active=True
                 )
                 if products is not None:
                     for p in products:
                         pe = ProductEntry.objects.create(**p, cart=instance)
                         count += 1
                         sub_total = sub_total + float(pe.cost)
+                
+                else:
+                    shipping = 0.00
                 total = (sub_total + shipping) - discount
 
                 instance.sub_total = sub_total

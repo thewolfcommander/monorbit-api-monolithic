@@ -58,6 +58,9 @@ class ListCreateProductCustomCategory(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class = ProductCustomCategorySerializer
     queryset = ProductCustomCategory.objects.all()
+    filterset_fields = [
+        'network',
+    ]
 
 
 class UpdateProductCustomCategory(generics.RetrieveUpdateDestroyAPIView):

@@ -38,6 +38,7 @@ class ProductCustomCategory(models.Model):
     This would be our product category
     """
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    network = models.ForeignKey(Network, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255, null=True, blank=True)
     image = models.URLField(null=True, blank=True, default="https://content.monorbit.com/images/placeholder.png")
 

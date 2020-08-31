@@ -14,6 +14,7 @@ from monorbit.utils import tools, validators
 def expiration_delta():
     return timezone.now() + timezone.timedelta(minutes=10)
 
+
 class CustomUserManager(BaseUserManager):
     """
     This manager is for handling user authentication model and functioning
@@ -115,8 +116,7 @@ pre_save.connect(first_time_user_initializers, sender=User)
 class PasswordResetToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=10, null=True, blank=True)
-    expiry = models.DateTimeField(default=expiration_delta, null=True, blank=True)
-    created = models.DateTimeField(default=timezone.now, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.id)
@@ -124,8 +124,7 @@ class PasswordResetToken(models.Model):
 class EmailVerifyOTP(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     otp = models.CharField(max_length=10, null=True, blank=True)
-    expiry = models.DateTimeField(default=expiration_delta, null=True, blank=True)
-    created = models.DateTimeField(default=timezone.now, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.id)

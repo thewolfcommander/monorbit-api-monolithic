@@ -34,6 +34,7 @@ class ProductCustomCategorySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
+            'network',
             'image'
         ]
 
