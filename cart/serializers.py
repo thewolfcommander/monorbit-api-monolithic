@@ -90,8 +90,11 @@ class CartCreateSerializer(serializers.ModelSerializer):
                         print(pd)
                         try:
                             pe = ProductEntry.objects.get(product=pd, cart=instance)
+                            prev_quan = pe.quantity
                             pe.delete()
                             pe = ProductEntry.objects.create(**p, cart=instance)
+                            pe.quantity = quantity + prev_quan
+                            pe.save()
                         except:
                             pe = ProductEntry.objects.create(**p, cart=instance)
                         count += 1
