@@ -42,7 +42,7 @@ class UpdateProductEntry(generics.RetrieveUpdateDestroyAPIView):
             self.perform_destroy(instance)
         except Http404:
             pass
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=204)
 
 
 class CreateCart(generics.CreateAPIView):
