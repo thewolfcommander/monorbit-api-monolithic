@@ -1,4 +1,5 @@
 from rest_framework import generics, permissions
+from rest_framework.views import Response
 
 from .serializers import *
 from cart.models import *
@@ -29,6 +30,18 @@ class UpdateProductEntry(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            isntance.cart.count -= 1
+            instance.cart.sub_total = float(instance.cart.sub_total) - float(instance.cost)
+            instance.cart.total = (float(instance.cart.sub_total) + float(instance.cart.shipping)) - float(instance.cart.discount)
+            instance.cart.save()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CreateCart(generics.CreateAPIView):
