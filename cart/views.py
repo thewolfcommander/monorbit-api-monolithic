@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics, permissions
 from rest_framework.views import Response
 
