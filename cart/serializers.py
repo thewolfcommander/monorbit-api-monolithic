@@ -83,7 +83,7 @@ class CartCreateSerializer(serializers.ModelSerializer):
                 if products is not None:
                     for p in products:
                         pd = p.get('product')
-                        quan = f.get('quantity')
+                        quan = p.get('quantity')
                         try:
                             pe = ProductEntry.objects.get(product=pd, cart=instance)
                             pe.delete()
