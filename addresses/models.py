@@ -20,7 +20,7 @@ class Address(models.Model):
     lat = models.CharField(max_length=50, null=True, blank=True)
     lng = models.CharField(max_length=50, null=True, blank=True)
     is_default = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_archived = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

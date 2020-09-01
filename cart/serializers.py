@@ -80,27 +80,26 @@ class CartCreateSerializer(serializers.ModelSerializer):
         if user is not None:
             try:
                 instance = Cart.objects.get(user=user, is_active=True)
-                count = instance.count
-                sub_total = float(instance.sub_total)
+                instance.count = 0
+                instance.sub_total = 0.00
+                instance.shipping = 0.00
+                instance.total = 0.00
+                instance.discount = 0.00
+                instance.productentry_set.all().delete()
                 if products is not None:
                     print(products)
                     for p in products:
                         pd = p.get('product')
                         quan = p.get('quantity')
-                        print(pd)
                         try:
                             pe = ProductEntry.objects.get(product=pd, cart=instance)
-                            prev_quan = pe.quantity
                             pe.delete()
                             pe = ProductEntry.objects.create(**p, cart=instance)
-                            pe.quantity = quantity + prev_quan
                             pe.save()
                         except:
                             pe = ProductEntry.objects.create(**p, cart=instance)
                         count += 1
                         sub_total = sub_total + float(pe.cost)
-                else:
-                    shipping = 0.00
 
                 total = (sub_total + shipping) - discount
                 instance.sub_total = sub_total
@@ -145,6 +144,26 @@ class CartCreateSerializer(serializers.ModelSerializer):
 class CartShowSerializer(serializers.ModelSerializer):
     user = UserMiniSerializer(read_only=True)
     products = ProductEntryTinySerializer(many=True, required=False)
+    class Meta:
+        model = Cart
+        fields = [
+            'id',
+            'user',
+            'count',
+            'sub_total',
+            'shipping',
+            'total',
+            'discount',
+            'is_active',
+            'timestamp',
+            'updated',
+            'products'
+        ]
+
+
+class CartMegaDetailSerializer(serializers.ModelSerializer):
+    user = UserMiniSerializer(read_only=True)
+    products = ProductEntryShowSerializer(many=True, required=False)
     class Meta:
         model = Cart
         fields = [

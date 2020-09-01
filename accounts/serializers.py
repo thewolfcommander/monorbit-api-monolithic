@@ -139,7 +139,7 @@ class UserDeleteSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.is_active = False
-        instance.is_archived = False
+        instance.is_archived = True
         instance.save()
 
         return instance
