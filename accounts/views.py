@@ -98,7 +98,7 @@ class RegisterView(APIView):
                 usr.hash_token = tools.label_gen(string)
                 usr.save()
                 mobile = "+91{}".format(str(serializer.validated_data['mobile_number']))
-                sms.verify_mobile(mobile_number=mobile, otp=otp_obj.otp)
+#                 sms.verify_mobile(mobile_number=mobile, otp=otp_obj.otp)
                 data = {
                     'status': True,
                     "message": "OTP Sent to Mobile Number",
@@ -245,7 +245,7 @@ class ResendMobileVerifyOTPView(APIView):
                 if otp.exists():
                     otp.delete()
                 otp = acc_models.EmailVerifyOTP.objects.create(user=user)
-                sms.verify_mobile(mobile_number="+91{}".format(str(mobile_number)), otp=otp.otp)
+#                 sms.verify_mobile(mobile_number="+91{}".format(str(mobile_number)), otp=otp.otp)
                 data = {
                     'status': True,
                     'otp': otp.otp,
@@ -331,7 +331,7 @@ class ForgotPasswordView(APIView):
                 otp = acc_models.PasswordResetToken.objects.create(user=user)
                 user.password_otp_sent += 1
                 user.save()
-                sms.verify_mobile(mobile_number="+91{}".format(str(mobile_number)), otp=otp.token)
+#                 sms.verify_mobile(mobile_number="+91{}".format(str(mobile_number)), otp=otp.token)
                 data = {
                     'status': True,
                     'otp': otp.token,
