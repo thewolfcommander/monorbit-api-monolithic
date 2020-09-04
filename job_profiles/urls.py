@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import *
 
-app_name = 'jon_profiles'
+app_name = 'job_profiles'
 
 urlpatterns = [
     path('all/', ListCreateJobProfile.as_view(), name='all_profiles'),
