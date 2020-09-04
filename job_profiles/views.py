@@ -4,6 +4,10 @@ from .serializers import *
 from .models import *
 
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 class ListCreateJobProfile(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = JobProfileSerializer

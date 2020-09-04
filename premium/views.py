@@ -5,6 +5,9 @@ from .models import *
 from .serializers import *
 
 
+import logging
+logger = logging.getLogger(__name__)
+
 class ListAllNetworkMembershipActivity(generics.ListAPIView):
     queryset = NetworkMembershipActivity.objects.all()
     serializer_class = NetworkMembershipActivityShowSerializer

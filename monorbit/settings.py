@@ -13,8 +13,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import datetime
 from datetime import timedelta
 from decouple import config
-import json_logging
+
 import logging
+logger = logging.getLogger(__name__)
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -127,7 +128,6 @@ db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
 DATABASES['default']['CONN_MAX_AGE'] = 500
 
-LOG_FILE = BASE_DIR / config('LOG_FILE', 'LOG_FILE')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -230,14 +230,6 @@ JWT_AUTH = {
     'JWT_AUTH_COOKIE': None,
 
 }
-
-
-json_logging.ENABLE_JSON_LOGGING = False
-json_logging.__init()
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-logger.addHandler(logging.FileHandler(filename=LOG_FILE))
 
 ATOMIC_REQUESTS = True
 

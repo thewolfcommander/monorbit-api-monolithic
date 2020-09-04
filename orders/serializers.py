@@ -5,6 +5,10 @@ from addresses.serializers import AddressShowSerializer
 from .models import *
 
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 class OrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order

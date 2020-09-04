@@ -5,6 +5,9 @@ from network.models import Network
 from .models import *
 
 
+import logging
+logger = logging.getLogger(__name__)
+
 class NetworkMembershipPlanFeaturesSerailizer(serializers.ModelSerializer):
     class Meta:
         model = NetworkMembershipPlanFeatures

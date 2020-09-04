@@ -14,6 +14,10 @@ from job_profiles.models import (
 )
 
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 class JobProfileSerializer(serializers.ModelSerializer):
     user = UserMiniSerializer(read_only=True, required=False)
     class Meta:

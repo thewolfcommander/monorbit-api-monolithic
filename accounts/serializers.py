@@ -3,6 +3,8 @@ from rest_framework import serializers, exceptions
 from . import models as acc_models
 
 
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Serialized Data for User model

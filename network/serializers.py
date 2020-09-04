@@ -4,6 +4,9 @@ from accounts.serializers import UserMiniSerializer
 from .models import *
 
 
+import logging
+logger = logging.getLogger(__name__)
+
 class NetworkCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkCategory

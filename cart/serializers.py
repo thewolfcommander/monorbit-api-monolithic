@@ -5,6 +5,10 @@ from product_catalog.serializers import ProductShowSerializer
 from product_catalog.models import Product
 
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 class ProductEntryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductEntry

@@ -3,6 +3,8 @@ from rest_framework import generics, permissions
 from .models import *
 from .serializers import *
 
+import logging
+logger = logging.getLogger(__name__)
 
 class CreateAddress(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
