@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import *
 
+app_name='cart'
 
 urlpatterns = [
     path('create/', CreateCart.as_view()),

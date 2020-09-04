@@ -2,6 +2,8 @@ from django.urls import path
 
 from .views import *
 
+app_name = 'network'
+
 urlpatterns = [
     # Network Categories
     path('categories/', NetworkCategoryListCreateView.as_view(), name='network-categories'),
