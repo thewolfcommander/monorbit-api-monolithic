@@ -21,11 +21,11 @@ class TestUrls(SimpleTestCase):
         self.assertEquals(resolve(url).func.view_class, RefreshToken)
 
     def test_user_info_url_is_resolved(self):
-        url = reverse('accounts:user_info', kwargs={'slug': self.slug})
+        url = reverse('accounts:user_info', args=['7253919169'])
         self.assertEquals(resolve(url).func.view_class, GetUserInfo)
 
     def test_delete_user_url_is_resolved(self):
-        url = reverse('accounts:delete_user', kwargs={'slug': self.slug})
+        url = reverse('accounts:delete_user', args=['7253919169'])
         self.assertEquals(resolve(url).func.view_class, DeleteAccount)
 
     def test_register_view_url_is_resolved(self):
