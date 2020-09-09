@@ -191,6 +191,25 @@ class ShowNetworkSerializer(serializers.ModelSerializer):
         ]
 
 
+class MiniNetworkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Network
+        fields = [
+            'id',
+            'user',
+            'category',
+            'thumbnail_image',
+            'network_type',
+            'name',
+            'address',
+            'landmark',
+            'pincode',
+            'rating',
+            'no_of_reviews',
+            'followers',
+        ]
+
+
 class NetworkDetailSerializer(serializers.ModelSerializer):
     images = NetworkImageShowSerializer(many=True, required=False)
     videos = NetworkVideoShowSerializer(many=True, required=False)
