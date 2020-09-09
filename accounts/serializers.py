@@ -3,6 +3,8 @@ from rest_framework import serializers, exceptions
 from . import models as acc_models
 
 
+import logging
+logger = logging.getLogger(__name__)
 
 """
 Serialized Data for User model
@@ -102,6 +104,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
             'network_created',
             'otp_sent',
             'is_consumer',
+            'followed_networks',
             'is_creator',
             'is_working_profile',
             'is_active',

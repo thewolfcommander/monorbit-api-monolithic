@@ -5,6 +5,10 @@ from accounts.serializers import UserMiniSerializer
 from .models import *
 
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 class ProductDefaultCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductDefaultCategory

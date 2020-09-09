@@ -9,6 +9,10 @@ from .permissions import IsOwner
 from . import serializers as acc_serializers
 from monorbit.utils import tools, sms
 
+
+import logging
+logger = logging.getLogger(__name__)
+
 def expiration_delta():
     return timezone.now() + timezone.timedelta(minutes=10)
 
@@ -40,6 +44,7 @@ class LoginView(APIView):
                         'hash_token': user_obj.hash_token,
                         'is_consumer': user_obj.is_consumer,
                         'is_creator': user_obj.is_creator,
+                        'followed_networks': user_obj.followed_networks,
                         'is_logged_in': user_obj.is_logged_in,
                         'is_working_profile': user_obj.is_working_profile,
                         'is_mobile_verified': user_obj.is_mobile_verified,
@@ -179,6 +184,7 @@ class VerifyOTPView(APIView):
                                 'full_name': usr_obj.full_name,
                                 'email': usr_obj.email,
                                 'hash_token': usr_obj.hash_token,
+                                'followed_networks': user_obj.followed_networks,
                                 'is_consumer': usr_obj.is_consumer,
                                 'is_logged_in': usr_obj.is_logged_in,
                                 'is_creator': usr_obj.is_creator,

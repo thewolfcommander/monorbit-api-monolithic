@@ -6,6 +6,10 @@ from monorbit.utils import tools
 from addresses.models import Address
 from cart.models import Cart
 
+
+import logging
+logger = logging.getLogger(__name__)
+
 ORDER_STATUS_CHOICES = (
     ('Created', 'Created'),
     ('Confirmed', 'Confirmed'),

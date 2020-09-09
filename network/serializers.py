@@ -4,6 +4,9 @@ from accounts.serializers import UserMiniSerializer
 from .models import *
 
 
+import logging
+logger = logging.getLogger(__name__)
+
 class NetworkCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkCategory
@@ -178,12 +181,32 @@ class ShowNetworkSerializer(serializers.ModelSerializer):
             'rating',
             'no_of_reviews',
             'registered_stores',
+            'followers',
             'is_verified',
             'is_active',
             'is_premium',
             'is_spam',
             'is_video',
             'is_document',
+        ]
+
+
+class MiniNetworkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Network
+        fields = [
+            'id',
+            'user',
+            'category',
+            'thumbnail_image',
+            'network_type',
+            'name',
+            'address',
+            'landmark',
+            'pincode',
+            'rating',
+            'no_of_reviews',
+            'followers',
         ]
 
 
@@ -222,6 +245,7 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
             'locations',
             'rating',
             'no_of_reviews',
+            'followers',
             'registered_stores',
             'is_verified',
             'is_archived',

@@ -8,6 +8,10 @@ from accounts.models import User
 from monorbit.utils import tools, validators
 
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 class JobProfile(models.Model):
     """
     This will be the common model for all the job profiles viz. Delivery Boy, Permanent Job Profiles, and Freelancers. They all have to create a common job profile.

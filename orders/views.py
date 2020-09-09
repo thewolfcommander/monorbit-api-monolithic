@@ -3,6 +3,9 @@ from rest_framework import generics, permissions
 from .models import *
 from .serializers import *
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class CreateOrder(generics.CreateAPIView):
     serializer_class = OrderCreateSerializer

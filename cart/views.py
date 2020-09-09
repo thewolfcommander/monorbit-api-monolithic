@@ -6,6 +6,10 @@ from .serializers import *
 from cart.models import *
 
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 class CreateProductEntry(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProductEntryCreateSerializer

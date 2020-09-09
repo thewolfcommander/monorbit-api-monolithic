@@ -5,6 +5,10 @@ from product_catalog.models import Product
 
 from monorbit.utils import tools
 
+
+import logging
+logger = logging.getLogger(__name__)
+
     
 class Cart(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)

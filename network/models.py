@@ -8,6 +8,8 @@ from monorbit.utils import tools, validators
 
 phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
+import logging
+logger = logging.getLogger(__name__)
 
 # Create your models here.
 
@@ -66,6 +68,7 @@ class Network(models.Model):
     rating = models.DecimalField(default=5.0, max_digits=2, decimal_places=1)
     no_of_reviews = models.IntegerField(null=True, blank=True, default=0)
     registered_stores = models.IntegerField(null=True, blank=True, default=1)
+    followers = models.PositiveIntegerField(null=True, blank=True, default=0)
     
     # Documents Details
     gst = models.CharField(max_length=255, null=True, blank=True)
@@ -154,7 +157,7 @@ class NetworkOperationTiming(models.Model):
     ]
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
-    day = models.CharField(max_length=255, null=True, blank=True)
+    day = models.CharField(max_length=255, null=True, blank=True, choices=DAY_CHOICES, default='All')
     opening = models.CharField(max_length=25, null=True, blank=True)
     status = models.BooleanField(default=True)
     closing = models.CharField(max_length=25, null=True, blank=True)

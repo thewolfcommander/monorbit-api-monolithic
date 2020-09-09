@@ -7,6 +7,10 @@ from accounts.models import User
 from network.models import Network, NetworkCategory
 
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 class ProductDefaultCategory(models.Model):
     """
     This would be our product category

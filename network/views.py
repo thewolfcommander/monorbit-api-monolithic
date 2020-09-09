@@ -6,6 +6,9 @@ from .serializers import *
 from .permissions import *
 
 
+import logging
+logger = logging.getLogger(__name__)
+
 class NetworkCategoryListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = NetworkCategory.objects.all()

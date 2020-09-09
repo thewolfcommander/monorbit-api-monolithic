@@ -2,6 +2,10 @@ from rest_framework import serializers
 from .models import *
 from accounts.serializers import UserMiniSerializer
 
+
+import logging
+logger = logging.getLogger(__name__)
+
 class AddressCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
