@@ -15,4 +15,5 @@ urlpatterns = [
     path('api/v1/orders/', include('orders.urls', namespace='orders')),
     path('api/v1/premium/', include('premium.urls', namespace='premium')),
     path('api/v1/catalog/product/', include('product_catalog.urls', namespace='product')),
+    path('api/v1/transactions/', include('transactions.urls', namespace='transactions')),
 ]

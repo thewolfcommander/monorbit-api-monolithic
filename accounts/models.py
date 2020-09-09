@@ -71,6 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     otp_sent = models.IntegerField(default=0, null=True, blank=True)
     password_otp_sent = models.IntegerField(default=0, null=True, blank=True)
     order_count = models.PositiveIntegerField(default=0, null=True, blank=True)
+    followed_networks = models.PositiveIntegerField(default=0, null=True, blank=True)
     
     # Different Flags
     is_consumer = models.BooleanField(default=True, help_text="This will determine whether the user is a consumer")

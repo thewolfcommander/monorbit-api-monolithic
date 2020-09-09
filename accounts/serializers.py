@@ -104,6 +104,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
             'network_created',
             'otp_sent',
             'is_consumer',
+            'followed_networks'
             'is_creator',
             'is_working_profile',
             'is_active',
