@@ -184,7 +184,7 @@ class VerifyOTPView(APIView):
                                 'full_name': usr_obj.full_name,
                                 'email': usr_obj.email,
                                 'hash_token': usr_obj.hash_token,
-                                'followed_networks': user_obj.followed_networks,
+                                'followed_networks': usr_obj.followed_networks,
                                 'is_consumer': usr_obj.is_consumer,
                                 'is_logged_in': usr_obj.is_logged_in,
                                 'is_creator': usr_obj.is_creator,
