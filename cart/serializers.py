@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Cart, ProductEntry
 from accounts.serializers import UserMiniSerializer
-from product_catalog.serializers import ProductShowSerializer
+from product_catalog.serializers import ProductShowSerializer, ProductMiniSerializer
 from product_catalog.models import Product
 
 
@@ -44,6 +44,7 @@ class ProductEntryShowSerializer(serializers.ModelSerializer):
 
     
 class ProductEntryTinySerializer(serializers.ModelSerializer):
+    product = ProductMiniSerializer(read_only=True)
     class Meta:
         model = ProductEntry
         fields = [

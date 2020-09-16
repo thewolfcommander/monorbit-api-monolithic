@@ -455,6 +455,31 @@ class ProductShowSerializer(serializers.ModelSerializer):
         ]
 
 
+
+class ProductMiniSerializer(serializers.ModelSerializer):
+    images = ProductImageShowSerializer(many=True, required=True)
+    class Meta:
+        model = Product
+        fields = [
+            'id',
+            'name',
+            'item_code',
+            'slug',
+            'brand_name',
+            'barcode',
+            'thumbnail_image',
+            'mrp',
+            'nsp',
+            'discount_percent',
+            'tax',
+            'shipping',
+            'quantity_per_measurement',
+            'short_description',
+            'rating',
+            'no_of_reviews',
+            'images',
+        ]
+
   
 class ProductImageCreateSerializer(serializers.ModelSerializer):
     class Meta:
