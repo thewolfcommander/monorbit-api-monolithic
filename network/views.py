@@ -130,7 +130,7 @@ class CreateNetworkReview(generics.CreateAPIView):
 
 class ListNetworkReview(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated,]
-    queryset = NetworkReview.objects.all()
+    queryset = NetworkReview.objects.all().order_by('-created')
     serializer_class = NetworkReviewShowSerializer
     filterset_fields = [
         'network',
