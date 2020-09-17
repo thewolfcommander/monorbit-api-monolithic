@@ -47,3 +47,7 @@ class TestUrls(SimpleTestCase):
     def test_reset_password_url_is_resolved(self):
         url = reverse('accounts:reset_password')
         self.assertEquals(resolve(url).func.view_class, ResetPasswordView)
+
+    def test_sudo_mode_url_is_resolved(self):
+        url = reverse('accounts:sudo_mode')
+        self.assertEquals(resolve(url).func.view_class, SudoModeAuthenticationView)

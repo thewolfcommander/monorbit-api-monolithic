@@ -1,4 +1,5 @@
 from django.utils import timezone
+from django.contrib.auth.hashers import check_password
 from rest_framework import generics, permissions, authentication
 from rest_framework.views import APIView, status, Response
 
@@ -511,3 +512,28 @@ class DeleteAccount(generics.UpdateAPIView):
     serializer_class = acc_serializers.UserDeleteSerializer
     queryset = acc_models.User.objects.all()
     lookup_field = 'mobile_number'
+
+
+class SudoModeAuthenticationView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def post(self, request, format=None):
+        user = request.user
+        password = request.data.get('password', None)
+
+        if password is None:
+            return Response({
+                "status": False,
+                "message": "You have to provide password"
+            }, status=400)
+
+        if check_password(password, user.password):
+            return Response({
+                "status": True,
+                "message": "You have permission to do the stuff"
+            }, status=200)
+        else:
+            return Response({
+                "status": False,
+                "message": "Your access is denied. Please check the password"
+            }, status=403)

@@ -14,4 +14,6 @@ urlpatterns = [
     path('resend-mobile-otp/', ResendMobileVerifyOTPView.as_view(), name='resend_mobile_otp'),
     path('forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset_password'),
+
+    path('sudo-mode/enter/', SudoModeAuthenticationView.as_view(), name='sudo_mode'),
 ]

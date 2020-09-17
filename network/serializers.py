@@ -430,3 +430,16 @@ class NetworkReviewShowSerializer(serializers.ModelSerializer):
             'created',
             'is_active'
         ]
+
+    def update(self, instance, validated_data):
+        instance.is_active = validated_data.get('is_active', instance.is_active) 
+        instance.is_spam = validated_data.get('is_spam', instance.is_spam) 
+        instance.rating = validated_data.get('rating', instance.rating) 
+        instance.comment = validated_data.get('comment', instance.comment)
+        init = float(instance.network.rating)*float(instance.network.no_of_reviews)
+        new_rate = (init+float(instance.rating))/(instance.network.no_of_reviews+1)
+        instance.network.rating = new_rate
+        instance.network.no_of_reviews += 1
+        instance.network.save()
+        instance.save()
+        return instance

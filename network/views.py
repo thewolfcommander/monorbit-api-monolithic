@@ -141,8 +141,11 @@ class ListNetworkReview(generics.ListAPIView):
     ]
 
 
-class UpdateNetworkReview(generics.RetrieveDestroyAPIView):
+class UpdateNetworkReview(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = NetworkReview.objects.all()
     serializer_class = NetworkReviewShowSerializer
     lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
