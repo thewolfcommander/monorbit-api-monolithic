@@ -69,6 +69,15 @@ AUTH_USER_MODEL = 'accounts.User'
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 CORS_ORIGIN_ALLOW_ALL = True
 
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
