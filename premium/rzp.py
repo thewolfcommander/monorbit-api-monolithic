@@ -27,4 +27,4 @@ def capture_payment():
     instance = client.payment.capture("u9ns98us", "150000", {"currency":"INR"})
     return instance
 
-print(capture_payment())
+# print(capture_payment())
