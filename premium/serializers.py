@@ -59,9 +59,10 @@ class NetworkMembershipActivityCreateSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'relation',
-            'payment',
-            'active_till',
-            'expiry',
+            'created',
+            'trial_active_till',
+            'trial_expiry',
+            'trial_applied',
             'active'
         ]
 
@@ -79,19 +80,36 @@ class NetworkMembershipActivityCreateSerializer(serializers.ModelSerializer):
             instance = NetworkMembershipActivity.objects.create(**validated_data, relation=finding)
             return instance
         else:
-            raise ValidationError("Invalid Network Found")     
+            raise ValidationError("Invalid Network Found")
 
+
+class NetworkMembershipSubscriptionShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkMembershipSubscription
+        fields = [
+            'id',
+            'payment',
+            'payment_order_id',
+            'started',
+            'active_till',
+            'expiry',
+            'is_trial',
+            'active'
+        ]
 
     
 class NetworkMembershipActivityShowSerializer(serializers.ModelSerializer):
+    subscriptions = NetworkMembershipSubscriptionShowSerializer(read_only=True, many=True)
     relation = NetworkMembershipRelationSerializer(read_only=True)
     class Meta:
         model = NetworkMembershipActivity
         fields = [
             'id',
             'relation',
-            'payment',
-            'active_till',
-            'expiry',
-            'active'
+            'created',
+            'trial_active_till',
+            'trial_expiry',
+            'trial_applied',
+            'active',
+            'subscriptions'
         ]

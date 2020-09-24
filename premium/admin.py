@@ -3,22 +3,22 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 
-class NetworkMembershipPlanFeaturesInline(admin.TabularInline):
-    model = NetworkMembershipPlanFeatures
-    extra = 1
+# class NetworkMembershipPlanFeaturesInline(admin.TabularInline):
+#     model = NetworkMembershipPlanFeatures
+#     extra = 1
 
-@admin.register(NetworkMembershipPlan)
-class NetworkMembershipPlanAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'price_per_day', 'created']
-    inlines = [NetworkMembershipPlanFeaturesInline]
-
-
-@admin.register(NetworkMembershipRelation)
-class NetworkMembershipRelationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'network', 'plan']
-    list_filter = ['plan']
+# @admin.register(NetworkMembershipPlan)
+# class NetworkMembershipPlanAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'name', 'price_per_day', 'created']
+#     inlines = [NetworkMembershipPlanFeaturesInline]
 
 
-@admin.register(NetworkMembershipActivity)
-class NetworkMembershipActivityAdmin(admin.ModelAdmin):
-    list_display = ['id', 'relation', 'payment', 'created', 'active_till', 'active']
+# @admin.register(NetworkMembershipRelation)
+# class NetworkMembershipRelationAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'network', 'plan']
+#     list_filter = ['plan']
+
+
+# @admin.register(NetworkMembershipActivity)
+# class NetworkMembershipActivityAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'relation', 'payment', 'created', 'active_till', 'active']
