@@ -24,7 +24,11 @@ def get_payments():
     return instance
 
 def capture_payment():
-    instance = client.payment.capture("u9ns98us", "150000", {"currency":"INR"})
+    instance = client.payment.capture("pay_FgwKwl6nfY5f4Z", "150000", {"currency":"INR"})
     return instance
 
-# print(capture_payment())
+def fetch_payment():
+    instance = client.payment.fetch('pay_FgwKwl6nfY5f4Z')
+    return instance
+
+print(fetch_payment())

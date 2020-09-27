@@ -28,4 +28,13 @@ urlpatterns = [
     path('create/timing/', CreateNetworkOperationTiming.as_view(), name='create_network_image'),
     path('create/location/', CreateNetworkOperationLocation.as_view(), name='create_network_image'),
     path('create/review/', CreateNetworkReview.as_view(), name='create_network_review'),
+
+
+    # Network Jobs
+    path('jobs/all/', ListNetworkJob.as_view(), name='list_network_jobs'),
+    path('jobs/create/', CreateNetworkJob.as_view(), name='create_network_jobs'),
+    path('jobs/detail/<slug:id>/', UpdateNetworkJob.as_view(), name='update_network_jobs'),
+    path('jobs/offerings/all/', ListNetworkJobOffering.as_view(), name='list_network_job_offerings'),
+    path('jobs/offerings/create/', CreateNetworkJobOffering.as_view(), name='create_network_job_offerings'),
+    path('jobs/offerings/detail/<slug:id>/', UpdateNetworkJobOffering.as_view(), name='update_network_job_offerings'),
 ]

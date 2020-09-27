@@ -443,3 +443,91 @@ class NetworkReviewShowSerializer(serializers.ModelSerializer):
         instance.network.save()
         instance.save()
         return instance
+
+
+
+class NetworkJobCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkJob
+        fields = [
+            'id',
+            'network',
+            'job_name',
+            'job_type',
+            'job_description',
+            'job_requirements',
+            'salary_payout_type',
+            'salary_lower_range',
+            'salary_upper_range',
+            'actual_salary',
+            'age_bar_upper',
+            'age_bar_lower',
+            'is_active',
+            'is_verified',
+            'is_spam',
+            'is_vacant',
+            'created',
+            'updated'
+        ]
+
+    
+class NetworkJobShowSerializer(serializers.ModelSerializer):
+    network = MiniNetworkSerializer(read_only=True)
+    class Meta:
+        model = NetworkJob
+        fields = [
+            'id',
+            'network',
+            'job_name',
+            'job_type',
+            'job_description',
+            'job_requirements',
+            'salary_payout_type',
+            'salary_lower_range',
+            'salary_upper_range',
+            'actual_salary',
+            'age_bar_upper',
+            'age_bar_lower',
+            'is_active',
+            'is_verified',
+            'is_spam',
+            'is_vacant',
+            'created',
+            'updated'
+        ]
+
+    
+
+class NetworkJobOfferingCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkJobOffering
+        fields = [
+            'id',
+            'job',
+            'title',
+            'offering_information',
+            'is_active',
+            'is_filled',
+            'max_staff_for_job',
+            'last_date',
+            'created',
+            'updated'
+        ]
+
+    
+class NetworkJobOfferingShowSerializer(serializers.ModelSerializer):
+    job = NetworkJobShowSerializer(read_only=True)
+    class Meta:
+        model = NetworkJobOffering
+        fields = [
+            'id',
+            'job',
+            'title',
+            'offering_information',
+            'is_active',
+            'is_filled',
+            'max_staff_for_job',
+            'last_date',
+            'created',
+            'updated'
+        ]

@@ -189,6 +189,75 @@ class NetworkReview(models.Model):
         return str(self.id)
 
 
+class NetworkJob(models.Model):
+    """
+    This model will keep record of all the jobs created by the network in which job profiles can apply
+    """
+    JOB_TYPE = [
+        ('freelancer', 'Freelancer'),
+        ('delivery', 'Delivery'),
+        ('permanent', 'Permanent')
+    ]
+    SALARY_PAYOUT_TYPE = [
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('bimonthly', 'Bi Monthly'),
+        ('monthly', 'Monthly'),
+        ('quarterly', 'Quarterly'),
+        ('biyearly', 'Bi Yearly'),
+        ('yearly', 'Yearly'),
+        ('work', 'Work Basis')
+    ]
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    network = models.ForeignKey(Network, on_delete=models.CASCADE)
+    job_name = models.CharField(max_length=255, null=True, blank=True)
+    job_type = models.CharField(max_length=255, null=True, blank=True, choices=JOB_TYPE, default="permanent")
+    job_description = models.TextField(null=True, blank=True)
+    job_requirements = models.TextField(null=True, blank=True)
+    salary_payout_type = models.CharField(max_length=255, null=True, blank=True, choices=SALARY_PAYOUT_TYPE, default="monthly")
+    salary_lower_range = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    salary_upper_range = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    actual_salary = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    age_bar_upper = models.IntegerField(default=45, null=True, blank=True)
+    age_bar_lower = models.IntegerField(default=18, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_verified = models.BooleanField(default=False)
+    is_spam = models.BooleanField(default=False)
+    is_vacant = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
+class NetworkJobOffering(models.Model):
+    """
+    This model will hold the information about the job offerings for a particular network job. This is the model which will be used for application transactions
+    """
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    job = models.ForeignKey(NetworkJob, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    offering_information = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_filled = models.BooleanField(default=False)
+    max_staff_for_job = models.IntegerField(default=5, null=True, blank=True)
+    last_date = models.DateField(default=timezone.now)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
+
+"""
+
+USEFUL SIGNALS FOR ABOVE MODELS
+
+"""
+
+
     
 def instance_id_generator(sender, instance, **kwargs):
     if not instance.id:
@@ -222,6 +291,8 @@ pre_save.connect(instance_id_generator, sender=NetworkDocument)
 pre_save.connect(instance_id_generator, sender=NetworkOperationLocation)
 pre_save.connect(instance_id_generator, sender=NetworkOperationTiming)
 pre_save.connect(instance_id_generator, sender=NetworkReview)
+pre_save.connect(instance_id_generator, sender=NetworkJob)
+pre_save.connect(instance_id_generator, sender=NetworkJobOffering)
 
 pre_save.connect(image_label_generator, sender=NetworkImage)
 pre_save.connect(video_label_generator, sender=NetworkVideo)

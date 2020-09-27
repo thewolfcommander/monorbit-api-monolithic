@@ -149,3 +149,69 @@ class UpdateNetworkReview(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+
+class CreateNetworkJob(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = NetworkJob.objects.all()
+    serializer_class = NetworkJobCreateSerializer
+
+
+class ListNetworkJob(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = NetworkJob.objects.all().order_by('-updated')
+    serializer_class = NetworkJobShowSerializer
+    filterset_fields = [
+        'network',
+        'job_name',
+        'job_type',
+        'salary_payout_type',
+        'age_bar_upper',
+        'age_bar_lower',
+        'is_verified',
+        'is_vacant',
+        'is_spam',
+        'is_active'
+    ]
+
+
+class UpdateNetworkJob(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = NetworkJob.objects.all()
+    serializer_class = NetworkJobShowSerializer
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    
+
+class CreateNetworkJobOffering(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = NetworkJobOffering.objects.all()
+    serializer_class = NetworkJobOfferingCreateSerializer
+
+
+class ListNetworkJobOffering(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = NetworkJobOffering.objects.all().order_by('-updated')
+    serializer_class = NetworkJobOfferingShowSerializer
+    filterset_fields = [
+        'job',
+        'job__job_name',
+        'job__job_type',
+        'is_active',
+        'is_filled',
+        'max_staff_for_job',
+        'last_date',
+    ]
+
+
+class UpdateNetworkJobOffering(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = NetworkJobOffering.objects.all()
+    serializer_class = NetworkJobOfferingShowSerializer
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
