@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from accounts.serializers import UserMiniSerializer
+from job_profiles.serializers import JobProfileSerializer
 from .models import *
 
 
@@ -531,3 +532,65 @@ class NetworkJobOfferingShowSerializer(serializers.ModelSerializer):
             'created',
             'updated'
         ]
+
+
+class NetworkStaffCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkStaff
+        fields = [
+            'id',
+            'job',
+            'profile',
+            'is_active',
+            'joined'
+        ]
+
+
+class NetworkStaffShowSerializer(serializers.ModelSerializer):
+    job = NetworkJobShowSerializer(read_only=True)
+    profile = JobProfileSerializer(read_only=True)
+    class Meta:
+        model = NetworkStaff
+        fields = [
+            'id',
+            'job',
+            'profile',
+            'application_id',
+            'promoted_count',
+            'demoted_count',
+            'employee_score',
+            'is_active',
+            'joined',
+            'updated'
+        ]
+
+
+class NetworkStaffUpdateSerializer(serializers.ModelSerializer):
+    profile = JobProfileSerializer(read_only=True)
+    class Meta:
+        model = NetworkStaff
+        fields = [
+            'id',
+            'job',
+            'profile',
+            'application_id',
+            'promoted_count',
+            'demoted_count',
+            'employee_score',
+            'is_active',
+            'joined',
+            'updated'
+        ]
+    
+    def update(self, instance, validated_data):
+        job = instance.job
+        instance.job = validated_data.get('job', instance.job)
+        if instance.job.actual_salary >= job.actual_salary:
+            instance.promoted_count += 1
+        else:
+            instance.demoted_count += 1
+
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+        instance.employee_score = validated_data.get('employee_score', instance.employee_score)
+        instance.save()
+        return instance

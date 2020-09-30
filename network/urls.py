@@ -37,4 +37,10 @@ urlpatterns = [
     path('jobs/offerings/all/', ListNetworkJobOffering.as_view(), name='list_network_job_offerings'),
     path('jobs/offerings/create/', CreateNetworkJobOffering.as_view(), name='create_network_job_offerings'),
     path('jobs/offerings/detail/<slug:id>/', UpdateNetworkJobOffering.as_view(), name='update_network_job_offerings'),
+
+    # Staff
+    path('staff/all/', ListNetworkStaff.as_view(), name='list_staff',),
+    path('staff/create/', CreateNetworkStaff.as_view(), name='create_staff',),
+    path('staff/detail/<slug:id>/', ShowNetworkStaff.as_view(), name='show_staff',),
+    path('staff/update/<slug:id>/', UpdateNetworkStaff.as_view(), name='update_staff',),
 ]

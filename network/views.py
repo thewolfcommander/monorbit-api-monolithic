@@ -215,3 +215,42 @@ class UpdateNetworkJobOffering(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+
+class CreateNetworkStaff(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = NetworkStaff.objects.all()
+    serializer_class = NetworkStaffCreateSerializer
+
+
+class ListNetworkStaff(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = NetworkStaff.objects.all().order_by('-updated')
+    serializer_class = NetworkStaffShowSerializer
+    filterset_fields = [
+        'job',
+        'job__job_name',
+        'job__job_type',
+        'is_active',
+        'application_id',
+        'promoted_count',
+        'demoted_count',
+        'employee_score'
+    ]
+
+
+class ShowNetworkStaff(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = NetworkStaff.objects.all().order_by('-updated')
+    serializer_class = NetworkStaffShowSerializer
+    lookup_field = 'id'
+
+
+class UpdateNetworkStaff(generics.UpdateAPIView, generics.DestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = NetworkStaff.objects.all()
+    serializer_class = NetworkStaffUpdateSerializer
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)

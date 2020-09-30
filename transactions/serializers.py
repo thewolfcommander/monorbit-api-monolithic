@@ -4,6 +4,8 @@ from .models import *
 from accounts.serializers import UserMiniSerializer
 from network.serializers import MiniNetworkSerializer
 
+from job_profiles.serializers import DeliveryBoyShowSerializer, PermanentEmployeeShowSerializer, FreelancerShowSerializer
+
 class CreateNetworkFollowerSerializer(serializers.ModelSerializer):
     user = UserMiniSerializer(read_only=True)
     class Meta:
@@ -39,3 +41,17 @@ class ShowNetworkFollowerSerializer(serializers.ModelSerializer):
             'user',
             'created'
         ]
+
+    
+class CreateNetworkDeliveryBoyApplication(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkDeliveryBoyApplication
+        fields = [
+            'id',
+            'offering',
+            'delivery_boy',
+            'application_status',
+            'created'
+        ]
+    
+    # def create()

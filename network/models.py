@@ -4,6 +4,7 @@ from django.db.models.signals import pre_save
 from django.utils import timezone
 
 from accounts import models as acc_models
+from job_profiles.models import JobProfile
 from monorbit.utils import tools, validators
 
 phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -230,6 +231,25 @@ class NetworkJob(models.Model):
     def __str__(self):
         return str(self.id)
 
+    
+class NetworkStaff(models.Model):
+    """
+    This will be the staff of the network
+    """
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    job = models.ForeignKey(NetworkJob, on_delete=models.CASCADE)
+    profile = models.ForeignKey(JobProfile, on_delete=models.CASCADE)
+    application_id = models.CharField(max_length=20, null=True, blank=True)
+    promoted_count = models.IntegerField(default=0)
+    demoted_count = models.IntegerField(default=0)
+    employee_score = models.IntegerField(default=10, help_text="This score would be given to employee out of 10.")
+    is_active = models.BooleanField(default=True)
+    joined = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.id
+
 
 class NetworkJobOffering(models.Model):
     """
@@ -292,6 +312,7 @@ pre_save.connect(instance_id_generator, sender=NetworkOperationLocation)
 pre_save.connect(instance_id_generator, sender=NetworkOperationTiming)
 pre_save.connect(instance_id_generator, sender=NetworkReview)
 pre_save.connect(instance_id_generator, sender=NetworkJob)
+pre_save.connect(instance_id_generator, sender=NetworkStaff)
 pre_save.connect(instance_id_generator, sender=NetworkJobOffering)
 
 pre_save.connect(image_label_generator, sender=NetworkImage)

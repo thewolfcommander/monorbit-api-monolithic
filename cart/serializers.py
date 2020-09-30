@@ -29,6 +29,17 @@ class ProductEntryCreateSerializer(serializers.ModelSerializer):
 
         return instance
 
+
+class ProductEntryTinyCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductEntry
+        fields = [
+            'id',
+            'product',
+            'quantity',
+            'cost'
+        ]
+
     
 class ProductEntryShowSerializer(serializers.ModelSerializer):
     product = ProductShowSerializer(read_only=True)
@@ -57,7 +68,7 @@ class ProductEntryTinySerializer(serializers.ModelSerializer):
     
 class CartCreateSerializer(serializers.ModelSerializer):
     # user = UserMiniSerializer(read_only=True)
-    products = ProductEntryTinySerializer(many=True, required=False)
+    products = ProductEntryTinyCreateSerializer(many=True, required=False)
     class Meta:
         model = Cart
         fields = [
@@ -90,19 +101,26 @@ class CartCreateSerializer(serializers.ModelSerializer):
                 instance.shipping = 0.00
                 instance.total = 0.00
                 instance.discount = 0.00
-                instance.productentry_set.all().delete()
+                try:
+                    instance.productentry_set.all().delete()
+                except:
+                    pass
                 if products is not None:
-                    print(products)
                     for p in products:
-                        pd = p.get('product')
+                        pd = p.get('product', None)
                         quan = p.get('quantity')
-                        try:
-                            pe = ProductEntry.objects.get(product=pd, cart=instance)
-                            pe.delete()
-                            pe = ProductEntry.objects.create(**p, cart=instance)
-                            pe.save()
-                        except:
-                            pe = ProductEntry.objects.create(**p, cart=instance)
+                        print(p.get('product'))
+                        if pd is not None:
+                            try:
+                                pe = ProductEntry.objects.get(product=pd, cart=instance)
+                                pe.delete()
+                                pe = ProductEntry.objects.create(**p, cart=instance)
+                                pe.save()
+                            except:
+                                pe = ProductEntry.objects.create(**p, cart=instance)
+                        else:
+                            print("Breakin")
+                            break
                         count += 1
                         sub_total = sub_total + float(pe.cost)
 
