@@ -31,4 +31,4 @@ def fetch_payment():
     instance = client.payment.fetch('pay_FgwKwl6nfY5f4Z')
     return instance
 
-print(fetch_payment())
+# print(fetch_payment())

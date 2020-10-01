@@ -11,6 +11,7 @@ class Address(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255, null=True, blank=True)
+    alt_name = models.CharField(max_length=255, null=True, blank=True)
     address_1 = models.CharField(max_length=255, null=True, blank=True)
     address_2 = models.CharField(max_length=255, null=True, blank=True)
     landmark = models.CharField(max_length=255, null=True, blank=True)

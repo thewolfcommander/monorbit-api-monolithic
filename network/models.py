@@ -47,6 +47,7 @@ class Network(models.Model):
     """
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     urlid = models.CharField(max_length=255, unique=True, blank=True)
+    network_url = models.URLField(null=True, blank=True)
     user = models.ForeignKey(acc_models.User, on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey(NetworkCategory, on_delete=models.CASCADE, null=True, blank=True)
     network_type = models.ForeignKey(NetworkType, on_delete=models.CASCADE, null=True, blank=True)

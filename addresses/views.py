@@ -19,6 +19,7 @@ class ListAllAddresses(generics.ListAPIView):
     filterset_fields = [
         'user',
         'name',
+        'alt_name',
         'landmark',
         'city',
         'state',

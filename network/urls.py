@@ -29,7 +29,6 @@ urlpatterns = [
     path('create/location/', CreateNetworkOperationLocation.as_view(), name='create_network_image'),
     path('create/review/', CreateNetworkReview.as_view(), name='create_network_review'),
 
-
     # Network Jobs
     path('jobs/all/', ListNetworkJob.as_view(), name='list_network_jobs'),
     path('jobs/create/', CreateNetworkJob.as_view(), name='create_network_jobs'),
