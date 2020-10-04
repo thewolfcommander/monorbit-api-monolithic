@@ -108,7 +108,7 @@ class RegisterView(APIView):
                     'status': True,
                     "message": "OTP Sent to Mobile Number",
                     "otp": otp_obj.otp,
-                    'mobile_number': mobile,
+                    'mobile_number': usr.mobile_number,
                 }
                 return Response(data=data, status=201)
             else:
@@ -577,7 +577,8 @@ class UserLanguage(APIView):
             }, status = 400)
 
         try:
-            instance = acc_models.UserLocalization.objects.create(user=user)
+            print(acc_models.UserLocalization.objects.filter(user=user))
+            instance = acc_models.UserLocalization.objects.get(user=user)
             instance.communication_language_code = communication_language_code
             instance.interface_language_code = interface_language_code
             instance.save()
@@ -598,5 +599,5 @@ class UserLanguage(APIView):
                 'status': True,
                 'message': 'Language set successful.',
                 'communication_language_code': instance.communication_language_code,
-                'interface_language_code': instance.interface_language_co
+                'interface_language_code': instance.interface_language_code
             }, status=201)

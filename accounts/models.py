@@ -105,6 +105,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
+    def localization(self):
+        return self.userlocalization_set.all()
+
 
     
 def first_time_user_initializers(sender, instance, **kwargs):

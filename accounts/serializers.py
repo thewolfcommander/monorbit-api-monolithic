@@ -61,6 +61,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = acc_models.User
         fields = [
+            'country_code',
             'mobile_number',
             'password',
             'full_name',
@@ -88,7 +89,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
 
     
+class UserLocalizationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = acc_models.UserLocalization
+        fields = [
+            'communication_language_code',
+            'interface_language_code'
+        ]
+
+    
 class UserInfoSerializer(serializers.ModelSerializer):
+    localization = UserLocalizationSerializer(read_only=True, many=True)
     class Meta:
         model = acc_models.User
         fields = [
@@ -117,6 +128,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
             'registered_on',
             'last_logged_in_time',
             'updated_on',
+            'localization',
         ]
 
     def update(self, instance, validated_data):
