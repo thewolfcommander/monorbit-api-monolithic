@@ -16,4 +16,5 @@ urlpatterns = [
     path('reset-password/', ResetPasswordView.as_view(), name='reset_password'),
 
     path('sudo-mode/enter/', SudoModeAuthenticationView.as_view(), name='sudo_mode'),
+    path('user-language/', UserLanguage.as_view(), name='user_language'),
 ]

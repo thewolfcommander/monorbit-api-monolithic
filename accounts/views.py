@@ -8,8 +8,7 @@ from rest_framework_jwt.utils import jwt_encode_handler, jwt_payload_handler
 from . import models as acc_models
 from .permissions import IsOwner
 from . import serializers as acc_serializers
-from monorbit.utils import tools, sms
-
+from monorbit.utils import tools, sms, data
 
 import logging
 logger = logging.getLogger(__name__)
@@ -537,3 +536,67 @@ class SudoModeAuthenticationView(APIView):
                 "status": False,
                 "message": "Your access is denied. Please check the password"
             }, status=403)
+
+        
+class UserLanguage(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+
+        try:
+            instance = acc_models.UserLocalization.objects.create(user=user)
+            return Response({
+                'status': True,
+                'user': user.mobile_number,
+                'communication_language_code': instance.communication_language_code,
+                'interface_language_code': instance.interface_language_code,
+            }, status=200)
+        except acc_models.UserLocalization.DoesNotExist:
+            return Response({
+                'status': False,
+                'message': 'Localization not found for current user.',
+            }, status=400)
+
+
+    def post(self, request, format=None):
+        user = request.user
+        communication_language_code = request.data.get('communication_language_code', None)
+        interface_language_code = request.data.get('interface_language_code', None)
+
+        if communication_language_code is None:
+            return Response({
+                'status': False,
+                'message': 'No communication language provided. Please try again by providing a valid language.'
+            }, status=400)
+
+        if interface_language_code is None:
+            return Response({
+                'status': False,
+                'message': 'No interface language provided. Please try again by providing a valid language.'
+            }, status = 400)
+
+        try:
+            instance = acc_models.UserLocalization.objects.create(user=user)
+            instance.communication_language_code = communication_language_code
+            instance.interface_language_code = interface_language_code
+            instance.save()
+            return Response({
+                'status': True,
+                'message': 'Language set successful.',
+                'communication_language_code': instance.communication_language_code,
+                'interface_language_code': instance.interface_language_code
+            }, status=200)
+        except acc_models.UserLocalization.DoesNotExist:
+            instance = acc_models.UserLocalization.objects.create(
+                user=user,
+                communication_language_code=communication_language_code,
+                interface_language_code=interface_language_code,
+            )
+
+            return Response({
+                'status': True,
+                'message': 'Language set successful.',
+                'communication_language_code': instance.communication_language_code,
+                'interface_language_code': instance.interface_language_co
+            }, status=201)

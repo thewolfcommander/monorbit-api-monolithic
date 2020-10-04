@@ -9,6 +9,7 @@ from django.db.models.signals import pre_save
 from django.utils import timezone
 
 from monorbit.utils import tools, validators
+from monorbit.utils.data.languages import LANGUAGES
 
 import logging
 logger = logging.getLogger(__name__)
@@ -124,6 +125,7 @@ class PasswordResetToken(models.Model):
     def __str__(self):
         return str(self.id)
 
+
 class EmailVerifyOTP(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     otp = models.CharField(max_length=10, null=True, blank=True)
@@ -136,6 +138,20 @@ class EmailVerifyOTP(models.Model):
 class PasswordUpdateToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
+class UserLocalization(models.Model):
+    """
+    This model will keep track of the user's localization information
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    communication_language_code = models.CharField(max_length=5, null=True, blank=True, choices=LANGUAGES, default='en')
+    interface_language_code = models.CharField(max_length=5, null=True, blank=True, choices=LANGUAGES, default='en')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.id)
