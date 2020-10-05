@@ -1,0 +1,1 @@
+ssh -i "monorbit-alpha.pem" ubuntu@ec2-34-212-227-245.us-west-2.compute.amazonaws.com

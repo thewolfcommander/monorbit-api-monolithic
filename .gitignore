@@ -133,3 +133,5 @@ dmypy.json
 # Custom
 
 ./deploy.sh
+
+./monorbit-alpha.pem
