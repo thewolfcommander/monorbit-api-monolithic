@@ -1,0 +1,1 @@
+curl +sL https://raw.githubusercontent.com/monorbit/monorbit-api-monolithic/master/deploy/setup.sh?token=AJIVGJISVUBDYPFVL2JSM5K7PL36U | sudo bash -

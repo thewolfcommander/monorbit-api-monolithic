@@ -9,15 +9,15 @@ PROJECT_BASE_PATH='/usr/local/apps/monorbit-api-monolithic'
 
 echo "Installing dependencies..."
 apt-get update
-apt-get install -y python3-dev python3-venv sqlite python3-pip supervisor nginx git
+apt-get install -y python3-dev sqlite python3-pip supervisor nginx git
 
 # Create project directory
 mkdir -p $PROJECT_BASE_PATH
 git clone $PROJECT_GIT_URL $PROJECT_BASE_PATH
 
 # Create virtual environment
-mkdir -p $PROJECT_BASE_PATH/env
-python3 -m venv $PROJECT_BASE_PATH/env
+pip3 install virtualenv
+python3 -m virtualenv $PROJECT_BASE_PATH/env
 
 # Install python packages
 $PROJECT_BASE_PATH/env/bin/pip install -r $PROJECT_BASE_PATH/requirements.txt
