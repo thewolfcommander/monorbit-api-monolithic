@@ -19,7 +19,8 @@ SECRET_KEY = config('SECRET_KEY', 'SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = ['monorbit-alpha.herokuapp.com', 'localhost', '127.0.0.1', '34.212.227.245']
+# ALLOWED_HOSTS = ['monorbit-alpha.herokuapp.com', 'localhost', '127.0.0.1', '34.212.227.245']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
