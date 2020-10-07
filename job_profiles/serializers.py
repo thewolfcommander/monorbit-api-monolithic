@@ -60,6 +60,12 @@ class DeliveryBoyVehicleSerializer(serializers.ModelSerializer):
             'updated',
         ]
 
+    def create(self, validated_data):
+        instance = DeliveryBoyVehicle.objects.create(**validated_data)
+        instance.delivery_boy.job_profile.is_vehicle = True
+        instance.delivery_boy.job_profile.save()
+        return instance
+
     
 class DeliveryBoyShowSerializer(serializers.ModelSerializer):
     job_profile = JobProfileSerializer()
