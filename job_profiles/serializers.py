@@ -127,7 +127,12 @@ class DeliveryBoyCreateSerializer(serializers.ModelSerializer):
         profile = JobProfile.objects.filter(id=job_profile).first()
         print(profile)
         if profile.is_delivery_boy:
-            delivery_boy = DeliveryBoy.objects.create(**validated_data)
+            try:
+                delivery_boy = DeliveryBoy.objects.get(job_profile=profile)
+            except DeliveryBoy.DoesNotExist:
+                profile.is_delivery_boy = True
+                profile.save()
+                delivery_boy = DeliveryBoy.objects.create(**validated_data)
         else:
             profile.is_delivery_boy = True
             profile.save()
@@ -353,7 +358,12 @@ class PermanentEmployeeCreateSerializer(serializers.ModelSerializer):
         skills = validated_data.pop('skills', None)
         experiences = validated_data.pop('experiences', None)
         if profile.is_permanent_employee:
-            permanent_employee = PermanentEmployee.objects.create(**validated_data)
+            try:
+                permanent_employee = PermanentEmployee.objects.get(job_profile=profile)
+            except PermanentEmployee.DoesNotExist:
+                profile.is_permanent_employee = True
+                profile.save()
+                permanent_employee = PermanentEmployee.objects.create(**validated_data)
         else:
             profile.is_permanent_employee = True
             profile.save()
@@ -600,7 +610,12 @@ class FreelancerCreateSerializer(serializers.ModelSerializer):
         specifications = validated_data.pop('specifications', None)
 
         if profile.is_freelancer:
-            freelancer = Freelancer.objects.create(**validated_data)
+            try:
+                freelancer = Freelancer.objects.get(job_profile=profile)
+            except Freelancer.DoesNotExist:
+                profile.is_freelancer = True
+                profile.save()
+                freelancer = Freelancer.objects.create(**validated_data)
         else:
             profile.is_freelancer = True
             profile.save()
