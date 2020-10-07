@@ -120,6 +120,9 @@ pre_save.connect(first_time_user_initializers, sender=User)
 
 
 
+
+
+
 class PasswordResetToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=10, null=True, blank=True)

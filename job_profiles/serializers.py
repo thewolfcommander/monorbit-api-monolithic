@@ -1,17 +1,7 @@
 from rest_framework import serializers
 
 from accounts.serializers import UserMiniSerializer
-from job_profiles.models import (
-    JobProfile,
-    DeliveryBoy,
-    DeliveryBoyVehicle,
-    PermanentEmployee,
-    PermanentEmployeeFile,
-    PermanentEmployeeSpecification,
-    Freelancer,
-    FreelancerFile,
-    FreelancerSpecification
-)
+from job_profiles.models import *
 
 
 import logging
@@ -158,6 +148,48 @@ class PermanentEmployeeSpecificationSerializer(serializers.ModelSerializer):
         ]
 
 
+class PermanentEmployeeSkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PermanentEmployeeSkill
+        fields = [
+            'id',
+            'level',
+            'label',
+            'description',
+            'added'
+        ]
+
+
+class PermanentEmployeeExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PermanentEmployeeExperience
+        fields = [
+            'id',
+            'title',
+            'organization',
+            'location',
+            'start_date',
+            'end_date',
+            'description',
+            'added'
+        ]
+
+
+class PermanentEmployeeEducationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PermanentEmployeeEducation
+        fields = [
+            'id',
+            'title',
+            'spcialization',
+            'organization',
+            'location',
+            'start_date',
+            'end_date',
+            'description',
+            'added'
+        ]
+
     
 class PermanentEmployeeFileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -175,6 +207,9 @@ class PermanentEmployeeShowSerializer(serializers.ModelSerializer):
     job_profile = JobProfileSerializer()
     specifications = PermanentEmployeeSpecificationSerializer(many=True)
     files = PermanentEmployeeFileSerializer(many=True)
+    educations = PermanentEmployeeEducationSerializer(many=True)
+    skills = PermanentEmployeeSkillSerializer(many=True)
+    experiences = PermanentEmployeeExperienceSerializer(many=True)
     class Meta:
         model = PermanentEmployee
         fields = [
@@ -186,7 +221,10 @@ class PermanentEmployeeShowSerializer(serializers.ModelSerializer):
             'updated',
             'short_bio',
             'files',
-            'specifications'
+            'specifications',
+            'educations',
+            'skills',
+            'experiences',
         ]
 
     def update(self, instance, validated_data):
@@ -199,6 +237,15 @@ class PermanentEmployeeShowSerializer(serializers.ModelSerializer):
         files_data = list(files_data)
         specifications_data = (instance.specifications).all()
         specifications_data = list(specifications_data)
+        
+        skills_data = (instance.skills).all()
+        skills_data = list(skills_data)
+        
+        educations_data = (instance.educations).all()
+        educations_data = list(educations_data)
+
+        experiences_data = (instance.experiences).all()
+        experiences_data = list(experiences_data)
         
         instance.is_recharged = validated_data.get('is_recharged', instance.is_recharged)
         instance.short_bio = validated_data.get('short_bio', instance.short_bio)
@@ -239,12 +286,46 @@ class PermanentEmployeeShowSerializer(serializers.ModelSerializer):
                 fl.description = f.get('description', fl.description)
                 fl.save()
 
+        if skills is not None:
+            for f in skills:
+                fl = skills_data.pop(0)
+                fl.level = f.get('level', fl.level) 
+                fl.label = f.get('label', fl.label) 
+                fl.description = f.get('description', fl.description)
+                fl.save()
+
+        if experiences is not None:
+            for f in experiences:
+                fl = experiences_data.pop(0)
+                fl.title = f.get('title', fl.level) 
+                fl.organization = f.get('organization', fl.organization) 
+                fl.location = f.get('location', fl.location) 
+                fl.start_date = f.get('start_date', fl.start_date) 
+                fl.end_date = f.get('end_date', fl.end_date) 
+                fl.description = f.get('description', fl.description)
+                fl.save()
+
+        if educations is not None:
+            for f in educations:
+                fl = educations_data.pop(0)
+                fl.title = f.get('title', fl.level) 
+                fl.specialization = f.get('specialization', fl.specialization) 
+                fl.organization = f.get('organization', fl.organization)
+                fl.location = f.get('location', fl.location) 
+                fl.start_date = f.get('start_date', fl.start_date) 
+                fl.end_date = f.get('end_date', fl.end_date) 
+                fl.description = f.get('description', fl.description)
+                fl.save()
+
         return instance
     
   
 class PermanentEmployeeCreateSerializer(serializers.ModelSerializer):
     specifications = PermanentEmployeeSpecificationSerializer(many=True, required=False)
     files = PermanentEmployeeFileSerializer(many=True, required=False)
+    educations = PermanentEmployeeEducationSerializer(many=True, required=False)
+    skills = PermanentEmployeeSkillSerializer(many=True, required=False)
+    experiences = PermanentEmployeeExperienceSerializer(many=True, required=False)
     class Meta:
         model = PermanentEmployee
         fields = [
@@ -256,7 +337,10 @@ class PermanentEmployeeCreateSerializer(serializers.ModelSerializer):
             'updated',
             'short_bio',
             'files',
-            'specifications'
+            'specifications',
+            'educations',
+            'skills',
+            'experiences'
         ]
 
     def create(self, validated_data):
@@ -265,6 +349,9 @@ class PermanentEmployeeCreateSerializer(serializers.ModelSerializer):
         
         files = validated_data.pop('files', None)
         specifications = validated_data.pop('specifications', None)
+        educations = validated_data.pop('educations', None)
+        skills = validated_data.pop('skills', None)
+        experiences = validated_data.pop('experiences', None)
         if profile.is_permanent_employee:
             permanent_employee = PermanentEmployee.objects.create(**validated_data)
         else:
@@ -279,6 +366,18 @@ class PermanentEmployeeCreateSerializer(serializers.ModelSerializer):
         if specifications is not None:
             for f in specifications:
                 PermanentEmployeeSpecification.objects.create(**f, permanent_employee=permanent_employee)
+
+        if skills is not None:
+            for f in skills:
+                PermanentEmployeeSkill.objects.create(**f, permanent_employee=permanent_employee)
+
+        if educations is not None:
+            for f in educations:
+                PermanentEmployeeEducation.objects.create(**f, permanent_employee=permanent_employee)
+
+        if experiences is not None:
+            for f in experiences:
+                PermanentEmployeeExperience.objects.create(**f, permanent_employee=permanent_employee)
         return permanent_employee
 
     
@@ -295,6 +394,48 @@ class FreelancerSpecificationSerializer(serializers.ModelSerializer):
             'added'
         ]
 
+
+class FreelancerSkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FreelancerSkill
+        fields = [
+            'id',
+            'level',
+            'label',
+            'description',
+            'added'
+        ]
+
+
+class FreelancerExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FreelancerExperience
+        fields = [
+            'id',
+            'title',
+            'organization',
+            'location',
+            'start_date',
+            'end_date',
+            'description',
+            'added'
+        ]
+
+
+class FreelancerEducationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FreelancerEducation
+        fields = [
+            'id',
+            'title',
+            'spcialization',
+            'organization',
+            'location',
+            'start_date',
+            'end_date',
+            'description',
+            'added'
+        ]
 
     
 class FreelancerFileSerializer(serializers.ModelSerializer):
@@ -316,6 +457,9 @@ class FreelancerShowSerializer(serializers.ModelSerializer):
     job_profile = JobProfileSerializer()
     specifications = FreelancerSpecificationSerializer(many=True)
     files = FreelancerFileSerializer(many=True)
+    educations = FreelancerEducationSerializer(many=True)
+    skills = FreelancerSkillSerializer(many=True)
+    experiences = FreelancerExperienceSerializer(many=True)
     class Meta:
         model = Freelancer
         fields = [
@@ -328,6 +472,9 @@ class FreelancerShowSerializer(serializers.ModelSerializer):
             'short_bio',
             'files',
             'specifications',
+            'educations',
+            'skills',
+            'experiences',
         ]
 
     def update(self, instance, validated_data):
@@ -340,6 +487,15 @@ class FreelancerShowSerializer(serializers.ModelSerializer):
         files_data = list(files_data)
         specifications_data = (instance.specifications).all()
         specifications_data = list(specifications_data)
+
+        skills_data = (instance.skills).all()
+        skills_data = list(skills_data)
+        
+        educations_data = (instance.educations).all()
+        educations_data = list(educations_data)
+
+        experiences_data = (instance.experiences).all()
+        experiences_data = list(experiences_data)
         
         instance.is_recharged = validated_data.get('is_recharged', instance.is_recharged)
         instance.short_bio = validated_data.get('short_bio', instance.short_bio)
@@ -380,12 +536,46 @@ class FreelancerShowSerializer(serializers.ModelSerializer):
                 fl.description = f.get('description', fl.description)
                 fl.save()
 
+        if skills is not None:
+            for f in skills:
+                fl = skills_data.pop(0)
+                fl.level = f.get('level', fl.level) 
+                fl.label = f.get('label', fl.label) 
+                fl.description = f.get('description', fl.description)
+                fl.save()
+
+        if experiences is not None:
+            for f in experiences:
+                fl = experiences_data.pop(0)
+                fl.title = f.get('title', fl.level) 
+                fl.organization = f.get('organization', fl.organization) 
+                fl.location = f.get('location', fl.location) 
+                fl.start_date = f.get('start_date', fl.start_date) 
+                fl.end_date = f.get('end_date', fl.end_date) 
+                fl.description = f.get('description', fl.description)
+                fl.save()
+
+        if educations is not None:
+            for f in educations:
+                fl = educations_data.pop(0)
+                fl.title = f.get('title', fl.level) 
+                fl.specialization = f.get('specialization', fl.specialization) 
+                fl.organization = f.get('organization', fl.organization)
+                fl.location = f.get('location', fl.location) 
+                fl.start_date = f.get('start_date', fl.start_date) 
+                fl.end_date = f.get('end_date', fl.end_date) 
+                fl.description = f.get('description', fl.description)
+                fl.save()
+
         return instance
 
     
 class FreelancerCreateSerializer(serializers.ModelSerializer):
     specifications = FreelancerSpecificationSerializer(many=True, required=False)
     files = FreelancerFileSerializer(many=True, required=False)
+    educations = FreelancerEducationSerializer(many=True, required=False)
+    skills = FreelancerSkillSerializer(many=True, required=False)
+    experiences = FreelancerExperienceSerializer(many=True, required=False)
     class Meta:
         model = Freelancer
         fields = [
@@ -397,7 +587,10 @@ class FreelancerCreateSerializer(serializers.ModelSerializer):
             'updated',
             'short_bio',
             'files',
-            'specifications'
+            'specifications',
+            'educations',
+            'skills',
+            'experiences'
         ]
 
     def create(self, validated_data):
@@ -420,4 +613,16 @@ class FreelancerCreateSerializer(serializers.ModelSerializer):
         if specifications is not None:
             for f in specifications:
                 FreelancerSpecification.objects.create(**f, freelancer=freelancer)
+
+        if skills is not None:
+            for f in skills:
+                FreelancerSkill.objects.create(**f, permanent_employee=permanent_employee)
+
+        if educations is not None:
+            for f in educations:
+                FreelancerEducation.objects.create(**f, permanent_employee=permanent_employee)
+
+        if experiences is not None:
+            for f in experiences:
+                FreelancerExperience.objects.create(**f, permanent_employee=permanent_employee)
         return freelancer

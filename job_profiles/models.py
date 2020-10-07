@@ -144,6 +144,18 @@ class PermanentEmployee(CommonInfo):
     def specifications(self):
         return self.permanentemployeespecification_set.all()
 
+    @property
+    def educations(self):
+        return self.permanentemployeeeducation_set.all()
+
+    @property
+    def skills(self):
+        return self.permanentemployeeskill_set.all()
+
+    @property
+    def experiences(self):
+        return self.permanentemployeeexperience_set.all()
+
     
 class PermanentEmployeeSpecification(models.Model):
     """
@@ -170,6 +182,77 @@ class PermanentEmployeeSpecification(models.Model):
     def __str__(self):
         return str(self.id)
 
+
+class PermanentEmployeeSkill(models.Model):
+    """
+    These will be different dynamic fields for permanent employee profile
+    """
+    LEVEL = [
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('expert', 'Expert'),
+    ]
+    id  = models.CharField(max_length=50, primary_key=True, unique=True, blank=True)
+    permanent_employee = models.ForeignKey(PermanentEmployee, on_delete=models.CASCADE)
+    level = models.CharField(max_length=50, choices=LEVEL, default="beginner")
+    label = models.CharField(max_length=255, null=True, blank=True, help_text="Label of the Specification")
+    description = models.TextField(null=True, blank=True, help_text="Description of the Specification")
+    added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Permanent Employee Skill"
+        verbose_name_plural = "Permanent Employee Skills"
+
+    
+    def __str__(self):
+        return str(self.id)
+
+
+class PermanentEmployeeExperience(models.Model):
+    """
+    These will be different dynamic fields for permanent employee profile
+    """
+    id  = models.CharField(max_length=50, primary_key=True, unique=True, blank=True)
+    permanent_employee = models.ForeignKey(PermanentEmployee, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, null=True, blank=True, help_text="Title of the Specification")
+    organization = models.CharField(max_length=255, null=True, blank=True, help_text=" of the Specification")
+    location = models.CharField(max_length=255, null=True, blank=True)
+    start_date = models.DateField(default='10-08-2020')
+    end_date = models.DateField(default='10-08-2020')
+    description = models.TextField(null=True, blank=True, help_text="Description of the Specification")
+    added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Permanent Employee Experience"
+        verbose_name_plural = "Permanent Employee Experience"
+
+    
+    def __str__(self):
+        return str(self.id)
+
+
+class PermanentEmployeeEducation(models.Model):
+    """
+    These will be different dynamic fields for permanent employee profile
+    """
+    id  = models.CharField(max_length=50, primary_key=True, unique=True, blank=True)
+    permanent_employee = models.ForeignKey(PermanentEmployee, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, null=True, blank=True, help_text="Title of the Specification")
+    specialization = models.CharField(max_length=255, null=True, blank=True, help_text="Title of the Specification")
+    organization = models.CharField(max_length=255, null=True, blank=True, help_text=" of the Specification")
+    location = models.CharField(max_length=255, null=True, blank=True)
+    start_date = models.DateField(default='10-08-2020')
+    end_date = models.DateField(default='10-08-2020')
+    description = models.TextField(null=True, blank=True, help_text="Description of the Specification")
+    added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Permanent Employee Education"
+        verbose_name_plural = "Permanent Employee Education"
+
+    
+    def __str__(self):
+        return str(self.id)
     
 
 class PermanentEmployeeFile(models.Model):
@@ -273,6 +356,77 @@ class FreelancerFile(models.Model):
         return str(self.id)
 
 
+class FreelancerSkill(models.Model):
+    """
+    These will be different dynamic fields for Freelancer profile
+    """
+    LEVEL = [
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('expert', 'Expert'),
+    ]
+    id  = models.CharField(max_length=50, primary_key=True, unique=True, blank=True)
+    freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE)
+    level = models.CharField(max_length=50, choices=LEVEL, default="beginner")
+    label = models.CharField(max_length=255, null=True, blank=True, help_text="Label of the Specification")
+    description = models.TextField(null=True, blank=True, help_text="Description of the Specification")
+    added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Freelancer Skill"
+        verbose_name_plural = "Freelancer Skills"
+
+    
+    def __str__(self):
+        return str(self.id)
+
+
+class FreelancerExperience(models.Model):
+    """
+    These will be different dynamic fields for Freelancer profile
+    """
+    id  = models.CharField(max_length=50, primary_key=True, unique=True, blank=True)
+    freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, null=True, blank=True, help_text="Title of the Specification")
+    organization = models.CharField(max_length=255, null=True, blank=True, help_text=" of the Specification")
+    location = models.CharField(max_length=255, null=True, blank=True)
+    start_date = models.DateField(default='10-08-2020')
+    end_date = models.DateField(default='10-08-2020')
+    description = models.TextField(null=True, blank=True, help_text="Description of the Specification")
+    added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Freelancer Experience"
+        verbose_name_plural = "Freelancer Experience"
+
+    
+    def __str__(self):
+        return str(self.id)
+
+
+class FreelancerEducation(models.Model):
+    """
+    These will be different dynamic fields for Freelancer profile
+    """
+    id  = models.CharField(max_length=50, primary_key=True, unique=True, blank=True)
+    freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, null=True, blank=True, help_text="Title of the Specification")
+    specialization = models.CharField(max_length=255, null=True, blank=True, help_text="Title of the Specification")
+    organization = models.CharField(max_length=255, null=True, blank=True, help_text=" of the Specification")
+    location = models.CharField(max_length=255, null=True, blank=True)
+    start_date = models.DateField(default='10-08-2020')
+    end_date = models.DateField(default='10-08-2020')
+    description = models.TextField(null=True, blank=True, help_text="Description of the Specification")
+    added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Freelancer Education"
+        verbose_name_plural = "Freelancer Education"
+
+    
+    def __str__(self):
+        return str(self.id)
+
     
 
 def pre_save_id_receiver(sender, instance, **kwargs):
@@ -285,6 +439,12 @@ pre_save.connect(pre_save_id_receiver, sender=DeliveryBoyVehicle)
 pre_save.connect(pre_save_id_receiver, sender=PermanentEmployee)
 pre_save.connect(pre_save_id_receiver, sender=PermanentEmployeeFile)
 pre_save.connect(pre_save_id_receiver, sender=PermanentEmployeeSpecification)
+pre_save.connect(pre_save_id_receiver, sender=PermanentEmployeeSkill)
+pre_save.connect(pre_save_id_receiver, sender=PermanentEmployeeEducation)
+pre_save.connect(pre_save_id_receiver, sender=PermanentEmployeeExperience)
 pre_save.connect(pre_save_id_receiver, sender=Freelancer)
 pre_save.connect(pre_save_id_receiver, sender=FreelancerFile)
 pre_save.connect(pre_save_id_receiver, sender=FreelancerSpecification)
+pre_save.connect(pre_save_id_receiver, sender=FreelancerSkill)
+pre_save.connect(pre_save_id_receiver, sender=FreelancerEducation)
+pre_save.connect(pre_save_id_receiver, sender=FreelancerExperience)
