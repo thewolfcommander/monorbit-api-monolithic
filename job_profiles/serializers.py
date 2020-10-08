@@ -192,7 +192,7 @@ class PermanentEmployeeEducationSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
-            'spcialization',
+            'specialization',
             'organization',
             'location',
             'start_date',
@@ -444,7 +444,7 @@ class FreelancerEducationSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
-            'spcialization',
+            'specialization',
             'organization',
             'location',
             'start_date',
