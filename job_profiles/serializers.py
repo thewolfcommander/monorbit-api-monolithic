@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from accounts.serializers import UserMiniSerializer
 from job_profiles.models import *
@@ -39,9 +40,9 @@ class JobProfileSerializer(serializers.ModelSerializer):
         user = request.user
         try:
             instance = JobProfile.objects.create(**validated_data, user=user)
-        except:
-            instance = JobProfile.objects.get(user=user)
-        return instance
+            return instance
+        except Exception as e:
+            raise ValidationError("Cannot create job profile. Reason: {}".format(e))
 
     
 class DeliveryBoyVehicleSerializer(serializers.ModelSerializer):
