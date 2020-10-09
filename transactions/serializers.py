@@ -8,7 +8,7 @@ from network.models import NetworkStaff
 from accounts.serializers import UserMiniSerializer
 from network.serializers import MiniNetworkSerializer, NetworkJobOfferingShowSerializer
 
-from job_profiles.serializers import DeliveryBoyShowSerializer, PermanentEmployeeShowSerializer, FreelancerShowSerializer
+from job_profiles.serializers import *
 
 class CreateNetworkFollowerSerializer(serializers.ModelSerializer):
     user = UserMiniSerializer(read_only=True)
