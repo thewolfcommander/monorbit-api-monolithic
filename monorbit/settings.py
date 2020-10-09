@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'addresses',
     'cart',
+    'core',
     'greivances',
     'job_profiles',
     'network',

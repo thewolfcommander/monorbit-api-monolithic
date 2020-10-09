@@ -22,17 +22,17 @@ class CustomUserManager(BaseUserManager):
     """
     This manager is for handling user authentication model and functioning
     """
-    def create_user(self, email, mobile_number, password, **extra_fields):
+    def create_user(self, email, mobile_number, full_name, password, **extra_fields):
 
-        user = self.model(mobile_number=mobile_number, email=email, *extra_fields)
+        user = self.model(mobile_number=mobile_number, email=email, full_name=full_name, *extra_fields)
         user.set_password(password)
         string = "MONO{}".format(str(mobile_number))
         user.hash_token = tools.label_gen(string)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, mobile_number, password, **extra_fields):
-        user = self.create_user(email, mobile_number, password, **extra_fields)
+    def create_superuser(self, email, mobile_number, full_name, password, **extra_fields):
+        user = self.create_user(email, mobile_number, full_name, password, **extra_fields)
         user.is_admin=True
         user.is_superuser = True
         user.save(using=self._db)
@@ -52,6 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('Transgender', 'Transgender'),
         ('Custom', 'Custom'),
     ]
+    id = models.CharField(max_length=20, blank=True, unique=True, primary_key=True)
     hash_token = models.CharField(max_length=255, null=True, blank=True)
     full_name = models.CharField(max_length=255, null=True, blank=True, help_text="This will be the user full name", verbose_name="full_name")
     email = models.EmailField(
@@ -62,7 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
     )
     country_code = models.IntegerField(default=91, null=True, blank=True)
-    mobile_number = models.CharField(unique=True, primary_key=True, max_length=10, blank=True, help_text="This will be the user phone number", error_messages={'required': 'Please provide your mobile number.', 'unique': 'An account with this mobile number exist.', 'invalid': 'Mobile number should be valid'})
+    mobile_number = models.CharField(unique=True, max_length=10, blank=True, help_text="This will be the user phone number", error_messages={'required': 'Please provide your mobile number.', 'unique': 'An account with this mobile number exist.', 'invalid': 'Mobile number should be valid'})
     gender = models.CharField(max_length=30, null=True, blank=True, choices=GENDER_CHOICES, default='Male')
     dob = models.CharField(max_length=100, null=True, blank=True, default="22-01-2000")
     registration_reference = models.CharField(max_length=255, null=True, blank=True, default="None")    
@@ -98,6 +99,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     UNIQUE_TOGETHER = ['mobile_number', 'email']
     REQUIRED_FIELDS = ['email', 'full_name']
 
+    def __str__(self):
+        return str(self.id)
     
     @property
     def is_staff(self):
@@ -108,12 +111,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     def localization(self):
         return self.userlocalization_set.all()
 
-
     
 def first_time_user_initializers(sender, instance, **kwargs):
     if not instance.hash_token:
         string = "MONO{}".format(str(instance.mobile_number))
         instance.token = tools.label_gen(string)
+    
+    if not instance.id:
+        instance.id = tools.random_string_generator(14)
 
     
 pre_save.connect(first_time_user_initializers, sender=User)
