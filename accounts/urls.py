@@ -5,7 +5,7 @@ from .views import *
 app_name = 'accounts'
 
 urlpatterns = [
-    path('login/', LoginView.as_view(), name='login_view'),
+    path('login/test/', LoginView.as_view(), name='login_view'),
     path('logout/', LogoutView.as_view(), name='logout_view'),
     path('refresh-token/', RefreshToken.as_view(), name='refresh_token'),
     path('verify-token/', verify_jwt_token, name='verify_token'),
