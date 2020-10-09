@@ -1,7 +1,7 @@
 import requests
 from decouple import config
 
-from data.email_templates import *
+from monorbit.utils.data.email_templates import *
 
 API_KEY = config('MAILGUN_API_KEY')
 URL = config('MAILGUN_API_URL')

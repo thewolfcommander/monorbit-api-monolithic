@@ -82,6 +82,27 @@ class NetworkMembershipSubscription(models.Model):
     active = models.BooleanField(default=True)
 
 
+class NetworkMembershipOrderReciept(models.Model):
+    """
+    This model will keep record of the razorpay orders
+    """
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    order_id = models.CharField(max_length=50, null=True, blank=True)
+    entity = models.CharField(max_length=50, null=True, blank=True)
+    amount = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    amount_paid = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    amount_due = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=10, null=True, blank=True)
+    status = models.CharField(max_length=50, null=True, blank=True)
+    attempts = models.IntegerField(default=0, null=True, blank=True)
+    created_at_rzp = models.BigIntegerField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.id
+
+
 class NetworkMembershipInvoice(models.Model):
     """
     THis model will handle invoicing feature

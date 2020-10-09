@@ -125,6 +125,12 @@ class CreateNetworkMembershipActivity(APIView):
             }, status=400)
 
 
+class CreateRZPOrder(APIView):
+    permission_classes =[permissions.IsAuthenticated]
+
+    def post(self, request, format=None):
+        currency = 'INR'
+        pass
 
 
 class CreateNetworkMembershipSubscription(APIView):

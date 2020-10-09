@@ -17,6 +17,9 @@ urlpatterns = [
     path('forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset_password'),
 
+    path('verify-email/enter/', EmailVerificationEnter.as_view(), name='enter_email_verification'),
+    path('verify-email/verify/', VerifyEmailOTP.as_view(), name='verify_email_otp'),
+
     path('sudo-mode/enter/', SudoModeAuthenticationView.as_view(), name='sudo_mode'),
     path('user-language/', UserLanguage.as_view(), name='user_language'),
 ]
