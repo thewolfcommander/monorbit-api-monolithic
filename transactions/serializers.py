@@ -109,7 +109,7 @@ class CreateNetworkFreelancerApplication(serializers.ModelSerializer):
     
 class ShowNetworkDeliveryBoyApplication(serializers.ModelSerializer):
     offering = NetworkJobOfferingShowSerializer(read_only=True)
-    delivery_boy = DeliveryBoyShowSerializer(read_only=True)
+    delivery_boy = DeliveryBoyMiniSerializer(read_only=True)
     class Meta:
         model = NetworkDeliveryBoyApplication
         fields = [
@@ -161,7 +161,7 @@ class ShowNetworkDeliveryBoyApplication(serializers.ModelSerializer):
 
 class ShowNetworkPermanentEmployeeApplication(serializers.ModelSerializer):
     offering = NetworkJobOfferingShowSerializer(read_only=True)
-    permanent_employee = PermanentEmployeeShowSerializer(read_only=True)
+    permanent_employee = PermanentEmployeeMiniSerializer(read_only=True)
     class Meta:
         model = NetworkPermanentEmployeeApplication
         fields = [
@@ -213,7 +213,7 @@ class ShowNetworkPermanentEmployeeApplication(serializers.ModelSerializer):
 
 class ShowNetworkFreelancerApplication(serializers.ModelSerializer):
     offering = NetworkJobOfferingShowSerializer(read_only=True)
-    freelancer = FreelancerShowSerializer(read_only=True)
+    freelancer = FreelancerMiniSerializer(read_only=True)
     class Meta:
         model = NetworkFreelancerApplication
         fields = [

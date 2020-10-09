@@ -583,6 +583,52 @@ class FreelancerShowSerializer(serializers.ModelSerializer):
         return instance
 
 
+
+class FreelancerMiniSerializer(serializers.ModelSerializer):
+    job_profile = JobProfileSerializer()
+    class Meta:
+        model = Freelancer
+        fields = [
+            "id",
+            "job_profile",
+            "is_recharged",
+            "active",
+            "added",
+            "updated",
+            "short_bio"
+        ]
+
+
+class DeliveryBoyMiniSerializer(serializers.ModelSerializer):
+    job_profile = JobProfileSerializer()
+    class Meta:
+        model = DeliveryBoy
+        fields = [
+            "id",
+            "job_profile",
+            "is_recharged",
+            "active",
+            "added",
+            "updated",
+            "short_bio"
+        ]
+
+
+class PermanentEmployeeMiniSerializer(serializers.ModelSerializer):
+    job_profile = JobProfileSerializer()
+    class Meta:
+        model = PermanentEmployee
+        fields = [
+            "id",
+            "job_profile",
+            "is_recharged",
+            "active",
+            "added",
+            "updated",
+            "short_bio"
+        ]
+
+
 class FreelancerCreateSerializer(serializers.ModelSerializer):
     specifications = FreelancerSpecificationSerializer(many=True, required=False)
     files = FreelancerFileSerializer(many=True, required=False)
