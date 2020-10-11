@@ -1,6 +1,6 @@
-from django.contrib import admin
+# from django.contrib import admin
 
-from .models import *
+# from .models import *
 # Register your models here.
 
 # class NetworkMembershipPlanFeaturesInline(admin.TabularInline):
@@ -22,3 +22,12 @@ from .models import *
 # @admin.register(NetworkMembershipActivity)
 # class NetworkMembershipActivityAdmin(admin.ModelAdmin):
 #     list_display = ['id', 'relation', 'payment', 'created', 'active_till', 'active']
+
+ 
+from django.contrib import admin
+from django.apps import apps
+
+app = apps.get_app_config('premium')
+
+for model_name, model in app.models.items():
+    admin.site.register(model)

@@ -9,6 +9,15 @@ from monorbit.utils import tools
 import logging
 logger = logging.getLogger(__name__)
 
+
+class Wishlist(models.Model):
+    """
+    Wishlist Model
+    """
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    count = models.PositiveIntegerField(default=0)
+
     
 class Cart(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
