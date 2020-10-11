@@ -11,4 +11,10 @@ urlpatterns = [
 
     path('email/send/', SendEmail.as_view(), name='send_email'),
     path('email/all/', AllEmail.as_view(), name='all_email'),
+
+    path('user/devices/', ListCreateUserDeviceRegistration.as_view(), name='list_create_user_devices'),
+    path('user/devices/update/<slug:id>/', UpdateUserDeviceRegistration.as_view(), name='update_user_devices'),
+
+    path('user/activity/auth/', ListCreateUserLoginActivity.as_view(), name='list_create_user_login_activity'),
+    path('user/activity/auth/<int:id>/', UpdateUserLoginActivity.as_view(), name='update_user_login_activity'),
 ]

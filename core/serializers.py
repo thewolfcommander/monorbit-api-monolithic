@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import *
+from accounts.serializers import *
 
 
 class TipToGrowSerializer(serializers.ModelSerializer):
@@ -38,4 +39,41 @@ class EmailSentToUsersSerializer(serializers.ModelSerializer):
             'message',
             'sent_on',
             'is_success'
+        ]
+
+    
+class UserLoginActivitySerializer(serializers.ModelSerializer):
+    user = UserMiniSerializer(read_only=True)
+    class Meta:
+        model = UserLoginActivity
+        fields = [
+            'id',
+            'user',
+            'ip_address',
+            'os_platform',
+            'browser',
+            'is_logged_from_mobile',
+            'is_logged_from_web',
+            'timestamp'
+        ]
+
+    
+class UserDeviceRegistrationSerializer(serializers.ModelSerializer):
+    user = UserMiniSerializer(read_only=True)
+    class Meta:
+        model = UserDeviceRegistration
+        fields = [
+            'id',
+            'user',
+            'device_type',
+            'operating_system',
+            'browser',
+            'ip_addresss',
+            'lat',
+            'lng',
+            'device_language',
+            'user_agent',
+            'is_app',
+            'is_browser',
+            'timestamp'
         ]

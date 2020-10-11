@@ -3,7 +3,7 @@ from rest_framework import serializers
 from cart.serializers import CartShowSerializer, CartMegaDetailSerializer
 from addresses.serializers import AddressShowSerializer
 from .models import *
-from network.models import NetworkOrder
+# from network.models import NetworkOrder
 
 import logging
 logger = logging.getLogger(__name__)

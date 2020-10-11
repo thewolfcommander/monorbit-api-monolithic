@@ -3,7 +3,7 @@ from rest_framework import serializers
 from accounts.serializers import UserMiniSerializer
 from job_profiles.serializers import JobProfileSerializer
 from .models import *
-from orders.serializers import OrderDetailSerializer
+# from orders.serializers import OrderDetailSerializer
 
 
 import logging
@@ -602,13 +602,13 @@ class NetworkStaffUpdateSerializer(serializers.ModelSerializer):
         return instance
 
     
-class NetworkOrderSerializer(serializers.ModelSerializer):
-    network = MiniNetworkSerializer(read_only=True)
-    order = OrderDetailSerializer(read_only=True)
-    class Meta:
-        model = NetworkOrder
-        fields = [
-            'network',
-            'order',
-            'created'
-        ]
+# class NetworkOrderSerializer(serializers.ModelSerializer):
+#     network = MiniNetworkSerializer(read_only=True)
+#     order = OrderDetailSerializer(read_only=True)
+#     class Meta:
+#         model = NetworkOrder
+#         fields = [
+#             'network',
+#             'order',
+#             'created'
+#         ]

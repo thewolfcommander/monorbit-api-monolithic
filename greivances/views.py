@@ -133,3 +133,165 @@ class DeleteFAQReaction(generics.DestroyAPIView):
         except Http404:
             pass
         return Response(status=204)
+
+    
+class ListCreateTicketCategory(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = TicketCategorySerializer
+    queryset = TicketCategory.objects.all()
+
+
+class UpdateTicketCategory(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = TicketCategorySerializer
+    queryset = TicketCategory.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class CreateTicket(generics.CreateAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = CreateTicketSerializer
+    queryset = Ticket.objects.all()
+
+
+class ListTicket(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ShowTicketSerializer
+    queryset = Ticket.objects.all()
+    filterset_fields = [
+        'id',
+        'category',
+        'category__title',
+        'monion_referral',
+        'mobile_number',
+        'define_category',
+        'title',
+        'ticket_status',
+        'upvotes',
+        'downvotes',
+        'is_active',
+        'user'
+    ]
+
+
+class UpdateTicket(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ShowTicketSerializer
+    queryset = Ticket.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class ListCreateTicketComment(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = TicketCommentSerializer
+    queryset = TicketComment.objects.all()
+    filterset_fields = [
+        'id',
+        'ticket',
+        'upvotes',
+        'downvotes',
+        'user'
+    ]
+
+
+class UpdateTicketComment(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = TicketCommentSerializer
+    queryset = TicketComment.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class GiveTicketReaction(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, format=None):
+        reaction = request.data.get('reaction', None)
+        ticket = request.data.get('ticket', None)
+
+        if reaction is None:
+            return Response({
+                'status': False,
+                'message': "Invalid Reaction. Please give a proper reaction on the Ticket"
+            }, status=400)
+        
+        if ticket is None:
+            return Response({
+                'status': False,
+                'message': "Invalid Ticket ID."
+            }, status=400)
+
+        try:
+            ticket_obj = Ticket.objects.get(id=ticket)
+            if reaction == 'up':
+                ticket_obj.upvotes += 1
+                ticket_obj.save()
+            elif reaction == 'down':
+                ticket_obj.downvotes += 1
+                ticket_obj.save()
+            else:
+                return Response({
+                    'status': False,
+                    'message': "Invalid Reaction"
+                }, status=400)
+            return Response({
+                'status': True,
+                'message': "Hurray! You reacted"
+            }, status=200)
+        except Ticket.DoesNotExist:
+            return Response({
+                'status': False,
+                'message': "Invalid Ticket ID"
+            }, status=400)
+
+        
+
+class GiveTicketCommentReaction(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, format=None):
+        reaction = request.data.get('reaction', None)
+        comment = request.data.get('comment', None)
+
+        if reaction is None:
+            return Response({
+                'status': False,
+                'message': "Invalid Reaction. Please give a proper reaction on the comment"
+            }, status=400)
+        
+        if comment is None:
+            return Response({
+                'status': False,
+                'message': "Invalid comment ID."
+            }, status=400)
+
+        try:
+            comment_obj = TicketComment.objects.get(id=comment)
+            if reaction == 'up':
+                comment_obj.upvotes += 1
+                comment_obj.save()
+            elif reaction == 'down':
+                comment_obj.downvotes += 1
+                comment_obj.save()
+            else:
+                return Response({
+                    'status': False,
+                    'message': "Invalid Reaction"
+                }, status=400)
+            return Response({
+                'status': True,
+                'message': "Hurray! You reacted"
+            }, status=200)
+        except TicketComment.DoesNotExist:
+            return Response({
+                'status': False,
+                'message': "Invalid comment ID"
+            }, status=400)

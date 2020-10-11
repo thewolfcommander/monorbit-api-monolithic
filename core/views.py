@@ -96,3 +96,56 @@ class AllEmail(generics.ListAPIView):
         'email_sent_to',
         'is_success'
     ]
+
+
+class ListCreateUserLoginActivity(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserLoginActivitySerializer
+    queryset = UserLoginActivity.objects.all().order_by('-timestamp')
+    filterset_fields = [
+        'user',
+        'ip_address',
+        'os_platform',
+        'browser',
+        'is_logged_from_mobile',
+        'is_logged_from_web'
+    ]
+
+
+class UpdateUserLoginActivity(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserLoginActivitySerializer
+    queryset = UserLoginActivity.objects.all().order_by('-timestamp')
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    
+
+class ListCreateUserDeviceRegistration(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserDeviceRegistrationSerializer
+    queryset = UserDeviceRegistration.objects.all().order_by('-timestamp')
+    filterset_fields = [
+        'user',
+        'device_type',
+        'operating_system',
+        'browser',
+        'ip_addresss',
+        'lat',
+        'lng',
+        'device_language',
+        'is_app',
+        'is_browser',
+    ]
+
+
+class UpdateUserDeviceRegistration(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserDeviceRegistrationSerializer
+    queryset = UserDeviceRegistration.objects.all().order_by('-timestamp')
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)

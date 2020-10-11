@@ -1,6 +1,11 @@
 from django.db import models
+from django.db.models.signals import pre_save
 from django.db.models.aggregates import Count
 from random import randint
+
+from monorbit.utils import tools
+
+from accounts.models import User
 # Create your models here.
 
 class TipToGrowManager(models.Manager):
@@ -47,3 +52,54 @@ class EmailSentToUsers(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class UserLoginActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    os_platform = models.CharField(max_length=255, null=True, blank=True)
+    browser = models.CharField(max_length=255, null=True, blank=True)
+    is_logged_from_mobile = models.BooleanField(default=False)
+    is_logged_from_web = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
+    
+class ActionsActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    action_type = models.CharField(max_length=50, null=True, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    os_platform = models.CharField(max_length=255, null=True, blank=True)
+    api_url = models.URLField(null=True, blank=True)
+    status_code = models.IntegerField(default=200, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
+    
+class UserDeviceRegistration(models.Model):
+    id = models.CharField(max_length=128, unique=True, blank=True, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    device_type = models.CharField(max_length=255, null=True, blank=True)
+    operating_system = models.CharField(max_length=255, null=True, blank=True)
+    browser = models.CharField(max_length=255, null=True, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    lat = models.CharField(max_length=50, null=True, blank=True)
+    lng = models.CharField(max_length=50, null=True, blank=True)
+    device_language = models.CharField(max_length=50, null=True, blank=True)
+    user_agent = models.CharField(max_length=255, null=True, blank=True)
+    is_app = models.BooleanField(default=False)
+    is_browser = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
+def id_initializer(sender, instance, **kwargs):
+    if not instance.id:
+        instance.id = tools.random_string_generator(56)
+
+pre_save.connect(id_initializer, sender=UserDeviceRegistration)

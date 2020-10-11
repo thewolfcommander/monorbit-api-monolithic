@@ -4,7 +4,7 @@ from django.db.models.signals import pre_save
 from django.utils import timezone
 
 from accounts import models as acc_models
-from orders.models import Order
+# from orders.models import Order
 from job_profiles.models import JobProfile
 from monorbit.utils import tools, validators
 
@@ -192,13 +192,14 @@ class NetworkReview(models.Model):
         return str(self.id)
 
     
-class NetworkOrder(models.Model):
-    network = models.ForeignKey(Network, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
+# class NetworkOrder(models.Model):
+#     network = models.ForeignKey(Network, on_delete=models.CASCADE)
+#     # order = models.ForeignKey(Order, on_delete=models.CASCADE)
+#     order = models.CharField(max_length=255, null=True, blank=True)
+#     created = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return str(self.id)
+#     def __str__(self):
+#         return str(self.id)
 
 
 class NetworkJob(models.Model):
