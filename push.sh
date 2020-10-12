@@ -1,5 +1,5 @@
 git add . && git commit -m "Added Image upload feature, connected RDS"
-# git push
+git push
 # git push --set-upstream origin v1.1.0
 # git push heroku master
 # heroku run python3 manage.py migrate --app monorbit-alpha

@@ -136,4 +136,4 @@ dmypy.json
 
 monorbit-alpha.pem
 
-**/migrations/*
+# **/migrations/*
