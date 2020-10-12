@@ -8,7 +8,7 @@ from .serializers import *
 
 
 class ListCreateFAQCategory(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     serializer_class = FAQCategorySerializer
     queryset = FAQCategory.objects.all()
     filterset_fields = [
@@ -18,7 +18,7 @@ class ListCreateFAQCategory(generics.ListCreateAPIView):
 
 
 class UpdateFAQCategory(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     serializer_class = FAQCategorySerializer
     queryset = FAQCategory.objects.all()
     lookup_field = 'id'
@@ -28,13 +28,13 @@ class UpdateFAQCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateFAQ(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     serializer_class = FAQCreateSerializer
     queryset = FAQ.objects.all()
 
 
 class ListFAQ(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     serializer_class = FAQShowSerializer
     queryset = FAQ.objects.all().order_by('popularity_score')
     filterset_fields = [
@@ -57,7 +57,7 @@ class UpdateFAQ(generics.RetrieveUpdateDestroyAPIView):
 
     
 class CreateFAQReaction(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None):
         user = request.user
@@ -113,7 +113,7 @@ class CreateFAQReaction(APIView):
 
         
 class DeleteFAQReaction(generics.DestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     serializer_class = FAQReactionSerializer
     queryset = FAQReaction.objects.all()
     lookup_field = 'id'
