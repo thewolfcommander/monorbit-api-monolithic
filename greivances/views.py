@@ -10,7 +10,7 @@ from .serializers import *
 class ListCreateFAQCategory(generics.ListCreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = FAQCategorySerializer
-    queryset = FAQCategory.objects.all()
+    queryset = FAQCategory.objects.all().order_by('-added')
     filterset_fields = [
         'is_active',
         'added_by'
