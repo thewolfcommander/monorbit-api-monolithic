@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'addresses',
     'cart',
+    'core',
     'greivances',
     'job_profiles',
     'network',
@@ -102,24 +103,26 @@ WSGI_APPLICATION = 'monorbit.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+host = config('SERVER_HOST', True)
+
+if host:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('HEROKU_DB_NAME', 'HEROKU_DB_NAME'),
-#         'USER': config('HEROKU_DB_USER', 'HEROKU_DB_USER'),
-#         'PASSWORD': config('HEROKU_DB_PASSWORD', 'HEROKU_DB_PASSWORD'),
-#         'HOST': config('HEROKU_DB_HOST', 'HEROKU_DB_HOST'),
-#         'PORT': 5432,
-#     }
-# }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('AWS_RDS_DB_NAME', 'AWS_RDS_DB_NAME'),
+            'USER': config('AWS_RDS_USERNAME', 'AWS_RDS_USERNAME'),
+            'PASSWORD': config('AWS_RDS_PASSWORD', 'AWS_RDS_PASSWORD'),
+            'HOST': config('AWS_RDS_HOST', 'AWS_RDS_HOST'),
+            'PORT': 5432,
+        }
+    }
 
 # add this below the database configuration
 import dj_database_url
@@ -175,6 +178,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 REST_FRAMEWORK = {
 
     'PAGE_SIZE': 20,
+    'DATETIME_FORMAT': '%s000',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',

@@ -134,4 +134,6 @@ dmypy.json
 
 ./deploy.sh
 
-./monorbit-alpha.pem
+monorbit-alpha.pem
+
+**/migrations/*

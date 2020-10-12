@@ -1,8 +1,12 @@
+from datetime import datetime
+
 import random
 import string
 from django.utils import timezone
 from django.utils.text import slugify
 
+
+rzp_webhook_secret = 'gzrqd38il5vhp058oz6pg0r7d80l8bak8tw6wivisu6g61gkdn0rox120201010185439'
 
 def label_gen(prefix):
     date = timezone.now()
@@ -28,6 +32,7 @@ def random_number_generator(start, end):
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
+# print(label_gen(random_string_generator(size=55)))
 
 def unique_slug_generator(instance, new_slug=None):
     """

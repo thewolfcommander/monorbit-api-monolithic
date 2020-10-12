@@ -1,0 +1,73 @@
+{
+    "entity": "event",
+    "account_id": "acc_FfEClTNTgCg3bq",
+    "event": "order.paid",
+    "contains": ["payment", "order"
+    ],
+    "payload": {
+        "payment": {
+            "entity": {
+                "id": "pay_FnEft4NQuCLPZ5",
+                "entity": "payment",
+                "amount": 43070,
+                "currency": "INR",
+                "status": "captured",
+                "order_id": "order_FnEdL9F6bXkkf1",
+                "invoice_id": null,
+                "international": false,
+                "method": "card",
+                "amount_refunded": 0,
+                "refund_status": null,
+                "captured": true,
+                "description": "basic plan",
+                "card_id": "card_FnEft8ow0CF1Fm",
+                "card": {
+                    "id": "card_FnEft8ow0CF1Fm",
+                    "entity": "card",
+                    "name": "Kalaage Magazine",
+                    "last4": "1111",
+                    "network": "Visa",
+                    "type": "debit",
+                    "issuer": null,
+                    "international": false,
+                    "emi": false,
+                    "sub_type": "consumer"
+                },
+                "bank": null,
+                "wallet": null,
+                "vpa": null,
+                "email": "shravn@gmail.com",
+                "contact": "+918875545939",
+                "notes": [],
+                "fee": 797,
+                "tax": 0,
+                "error_code": null,
+                "error_description": null,
+                "error_source": null,
+                "error_step": null,
+                "error_reason": null,
+                "acquirer_data": {
+                    "auth_code": "903669"
+                },
+                "created_at": 1602341045
+            }
+        },
+        "order": {
+            "entity": {
+                "id": "order_FnEdL9F6bXkkf1",
+                "entity": "order",
+                "amount": 43070,
+                "amount_paid": 43070,
+                "amount_due": 0,
+                "currency": "INR",
+                "receipt": null,
+                "offer_id": null,
+                "status": "paid",
+                "attempts": 1,
+                "notes": [],
+                "created_at": 1602340900
+            }
+        }
+    },
+    "created_at": 1602341050
+}

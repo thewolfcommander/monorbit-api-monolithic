@@ -9,6 +9,69 @@ from monorbit.utils import tools
 import logging
 logger = logging.getLogger(__name__)
 
+
+
+class NetworkMembershipOrderReciept(models.Model):
+    """
+    This model will keep record of the razorpay orders
+    """
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    network = models.ForeignKey(Network, on_delete=models.CASCADE, null=True, blank=True)
+    order_id = models.CharField(max_length=50, null=True, blank=True)
+    entity = models.CharField(max_length=50, null=True, blank=True)
+    amount = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    amount_paid = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    amount_due = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    transaction_charge = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    tax = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=10, null=True, blank=True)
+    status = models.CharField(max_length=50, null=True, blank=True)
+    attempts = models.IntegerField(default=0, null=True, blank=True)
+    created_at_rzp = models.BigIntegerField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.id
+
+    
+class NetworkBilling(models.Model):
+    """
+    This model will keep record of the Billing information for network
+    """
+    network = models.ForeignKey(Network, on_delete=models.CASCADE, null=True, blank=True)
+    full_name = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    landmark = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
+    state = models.CharField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=255, null=True, blank=True)
+    pincode = models.CharField(max_length=10, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    added = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.id
+
+    
+class NetworkMembershipPaymentInvoice(models.Model):
+    """
+    This model will keep record of the razorpay payments for the orders
+    """
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    account_id = models.CharField(max_length=50, null=True, blank=True)
+    network_order_receipt = models.ForeignKey(NetworkMembershipOrderReciept, on_delete=models.CASCADE, null=True, blank=True)
+    payment_id = models.CharField(max_length=50, null=True, blank=True)
+    order_id = models.CharField(max_length=50, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
 class NetworkMembershipPlan(models.Model):
     PLAN_CHOICES = [
         ('Basic', 'Basic'),
@@ -73,7 +136,8 @@ class NetworkMembershipSubscription(models.Model):
     This model will map each individual subscription and payment to activity
     """
     activity = models.ForeignKey(NetworkMembershipActivity, on_delete=models.CASCADE)
-    payment_order_id = models.CharField(max_length=100, null=True, blank=True)
+    billing_profile = models.ForeignKey(NetworkBilling, on_delete=models.CASCADE)
+    network_order_receipt = models.ForeignKey(NetworkMembershipOrderReciept, on_delete=models.CASCADE)
     payment = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     started = models.DateField(default=timezone.now)
     is_trial = models.BooleanField(default=False)
@@ -81,26 +145,8 @@ class NetworkMembershipSubscription(models.Model):
     active_till = models.IntegerField(default=365, null=True, blank=True)
     active = models.BooleanField(default=True)
 
-
-class NetworkMembershipOrderReciept(models.Model):
-    """
-    This model will keep record of the razorpay orders
-    """
-    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
-    order_id = models.CharField(max_length=50, null=True, blank=True)
-    entity = models.CharField(max_length=50, null=True, blank=True)
-    amount = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
-    amount_paid = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
-    amount_due = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
-    currency = models.CharField(max_length=10, null=True, blank=True)
-    status = models.CharField(max_length=50, null=True, blank=True)
-    attempts = models.IntegerField(default=0, null=True, blank=True)
-    created_at_rzp = models.BigIntegerField(null=True, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class NetworkMembershipInvoice(models.Model):
@@ -185,4 +231,7 @@ pre_save.connect(instance_id, sender=NetworkMembershipPlan)
 pre_save.connect(instance_id, sender=NetworkMembershipRelation)
 pre_save.connect(instance_id, sender=NetworkMembershipActivity)
 pre_save.connect(instance_id, sender=NetworkMembershipInvoice)
+pre_save.connect(instance_id, sender=NetworkMembershipOrderReciept)
+pre_save.connect(instance_id, sender=NetworkMembershipPaymentInvoice)
+pre_save.connect(instance_id, sender=NetworkBilling)
 pre_save.connect(instance_membership_calculator, sender=NetworkMembershipSubscription)

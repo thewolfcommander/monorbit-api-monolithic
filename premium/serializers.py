@@ -113,3 +113,44 @@ class NetworkMembershipActivityShowSerializer(serializers.ModelSerializer):
             'active',
             'subscriptions'
         ]
+
+
+class NetworkBillingCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkBilling
+        fields = [
+            'id',
+            'network',
+            'full_name',
+            'email',
+            'address',
+            'landmark',
+            'city',
+            'state',
+            'country',
+            'pincode',
+            'is_active',
+            'added',
+            'updated'
+        ]
+
+    
+class NetworkBillingShowSerializer(serializers.ModelSerializer):
+    network = ShowNetworkSerializer(read_only=True)
+    class Meta:
+        model = NetworkBilling
+        fields = [
+            'id',
+            'network',
+            'full_name',
+            'email',
+            'address',
+            'landmark',
+            'city',
+            'state',
+            'country',
+            'pincode',
+            'is_active',
+            'added',
+            'updated'
+        ]

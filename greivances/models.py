@@ -52,6 +52,89 @@ class FAQReaction(models.Model):
     def __str__(self):
         return str(self.id)
 
+    
+class TicketCategory(models.Model):
+    """
+    This would be category of the issue ticket
+    """
+    title = models.CharField(max_length=255, null=True, blank=True)
+    icon = models.URLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
+    
+class Ticket(models.Model):
+    """
+    This would be the ticket information
+    """
+    TICKET_STATUS = [
+        ('created', 'Created'),
+        ('in_process', 'In Process'),
+        ('resolved', 'Resolved'),
+        ('spam', 'Spam'),
+        ('half_resolved', 'Half Resolved'),
+    ]
+    id = models.CharField(max_length=20, blank=True, primary_key=True, unique=True)
+    category = models.ForeignKey(TicketCategory, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    monion_referral = models.CharField(max_length=255, null=True, blank=True)
+    country_code = models.IntegerField(default=91, null=True, blank=True)
+    mobile_number = models.CharField(max_length=10, null=True, blank=True)
+    define_category = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    ticket_status = models.CharField(max_length=255, null=True, blank=True, default='created', choices=TICKET_STATUS)
+    upvotes = models.IntegerField(default=0, null=True, blank=True)
+    downvotes = models.IntegerField(default=0, null=True, blank=True)
+    is_attachment = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
+    def attachments(self):
+        return self.ticketattachment_set.all()
+
+    def comments(self):
+        return self.ticketcomment_set.all()
+
+    
+class TicketAttachment(models.Model):
+    """
+    Attachments linked to ticket
+    """
+    TYPE_CHOICES = [
+        ('image', 'Image'),
+        ('video', 'Video'),
+        ('doc', 'Document'),
+        ('audio', 'Audio')
+    ]
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
+    attachment_type = models.CharField(max_length=100, null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
+class TicketComment(models.Model):
+    """
+    Comments or resolutions made on ticket
+    """
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    upvotes = models.IntegerField(default=0, null=True, blank=True)
+    downvotes = models.IntegerField(default=0, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
 
 def instance_id_generator(sender, instance, **args):
     if not instance.id:
@@ -59,3 +142,4 @@ def instance_id_generator(sender, instance, **args):
         instance.id = strn.upper()
 
 pre_save.connect(instance_id_generator, sender=FAQ)
+pre_save.connect(instance_id_generator, sender=Ticket)

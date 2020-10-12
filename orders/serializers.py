@@ -3,7 +3,7 @@ from rest_framework import serializers
 from cart.serializers import CartShowSerializer, CartMegaDetailSerializer
 from addresses.serializers import AddressShowSerializer
 from .models import *
-
+from core.models import NetworkOrder
 
 import logging
 logger = logging.getLogger(__name__)
@@ -41,6 +41,11 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             instance.cart.user.order_count += 1
             instance.cart.user.save()
             instance.save()
+            for p in instance.cart.productentry_set.all():
+                NetworkOrder.objects.create(
+                    network=p.product.network,
+                    order=instance
+                )
             return instance
         else:
             raise Exception("The Cart is not Correct. It has been used already")
