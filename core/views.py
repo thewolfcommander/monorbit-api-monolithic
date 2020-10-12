@@ -19,6 +19,29 @@ class ListCreateTipToGrow(generics.ListCreateAPIView):
         'active'
     ]
 
+class GetARandomTip(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            random_tip = TipToGrow.objects.random()
+            data = {
+                'status': True,
+                'message': 'Here is a beautiful tip for you',
+                'tip': random_tip.tip,
+                'upvotes': random_tip.upvotes,
+                'downvotes': random_tip.downvotes,
+                'active': random_tip.active,
+            }
+            status = 200
+        except:
+            data = {
+                'status': False,
+                'message': 'Sorry, cannot get a tip for you.'
+            }
+            status = 503
+        return Response(data=data, status=status)
+
 
 class UpdateTipToGrow(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

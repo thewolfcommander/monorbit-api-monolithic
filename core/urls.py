@@ -7,6 +7,7 @@ app_name = 'core'
 
 urlpatterns = [
     path('tips-to-grow/', ListCreateTipToGrow.as_view(), name='list_create_tips_to_grow'),
+    path('tips-to-grow/random/', GetARandomTip.as_view(), name='get_a_random_tip'),
     path('tips-to-grow/update/<int:id>/', UpdateTipToGrow.as_view(), name='update_tips_to_grow'),
 
     path('email/send/', SendEmail.as_view(), name='send_email'),
