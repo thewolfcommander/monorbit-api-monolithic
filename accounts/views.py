@@ -37,32 +37,46 @@ class LoginView(APIView):
             )
 
             if user_obj.is_active:
-                token = jwt_encode_handler(jwt_payload_handler(user_obj))
-                user_obj.is_logged_in = True
-                user_obj.last_logged_in_time = timezone.now()
-                user_obj.save()
-                return Response(
-                    data={
-                        "status": True,
-                        "token": token,
-                        "user": {
-                            "id": user_obj.id,
-                            "mobile_number": user_obj.mobile_number,
-                            "full_name": user_obj.full_name,
-                            "email": user_obj.email,
-                            "hash_token": user_obj.hash_token,
-                            "is_consumer": user_obj.is_consumer,
-                            "is_creator": user_obj.is_creator,
-                            "followed_networks": user_obj.followed_networks,
-                            "is_logged_in": user_obj.is_logged_in,
-                            "is_working_profile": user_obj.is_working_profile,
-                            "is_mobile_verified": user_obj.is_mobile_verified,
-                            "is_email_verified": user_obj.is_email_verified,
+                if user_obj.is_mobile_verified:
+                    token = jwt_encode_handler(jwt_payload_handler(user_obj))
+                    user_obj.is_logged_in = True
+                    user_obj.last_logged_in_time = timezone.now()
+                    user_obj.save()
+                    return Response(
+                        data={
+                            "status": True,
+                            "token": token,
+                            "user": {
+                                "id": user_obj.id,
+                                "mobile_number": user_obj.mobile_number,
+                                "full_name": user_obj.full_name,
+                                "email": user_obj.email,
+                                "hash_token": user_obj.hash_token,
+                                "is_consumer": user_obj.is_consumer,
+                                "is_creator": user_obj.is_creator,
+                                "followed_networks": user_obj.followed_networks,
+                                "is_logged_in": user_obj.is_logged_in,
+                                "is_working_profile": user_obj.is_working_profile,
+                                "is_mobile_verified": user_obj.is_mobile_verified,
+                                "is_email_verified": user_obj.is_email_verified,
+                            },
+                            "message": "User logged in Successfully",
                         },
-                        "message": "User logged in Successfully",
-                    },
-                    status=200,
-                )
+                        status=200,
+                    )
+                else:
+                    otp_obj = acc_models.EmailVerifyOTP.objects.create(user=usr)
+                    user_obj.otp_sent += 1
+                    user_obj.save()
+                    mobile = "+91{}".format(str(serializer.validated_data["mobile_number"]))
+                    #                 sms.verify_mobile(mobile_number=mobile, otp=otp_obj.otp)
+                    data = {
+                        "status": True,
+                        "message": "OTP Sent to Mobile Number",
+                        "otp": otp_obj.otp,
+                        "mobile_number": user_obj.mobile_number,
+                    }
+                    return Response(data=data, status=201)
             else:
                 return Response(
                     data={"status": False, "message": "Invalid User. Unable to Login"},
