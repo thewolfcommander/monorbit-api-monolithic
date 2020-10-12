@@ -1,10 +1,12 @@
 from rest_framework import generics, permissions
 from rest_framework.views import APIView, Response
+from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
+from rest_framework.exceptions import ParseError
 
 from .models import *
 from .serializers import *
 
-from monorbit.utils import mail
+from monorbit.utils import mail, upload, files
 
 
 class ListCreateTipToGrow(generics.ListCreateAPIView):
@@ -149,3 +151,82 @@ class UpdateUserDeviceRegistration(generics.ListCreateAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+
+class ListAllNetworkOrders(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = NetworkOrderSerializer
+    queryset = NetworkOrder.objects.all().order_by('-timestamp')
+    filterset_fields = [
+        'network__user',
+        'network__network_url',
+        'network__network_type',
+        'network__name',
+        'network__landmark',
+        'network__city',
+        'network__state',
+        'network__country',
+        'network__pincode',
+        'network__rating',
+        'network__no_of_reviews',
+        'network__registered_stores',
+        'network__is_verified',
+        'network__is_active',
+        'network__is_spam',
+        'network__is_premium',
+        'order__id',
+        'order__day_id',
+        'order__billing_address',
+        'order__shipping_address',
+        'order__is_billing_shipping_same',
+        'order__cart__user',
+        'order__cart__count',
+        'order__cart__sub_total',
+        'order__cart__shipping',
+        'order__cart__total',
+        'order__cart__discount',
+        'order__cart__is_active',
+        'order__status',
+        'order__shipping_total',
+        'order__discount',
+        'order__total',
+        'order__tax',
+        'order__active'
+    ]
+
+
+class FileUploadView(APIView):
+    parser_class = [FileUploadParser]
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, format=None):
+        if 'file' not in request.data:
+            raise ParseError("FIle should be provided")
+        file_obj = request.data['file']
+        filetype = request.data['filetype']
+        url = files.upload(file_obj, filetype)
+        return Response({
+            "status": True,
+            "message": "File Uploaded",
+            "url": url,
+        }, status=201)
+
+    def get(self, request, format=None):
+        return Response({"message": "Hello world"})
+
+
+class FileView(APIView):
+    parser_classes = [FileUploadParser]
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        if 'file' not in request.data:
+            raise ParseError("FIle should be provided")
+        file_obj = request.data['file']
+        filetype = request.data['filetype']
+        url = upload.upload_file(file_obj, filetype)
+        return Response({
+            "status": True,
+            "message": "File Uploaded",
+            "url": url,
+        }, status=201)

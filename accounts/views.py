@@ -46,6 +46,7 @@ class LoginView(APIView):
                         "status": True,
                         "token": token,
                         "user": {
+                            "id": user_obj.id,
                             "mobile_number": user_obj.mobile_number,
                             "full_name": user_obj.full_name,
                             "email": user_obj.email,
@@ -225,6 +226,7 @@ class VerifyOTPView(APIView):
                             "message": "OTP successfully verified.",
                             "token": token,
                             "user": {
+                                "id": usr_obj.id,
                                 "mobile_number": usr_obj.mobile_number,
                                 "full_name": usr_obj.full_name,
                                 "email": usr_obj.email,

@@ -6,6 +6,8 @@ from random import randint
 from monorbit.utils import tools
 
 from accounts.models import User
+from network.models import Network
+from orders.models import Order
 # Create your models here.
 
 class TipToGrowManager(models.Manager):
@@ -97,6 +99,20 @@ class UserDeviceRegistration(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class TempFile(models.Model):
+    pass
+
+
+class NetworkOrder(models.Model):
+    network=models.ForeignKey(Network, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
 
 def id_initializer(sender, instance, **kwargs):
     if not instance.id:

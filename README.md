@@ -14,8 +14,8 @@ Monorbit API
     - [x] User Activity tracking
     - [x] User Authorization and Authentication Improvization
 - [ ] Miscelaneous
-    - [ ] Setup S3 Storage
-    - [ ] Setup Image uploading feature
+    - [x] Setup S3 Storage
+    - [x] Setup Image uploading feature
     - [ ] Integrate Image Optimization and compression
     - [ ] Setup AWS RDS Instance
     - [ ] Connect RDS to EC2 Instance

@@ -103,6 +103,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = acc_models.User
         fields = [
+            'id',
             'mobile_number',
             'full_name',
             'email',
@@ -169,6 +170,7 @@ class UserMiniSerializer(serializers.ModelSerializer):
     class Meta:
         model = acc_models.User
         fields = [
+            'id',
             'mobile_number',
             'full_name',
             'email',

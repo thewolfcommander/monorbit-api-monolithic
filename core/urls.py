@@ -17,4 +17,7 @@ urlpatterns = [
 
     path('user/activity/auth/', ListCreateUserLoginActivity.as_view(), name='list_create_user_login_activity'),
     path('user/activity/auth/<int:id>/', UpdateUserLoginActivity.as_view(), name='update_user_login_activity'),
+
+    path('handler/file/upload/', FileUploadView.as_view(), name='upload_file'),
+    path('handler/file/upload/test/', FileView.as_view(), name='upload_file2'),
 ]

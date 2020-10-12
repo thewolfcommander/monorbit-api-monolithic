@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from .models import *
 from accounts.serializers import *
+from network.serializers import ShowNetworkSerializer
+from orders.serializers import OrderDetailSerializer
 
 
 class TipToGrowSerializer(serializers.ModelSerializer):
@@ -75,5 +77,18 @@ class UserDeviceRegistrationSerializer(serializers.ModelSerializer):
             'user_agent',
             'is_app',
             'is_browser',
+            'timestamp'
+        ]
+
+    
+class NetworkOrderSerializer(serializers.ModelSerializer):
+    network = ShowNetworkSerializer(read_only=True)
+    order = OrderDetailSerializer(read_only=True)
+    class Meta:
+        model = NetworkOrder
+        fields = [
+            'id',
+            'network',
+            'order',
             'timestamp'
         ]
