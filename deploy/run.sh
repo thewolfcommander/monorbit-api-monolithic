@@ -1,4 +1,4 @@
-curl +sL https://raw.githubusercontent.com/monorbit/monorbit-api-monolithic/master/deploy/setup.sh?token=AJIVGJPEHGX2GDJNRIFHKFK7QRFFW | sudo bash -
+curl +sL https://raw.githubusercontent.com/monorbit/monorbit-api-monolithic/master/deploy/setup.sh?token=AJIVGJKDGBXIU3JHQIGHMUK7QRGDO | sudo bash -
 
 
 # thewolfcommander
