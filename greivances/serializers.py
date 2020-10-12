@@ -12,6 +12,7 @@ class FAQCategorySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
+            'image_url',
             'description',
             'is_active',
             'added_by',
@@ -30,6 +31,7 @@ class FAQCategorySerializer(serializers.ModelSerializer):
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.is_active = validated_data.get('is_active', instance.is_active)
+        instance.image_url = validated_data.get('image_url', instance.image_url)
         instance.save()
         return instance
 

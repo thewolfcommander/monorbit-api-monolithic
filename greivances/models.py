@@ -13,6 +13,7 @@ class FAQCategory(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    image_url = models.URLField(null=True, blank=True, default='https://www.freeiconspng.com/thumbs/platform-icon/platform-icon-12.png')
     added_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     added = models.DateTimeField(auto_now_add=True)
 
