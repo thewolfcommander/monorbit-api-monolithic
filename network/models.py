@@ -21,7 +21,7 @@ class NetworkCategory(models.Model):
     """
     name = models.CharField(max_length=255, null=True, blank=True)
     priority = models.IntegerField(default=2, null=True, blank=True)
-    image = models.URLField(null=True, blank=True, default="https://content.monorbit.com/images/placeholder.png")
+    image = models.URLField(null=True, blank=True, default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
     created = models.DateTimeField(default=timezone.now)
 
 
@@ -30,7 +30,7 @@ class NetworkType(models.Model):
     This is the category for which a network belongs to
     """
     name = models.CharField(max_length=255, null=True, blank=True)
-    image = models.URLField(null=True, blank=True, default="https://content.monorbit.com/images/placeholder.png")
+    image = models.URLField(null=True, blank=True, default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
     created = models.DateTimeField(default=timezone.now)
 
 
@@ -53,7 +53,7 @@ class Network(models.Model):
     category = models.ForeignKey(NetworkCategory, on_delete=models.CASCADE, null=True, blank=True)
     network_type = models.ForeignKey(NetworkType, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255, null=True, blank=True)
-    thumbnail_image = models.URLField(null=True, blank=True, default="https://content.monorbit.com/images/placeholder.png")
+    thumbnail_image = models.URLField(null=True, blank=True, default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
     address = models.CharField(max_length=255, null=True, blank=True)
     landmark = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
@@ -119,7 +119,7 @@ class NetworkImage(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
     label = models.CharField(max_length=255, null=True, blank=True)
-    image = models.URLField(null=True, blank=True)
+    image = models.URLField(null=True, blank=True, default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
 
     def __str__(self):
         return str(self.id)
@@ -129,7 +129,7 @@ class NetworkVideo(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
     label = models.CharField(max_length=255, null=True, blank=True)
-    video = models.URLField(null=True, blank=True)
+    video = models.URLField(null=True, blank=True, default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
 
     def __str__(self):
         return str(self.id)
@@ -139,7 +139,7 @@ class NetworkDocument(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
     label = models.CharField(max_length=255, null=True, blank=True)
-    doc = models.URLField(null=True, blank=True)
+    doc = models.URLField(null=True, blank=True, default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
 
     def __str__(self):
         return str(self.id)

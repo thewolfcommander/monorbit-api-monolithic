@@ -26,7 +26,7 @@ class JobProfile(models.Model):
         blank=True
     )
     alt_phone_number = models.CharField(max_length=10, blank=True, null=True, help_text="This will be the user's alternative phone number")
-    photo_url = models.URLField(null=True, blank=True, help_text="This will be applier's passport size photograph")
+    photo_url = models.URLField(null=True, blank=True, help_text="This will be applier's passport size photograph", default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
     adhaar_card = models.CharField(max_length=20, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True, help_text="Address Line 1")
     landmark = models.CharField(max_length=255, null=True, blank=True, help_text="Landmark")
@@ -106,7 +106,7 @@ class DeliveryBoyVehicle(models.Model):
     type_of_vehicle = models.CharField(max_length=255, choices=TYPE_OF_VEHICLE, default="motor_bike")
     vehicle_license = models.CharField(max_length=50, unique=True, null=True, blank=True, help_text="Vehicle License Number")
     valid_upto = models.DateField(default=datetime.date.today, help_text="Validity date of Vehicle")
-    vehicle_photo_url = models.URLField(blank=True, null=True, help_text="Upload Vehicle Image from front showing verhicle registration number. We will then verify the number from this image with vehicle_license field")
+    vehicle_photo_url = models.URLField(blank=True, null=True, help_text="Upload Vehicle Image from front showing verhicle registration number. We will then verify the number from this image with vehicle_license field", default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
     active = models.BooleanField(default=False)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -268,7 +268,7 @@ class PermanentEmployeeFile(models.Model):
     permanent_employee = models.ForeignKey(PermanentEmployee, on_delete=models.CASCADE)
     file_type = models.CharField(max_length=50, choices=FILE_TYPE, default="image")
     label = models.CharField(max_length=255, null=True, blank=True, help_text="Label on the File")
-    file_url = models.URLField(null=True, blank=True)
+    file_url = models.URLField(null=True, blank=True, default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
     added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -344,7 +344,7 @@ class FreelancerFile(models.Model):
     freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE)
     file_type = models.CharField(max_length=50, choices=FILE_TYPE, default="image")
     label = models.CharField(max_length=255, null=True, blank=True, help_text="Label on the File")
-    file_url = models.URLField(null=True, blank=True)
+    file_url = models.URLField(null=True, blank=True, default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
     added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
