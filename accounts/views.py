@@ -65,7 +65,7 @@ class LoginView(APIView):
                         status=200,
                     )
                 else:
-                    otp_obj = acc_models.EmailVerifyOTP.objects.create(user=usr)
+                    otp_obj = acc_models.EmailVerifyOTP.objects.create(user=user_obj)
                     user_obj.otp_sent += 1
                     user_obj.save()
                     mobile = "+91{}".format(str(serializer.validated_data["mobile_number"]))
