@@ -228,7 +228,7 @@ class CreateRZPOrder(APIView):
                     base_amount = int(plan_obj.price_per_day) * int(days)
                     # base_amount = 1*days
                     tax = float(base_amount*0.18)    # Initially taking 18% GST
-                    transaction_charge = float(base_amount*0.025)
+                    transaction_charge = float(base_amount*0.035)
                     amount = float(base_amount) + float(tax) + float(transaction_charge)
                     order = rzp.create_order(
                         order_currency=currency,
@@ -240,11 +240,11 @@ class CreateRZPOrder(APIView):
                         network = billing_obj.network,
                         order_id = order["id"],
                         entity = order["entity"],
-                        amount = order["amount"],
-                        amount_paid = order["amount_paid"],
-                        amount_due = order["amount_due"],
-                        transaction_charge=transaction_charge,
-                        tax=tax,
+                        amount = float(order["amount"])/100,
+                        amount_paid = float(order["amount_paid"])/100,
+                        amount_due = float(order["amount_due"])/100,
+                        transaction_charge=round(float(transaction_charge), 2),
+                        tax=round(float(tax), 2),
                         currency = order["currency"],
                         status = order["status"],
                         attempts = order["attempts"],
