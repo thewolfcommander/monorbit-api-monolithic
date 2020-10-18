@@ -53,7 +53,7 @@ class NetworkBilling(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     
 class NetworkMembershipPaymentInvoice(models.Model):
