@@ -165,7 +165,6 @@ class CreateRZPOrder(APIView):
 
     def post(self, request, format=None):
         currency = 'INR'
-        network = request.data.get('network')
         receipt = request.data.get('billing_profile')
         notes= request.data.get('notes')
         plan = request.data.get('plan')
@@ -216,12 +215,6 @@ class CreateRZPOrder(APIView):
                 'message': 'Invalid Plan'
             }, status=400)
 
-        if network is None:
-            return Response({
-                'status': False,
-                'message': 'Invalid Network'
-            }, status=400)
-
         if receipt is None:
             return Response({
                 'status': False,
@@ -231,7 +224,6 @@ class CreateRZPOrder(APIView):
             try:
                 plan_obj = NetworkMembershipPlan.objects.get(name=plan)
                 try:
-                    network_obj = Network.objects.get(id=network)
                     base_amount = int(plan_obj.price_per_day) * int(days)
                     # base_amount = 1*days
                     tax = float(base_amount*0.18)    # Initially taking 18% GST
@@ -240,11 +232,11 @@ class CreateRZPOrder(APIView):
                     order = rzp.create_order(
                         order_currency=currency,
                         order_amount=int(amount*100),
-                        order_reciept=receipt,
+                        order_reciept=str(receipt.id),
                         notes=notes
                     )
                     order_rec = NetworkMembershipOrderReciept.objects.create(
-                        network = network,
+                        network = receipt.network,
                         order_id = order["id"],
                         entity = order["entity"],
                         amount = order["amount"],
@@ -275,11 +267,11 @@ class CreateRZPOrder(APIView):
                             'created_at_rzp' : order["created_at"],
                         }
                     }, status=201)
-                except Network.DoesNotExist:
+                except Exception as e:
                     return Response({
                         'status': False,
-                        'message': 'Invalid Network Information'
-                    }, status=400)
+                        'message': "Subscription Failed. Please Try again later. Reason - {}".format(e)
+                    }, status=503)
             except NetworkMembershipPlan.DoesNotExist:
                 return Response({
                     'status': False,
