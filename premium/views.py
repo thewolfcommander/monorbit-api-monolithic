@@ -224,6 +224,7 @@ class CreateRZPOrder(APIView):
             try:
                 plan_obj = NetworkMembershipPlan.objects.get(name=plan)
                 try:
+                    billing_obj = NetworkBilling.objects.get(id=receipt)
                     base_amount = int(plan_obj.price_per_day) * int(days)
                     # base_amount = 1*days
                     tax = float(base_amount*0.18)    # Initially taking 18% GST
@@ -232,7 +233,7 @@ class CreateRZPOrder(APIView):
                     order = rzp.create_order(
                         order_currency=currency,
                         order_amount=int(amount*100),
-                        order_reciept=str(receipt.id),
+                        order_reciept=str(receipt),
                         notes=notes
                     )
                     order_rec = NetworkMembershipOrderReciept.objects.create(
@@ -253,7 +254,7 @@ class CreateRZPOrder(APIView):
                         'status': True,
                         'message': "Order Created Successfully",
                         'order_rec': {
-                            'network' : network,
+                            'network' : billing_obj.network,
                             'order_id' : order["id"],
                             'entity' : order["entity"],
                             'amount' : order["amount"],
@@ -267,11 +268,11 @@ class CreateRZPOrder(APIView):
                             'created_at_rzp' : order["created_at"],
                         }
                     }, status=201)
-                except Exception as e:
+                except NetworkBilling.DoesNotExist:
                     return Response({
                         'status': False,
-                        'message': "Subscription Failed. Please Try again later. Reason - {}".format(e)
-                    }, status=503)
+                        'message': 'Invalid Network Billing Information'
+                    }, status=400)
             except NetworkMembershipPlan.DoesNotExist:
                 return Response({
                     'status': False,
