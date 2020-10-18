@@ -78,7 +78,7 @@ class Ticket(models.Model):
         ('half_resolved', 'Half Resolved'),
     ]
     id = models.CharField(max_length=20, blank=True, primary_key=True, unique=True)
-    category = models.ForeignKey(TicketCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(FAQCategory, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     monion_referral = models.CharField(max_length=255, null=True, blank=True)
     country_code = models.IntegerField(default=91, null=True, blank=True)

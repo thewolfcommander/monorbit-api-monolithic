@@ -122,7 +122,6 @@ class TicketAttachmentCreateSerializer(serializers.ModelSerializer):
 
     
 class CreateTicketSerializer(serializers.ModelSerializer):
-    # category = TicketCategorySerializer(read_only=True)
     user = UserMiniSerializer(read_only=True)
     attachments = TicketAttachmentCreateSerializer(many=True)
     class Meta:
@@ -190,7 +189,7 @@ class CreateTicketSerializer(serializers.ModelSerializer):
 
     
 class ShowTicketSerializer(serializers.ModelSerializer):
-    category = TicketCategorySerializer(read_only=True)
+    category = FAQCategorySerializer(read_only=True)
     user = UserMiniSerializer(read_only=True)
     attachments = TicketAttachmentCreateSerializer(many=True)
     class Meta:
