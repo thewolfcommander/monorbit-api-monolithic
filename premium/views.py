@@ -229,7 +229,7 @@ class CreateRZPOrder(APIView):
             }, status=400)
         try:
             try:
-                plan_obj = NetworkMembershipPlan.objects.get(id=plan)
+                plan_obj = NetworkMembershipPlan.objects.get(name=plan)
                 try:
                     network_obj = Network.objects.get(id=network)
                     base_amount = int(plan_obj.price_per_day) * int(days)
