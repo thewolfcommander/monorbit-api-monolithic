@@ -280,7 +280,7 @@ class CreateRZPOrder(APIView):
                         'status': False,
                         'message': 'Invalid Network Information'
                     }, status=400)
-            except:
+            except NetworkMembershipPlan.DoesNotExist:
                 return Response({
                     'status': False,
                     'message': 'Invalid Plan Detail'
