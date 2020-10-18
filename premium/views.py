@@ -275,7 +275,7 @@ class CreateRZPOrder(APIView):
                             'created_at_rzp' : order["created_at"],
                         }
                     }, status=201)
-                except:
+                except Network.DoesNotExist:
                     return Response({
                         'status': False,
                         'message': 'Invalid Network Information'
