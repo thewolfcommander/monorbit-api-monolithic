@@ -237,7 +237,7 @@ class CreateRZPOrder(APIView):
                         notes=notes
                     )
                     order_rec = NetworkMembershipOrderReciept.objects.create(
-                        network = receipt.network,
+                        network = billing_obj.network,
                         order_id = order["id"],
                         entity = order["entity"],
                         amount = order["amount"],
