@@ -254,7 +254,7 @@ class CreateRZPOrder(APIView):
                         'status': True,
                         'message': "Order Created Successfully",
                         'order_rec': {
-                            'network' : billing_obj.network,
+                            'network' : billing_obj.network.id,
                             'order_id' : order["id"],
                             'entity' : order["entity"],
                             'amount' : order["amount"],
