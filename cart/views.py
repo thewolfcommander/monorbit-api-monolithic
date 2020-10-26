@@ -1,6 +1,6 @@
 from django.http import Http404
 from rest_framework import generics, permissions
-from rest_framework.views import Response
+from rest_framework.views import Response, APIView
 
 from .serializers import *
 from cart.models import *
@@ -77,3 +77,52 @@ class UpdateCart(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+
+class GetOrCreateWishlist(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            wishlist = Wishlist.objects.get(user=request.user)
+        except Wishlist.DoesNotExist:
+            wishlist = Wishlist.objects.create(user=request.user)
+        return Response({
+            'status': True,
+            'wishlist': {
+                'id': wishlist.id,
+                'user': wishlist.user,
+                'count': wishlist.count,
+                'updated': wishlist.updated
+            }
+        }, status=200)
+
+    
+class ShowWishlistDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = WishlistShowSerializer
+    queryset = Wishlist.objects.all()
+    lookup_field = 'id'
+
+
+class AddWishlistProductEntry(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = WishlistProductEntryCreateSerializer
+    queryset = WishlistProductEntry.objects.all()
+
+
+class DeleteWishlistProductEntry(generics.DestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = WishlistProductEntryCreateSerializer
+    queryset = WishlistProductEntry.objects.all()
+    lookup_field = 'id'
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            instance.wishlist.count -= 1
+            instance.wishlist.save()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response(status=204)

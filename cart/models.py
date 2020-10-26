@@ -17,6 +17,23 @@ class Wishlist(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     count = models.PositiveIntegerField(default=0)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
+
+    @property
+    def products(self):
+        return self.wishlistproductentry_set.all()
+
+    
+class WishlistProductEntry(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
 
     
 class Cart(models.Model):
@@ -59,4 +76,5 @@ def instance_id(sender, instance, **kwargs):
 
     
 pre_save.connect(instance_id, sender=Cart)
+pre_save.connect(instance_id, sender=Wishlist)
 pre_save.connect(product_cost_calculator, sender=ProductEntry)

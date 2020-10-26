@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cart, ProductEntry
+from .models import Cart, ProductEntry, Wishlist, WishlistProductEntry
 from accounts.serializers import UserMiniSerializer
 from product_catalog.serializers import ProductShowSerializer, ProductMiniSerializer
 from product_catalog.models import Product
@@ -202,3 +202,64 @@ class CartMegaDetailSerializer(serializers.ModelSerializer):
             'updated',
             'products'
         ]
+
+
+class WishlistProductEntryCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WishlistProductEntry
+        fields = [
+            'id',
+            'product',
+            'wishlist'
+        ]
+
+    def create(self, validated_data):
+        instance = WishlistProductEntry.objects.create(**validated_data)
+        instance.wishlist.count += 1
+        instance.wishlist.save()
+        return instance
+
+
+class WishlistProductEntryShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WishlistProductEntry
+        fields = [
+            'id',
+            'product',
+        ]
+
+
+class WishlistShowSerializer(serializers.ModelSerializer):
+    user = UserMiniSerializer(read_only=True)
+    products = WishlistProductEntryShowSerializer(many=True, required=False)
+    class Meta:
+        model = Wishlist
+        fields = [
+            'id',
+            'user',
+            'count',
+            'updated',
+            'timestamp',
+            'products'
+        ]
+
+    
+class WishlistCreateSerializer(serializers.ModelSerializer):
+    user = UserMiniSerializer(read_only=True)
+    products = WishlistProductEntryCreateSerializer(many=True, required=False)
+    class Meta:
+        model = Wishlist
+        fields = [
+            'id',
+            'user',
+            'count',
+            'updated',
+            'timestamp',
+            'products'
+        ]
+
+    def create(self, validated_data):
+        products = validated_data.pop('products', None)
+        count = 0
+        user = self.context['request'].user
+        return user

@@ -20,6 +20,7 @@ ORDER_STATUS_CHOICES = (
     ('Cancelled', 'Cancelled'),
     ('Returned', 'Returned'),
     ('Refunded', 'Refunded'),
+    ('Archived', 'Archived'),
 )
 
 
