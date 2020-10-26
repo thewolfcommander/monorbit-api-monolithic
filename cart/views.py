@@ -91,7 +91,7 @@ class GetOrCreateWishlist(APIView):
             'status': True,
             'wishlist': {
                 'id': wishlist.id,
-                'user': wishlist.user,
+                'user': wishlist.user.id,
                 'count': wishlist.count,
                 'updated': wishlist.updated
             }
