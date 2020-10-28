@@ -149,7 +149,7 @@ class ListCreateUserDeviceRegistration(generics.ListCreateAPIView):
         "device_type",
         "operating_system",
         "browser",
-        "ip_addresss",
+        "ip_address",
         "lat",
         "lng",
         "device_language",
