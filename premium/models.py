@@ -119,6 +119,8 @@ class NetworkMembershipActivity(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     relation = models.ForeignKey(NetworkMembershipRelation, on_delete=models.CASCADE)
     created = models.DateField(default=timezone.now)
+    activity_upgrade_limit = models.DateField(default=activity_expiry(90))
+    activity_downgrade_limit = models.DateField(default=activity_expiry(90))
     trial_expiry = models.DateField(default=activity_expiry(365))
     trial_active_till = models.IntegerField(default=365, null=True, blank=True)
     trial_applied = models.BooleanField(default=False)

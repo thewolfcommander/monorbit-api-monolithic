@@ -109,6 +109,8 @@ class NetworkMembershipActivityShowSerializer(serializers.ModelSerializer):
             'created',
             'trial_active_till',
             'trial_expiry',
+            'activity_upgrade_limit',
+            'activity_downgrade_limit',
             'trial_applied',
             'active',
             'subscriptions'
