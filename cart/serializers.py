@@ -90,7 +90,7 @@ class CartCreateSerializer(serializers.ModelSerializer):
         user = validated_data.get('user', None)
         count = 0
         sub_total = 0.00
-        shipping = 25.00
+        shipping = 0.00
         total = 0.00
         discount = 0.00
         if user is not None:
