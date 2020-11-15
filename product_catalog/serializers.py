@@ -144,6 +144,16 @@ class ProductSizeShowSerializer(serializers.ModelSerializer):
             'price_change'
         ]
 
+    
+class ProductColorShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductColor
+        fields = [
+            'color',
+            'change_side',
+            'price_change'
+        ]
+
 
 class ProductSpecificationShowSerializer(serializers.ModelSerializer):
     class Meta:
@@ -172,6 +182,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
     documents = ProductDocumentShowSerializer(many=True, required=False)
     tags = ProductTagShowSerializer(many=True, required=False)
     sizes = ProductSizeShowSerializer(many=True, required=False)
+    colors = ProductColorShowSerializer(many=True, required=False)
     specifications = ProductSpecificationShowSerializer(many=True, required=False)
     extras = ProductExtraShowSerializer(many=True, required=False)
     class Meta:
@@ -209,6 +220,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             'documents',
             'tags',
             'sizes',
+            'colors',
             'specifications',
             'extras'
         ]
@@ -219,6 +231,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         documents = validated_data.pop('documents', None)
         tags = validated_data.pop('tags', None)
         sizes = validated_data.pop('sizes', None)
+        colors = validated_data.pop('colors', None)
         specifications = validated_data.pop('specifications', None)
         extras = validated_data.pop('extras', None)
 
@@ -246,6 +259,10 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             for i in sizes:
                 ProductSize.objects.create(**i, product=product)
 
+        if colors is not None:
+            for i in colors:
+                ProductColor.objects.create(**i, product=product)
+
         if specifications is not None:
             for i in specifications:
                 ProductSpecification.objects.create(**i, product=product)
@@ -263,6 +280,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
     documents = ProductDocumentShowSerializer(many=True, required=False)
     tags = ProductTagShowSerializer(many=True, required=False)
     sizes = ProductSizeShowSerializer(many=True, required=False)
+    colors = ProductColorShowSerializer(many=True, required=False)
     specifications = ProductSpecificationShowSerializer(many=True, required=False)
     extras = ProductExtraShowSerializer(many=True, required=False)
     class Meta:
@@ -300,6 +318,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
             'documents',
             'tags',
             'sizes',
+            'colors',
             'specifications',
             'extras'
         ]
@@ -310,6 +329,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         documents = validated_data.pop('documents', None)
         tags = validated_data.pop('tags', None)
         sizes = validated_data.pop('sizes', None)
+        colors = validated_data.pop('colors', None)
         specifications = validated_data.pop('specifications', None)
         extras = validated_data.pop('extras', None)
 
@@ -323,6 +343,8 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         tags_data = list(tags_data)
         sizes_data = (instance.sizes).all()
         sizes_data = list(sizes_data)
+        colors_data = (instance.colors).all()
+        colors_data = list(colors_data)
         specifications_data = (instance.specifications).all()
         specifications_data = list(specifications_data)
         extras_data = (instance.extras).all()
@@ -334,6 +356,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         instance.custom_subcategory = validated_data.get('custom_subcategory', instance.custom_subcategory)
         instance.measurement = validated_data.get('measurement', instance.measurement)
         instance.name = validated_data.get('name', instance.name)
+        instance.slug = validated_data.get('slug', instance.slug)
         instance.brand_name = validated_data.get('brand_name', instance.brand_name)
         instance.barcode = validated_data.get('barcode', instance.barcode)
         instance.thumbnail_image = validated_data.get('thumbnail_image', instance.thumbnail_image)
@@ -380,6 +403,14 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
                 j.change_side = i.get('change_side', j.change_side)
                 j.price_change = i.get('price_change', j.price_change)
                 j.save()
+            
+        if colors is not None:
+            for i in colors:
+                j = colors_data.pop(0)
+                j.color = i.get('color', j.color)
+                j.change_side = i.get('change_side', j.change_side)
+                j.price_change = i.get('price_change', j.price_change)
+                j.save()
 
         if specifications is not None:
             for i in specifications:
@@ -413,6 +444,7 @@ class ProductShowSerializer(serializers.ModelSerializer):
     documents = ProductDocumentShowSerializer(many=True, required=True)
     tags = ProductTagShowSerializer(many=True, required=True)
     sizes = ProductSizeShowSerializer(many=True, required=True)
+    colors = ProductColorShowSerializer(many=True, required=True)
     specifications = ProductSpecificationShowSerializer(many=True, required=True)
     extras = ProductExtraShowSerializer(many=True, required=True)
     class Meta:
@@ -450,6 +482,7 @@ class ProductShowSerializer(serializers.ModelSerializer):
             'documents',
             'tags',
             'sizes',
+            'colors',
             'specifications',
             'extras'
         ]
@@ -523,6 +556,17 @@ class ProductSizeCreateSerializer(serializers.ModelSerializer):
         fields = [
             'product',
             'size',
+            'change_side',
+            'price_change'
+        ]
+
+    
+class ProductColorCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductColor
+        fields = [
+            'product',
+            'color',
             'change_side',
             'price_change'
         ]

@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from rest_framework.views import APIView
+from rest_framework.views import APIView, Response
 
 from .models import *
 from .serializers import *
@@ -50,6 +50,38 @@ class NetworkCreateView(generics.CreateAPIView):
     serializer_class = CreateNetworkSerializer
 
 
+class FindNetwork(APIView):
+    permission_classes = [permissions.AllowAny,]
+
+    def post(self, request, format=None):
+        username = request.data.get('username', None)
+
+        if username is None:
+            return Response({
+                'status': False,
+                'message': "Username not available"
+            }, status=400)
+
+        try:
+            instance = Network.objects.get(urlid=username)
+            return Response({
+                'status': False,
+                'message': "Username not available"
+            }, status=400)
+        except Network.DoesNotExist:
+            return Response({
+                'status': True,
+                'message': 'Username available'
+            }, status=200)
+            
+        return Response({
+                'status': False,
+                'message': "Username not available"
+            }, status=400)
+
+
+
+
 class NetworkListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Network.objects.all()
@@ -76,7 +108,7 @@ class NetworkDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Network.objects.all()
     serializer_class = NetworkDetailSerializer
-    lookup_field = 'id'
+    lookup_field = 'urlid'
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)

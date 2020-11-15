@@ -56,6 +56,21 @@ def unique_slug_generator(instance, new_slug=None):
     return slug
 
 
+def username_generator(name):
+    names = name.split(" ")
+    first_letter = names[0][0]
+    try:
+        three_letters_surname = names[-1][:10]
+    except:
+        three_letters_surname = random_string_generator(size=5)
+    number = '{:03d}'.format(random.randrange(1, 99999))
+    username = (first_letter + three_letters_surname + number)
+    return username
+
+# username_generator("Monosrbit Business")
+
+
+
 def valid_username(username):
     """
     To validate the Username and Clean it for authentication purpose

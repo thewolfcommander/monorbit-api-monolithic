@@ -311,8 +311,8 @@ def document_label_generator(sender, instance, **kwargs):
     
 def network_url_id_generator(sender, instance, **kwargs):
     if not instance.urlid:
-        instance.urlid = tools.short_url_id_gen()
-        print("A network created having URL ID - {}".format(instance.urlid))
+        instance.urlid = tools.username_generator(instance.name)
+        print("A network created having Username - {}".format(instance.urlid))
 
 
 pre_save.connect(instance_id_generator, sender=Network)

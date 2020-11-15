@@ -14,9 +14,10 @@ urlpatterns = [
     path('types/<int:id>/', NetworkTypeDetailView.as_view(), name='network_type'),
 
     # Networks
+    path('find/', FindNetwork.as_view(), name='find_network'),
     path('create/', NetworkCreateView.as_view(), name='create_network'),
     path('all/', NetworkListView.as_view(), name='all_networks'),
-    path('detail/<slug:id>/', NetworkDetailView.as_view(), name='network_detail'),
+    path('detail/<slug:urlid>/', NetworkDetailView.as_view(), name='network_detail'),
     path('delete/<slug:id>/', NetworkDeleteView.as_view(), name='network_delete'),
     path('reviews/', ListNetworkReview.as_view(), name='all_reviews'),
     path('reviews/<slug:id>/', UpdateNetworkReview.as_view(), name='review_detail'),

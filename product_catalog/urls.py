@@ -33,6 +33,7 @@ urlpatterns = [
     path('product/tag/create/', CreateProductTag.as_view(), name='tag_create'),
     path('product/specification/create/', CreateProductSpecification.as_view(), name='spec_create'),
     path('product/size/create/', CreateProductSize.as_view(), name='size_create'),
+    path('product/color/create/', CreateProductColor.as_view(), name='color_create'),
     path('product/extra/create/', CreateProductExtra.as_view(), name='extra_create'),
 
     path('product/review/create/', CreateProductReview.as_view(), name='review_create'),

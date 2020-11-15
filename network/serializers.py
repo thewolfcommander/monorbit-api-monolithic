@@ -87,6 +87,7 @@ class CreateNetworkSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'network_url',
+            'urlid',
             'category',
             'network_type',
             'name',
@@ -171,6 +172,7 @@ class ShowNetworkSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'category',
+            'urlid',
             'network_url',
             'thumbnail_image',
             'network_type',
@@ -202,6 +204,7 @@ class MiniNetworkSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'network_url',
+            'urlid',
             'category',
             'thumbnail_image',
             'network_type',
@@ -230,6 +233,7 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
             'user',
             'category',
             'network_url',
+            'urlid',
             'thumbnail_image',
             'network_type',
             'name',
@@ -285,6 +289,7 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
         
         instance.name = validated_data.get('name', instance.name)
         instance.network_url = validated_data.get('network_url', instance.network_url)
+        instance.urlid = validated_data.get('urlid', instance.urlid)
         instance.thumbnail_image = validated_data.get('thumbnail_image', instance.thumbnail_image)
         instance.address = validated_data.get('address', instance.address)
         instance.landmark = validated_data.get('landmark', instance.landmark)

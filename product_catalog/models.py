@@ -145,6 +145,10 @@ class Product(models.Model):
         return self.productsize_set.all()
 
     @property
+    def colors(self):
+        return self.productcolor_set.all()
+
+    @property
     def specifications(self):
         return self.productspecification_set.all()
 
@@ -196,6 +200,17 @@ class ProductSize(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=255, null=True, blank=True)
+    change_side = models.BooleanField(default=True, help_text="If True, then the change would be positive, otherwise - negative")
+    price_change = models.DecimalField(default=0.00, max_digits=12, decimal_places=2, help_text="This will be the Price Change from the Original Product Price")
+
+    def __str__(self):
+        return str(self.id)
+
+
+class ProductColor(models.Model):
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    color = models.CharField(max_length=255, null=True, blank=True)
     change_side = models.BooleanField(default=True, help_text="If True, then the change would be positive, otherwise - negative")
     price_change = models.DecimalField(default=0.00, max_digits=12, decimal_places=2, help_text="This will be the Price Change from the Original Product Price")
 
@@ -258,8 +273,7 @@ def document_label_generator(sender, instance, **kwargs):
 
     
 def product_datainit_generator(sender, instance, **kwargs):
-    if not instance.slug:
-        instance.slug = tools.unique_slug_generator(instance)
+    instance.slug = tools.unique_slug_generator(instance)
     if not instance.item_code:
         instance.item_code = tools.label_gen(instance.network.id)
     instance.discount_percent = ((float(instance.mrp)-float(instance.nsp))/float(instance.mrp))*100
@@ -276,6 +290,7 @@ pre_save.connect(instance_id_generator, sender=ProductVideo)
 pre_save.connect(instance_id_generator, sender=ProductDocument)
 pre_save.connect(instance_id_generator, sender=ProductTag)
 pre_save.connect(instance_id_generator, sender=ProductSize)
+pre_save.connect(instance_id_generator, sender=ProductColor)
 pre_save.connect(instance_id_generator, sender=ProductSpecification)
 pre_save.connect(instance_id_generator, sender=ProductExtra)
 pre_save.connect(instance_id_generator, sender=ProductReview)

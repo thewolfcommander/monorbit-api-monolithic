@@ -202,6 +202,12 @@ class CreateProductSize(generics.CreateAPIView):
     queryset = ProductSize.objects.all()
 
 
+class CreateProductColor(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    serializer_class = ProductColorCreateSerializer
+    queryset = ProductColor.objects.all()
+
+
 class CreateProductSpecification(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class = ProductSpecificationCreateSerializer
