@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Cart, ProductEntry, Wishlist, WishlistProductEntry
 from accounts.serializers import UserMiniSerializer
-from product_catalog.serializers import ProductShowSerializer, ProductMiniSerializer
+from product_catalog.serializers import *
 from product_catalog.models import Product
 
 
@@ -16,16 +16,26 @@ class ProductEntryCreateSerializer(serializers.ModelSerializer):
             'id',
             'cart',
             'product',
+            'color',
+            'size',
+            'extra',
             'quantity',
             'cost'
         ]
 
     def create(self, validated_data):
-        instance = ProductEntry.objects.create(**validated_data)
-        instance.cart.count += 1
-        instance.cart.sub_total = float(instance.cart.sub_total) + float(instance.cost)
-        instance.cart.total = (float(instance.cart.sub_total) + float(instance.cart.shipping)) - float(instance.cart.discount)
-        instance.cart.save()
+        product = validated_data.get('product')
+        cart = validated_data.get('cart')
+        try:
+            instance = ProductEntry.objects.get(product=product, cart=cart)
+            instance.quantity = validated_data.get('quantity')
+            instance.save()
+        except ProductEntry.DoesNotExist:
+            instance = ProductEntry.objects.create(**validated_data)
+            instance.cart.count += 1
+            instance.cart.sub_total = float(instance.cart.sub_total) + float(instance.cost)
+            instance.cart.total = (float(instance.cart.sub_total) + float(instance.cart.shipping)) - float(instance.cart.discount)
+            instance.cart.save()
 
         return instance
 
@@ -36,6 +46,9 @@ class ProductEntryTinyCreateSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'product',
+            'color',
+            'size',
+            'extra',
             'quantity',
             'cost'
         ]
@@ -43,12 +56,18 @@ class ProductEntryTinyCreateSerializer(serializers.ModelSerializer):
     
 class ProductEntryShowSerializer(serializers.ModelSerializer):
     product = ProductShowSerializer(read_only=True)
+    size = ProductSizeShowSerializer(required=False)
+    color = ProductColorShowSerializer(required=False)
+    extra = ProductExtraShowSerializer(required=False)
     class Meta:
         model = ProductEntry
         fields = [
             'id',
             'cart',
             'product',
+            'color',
+            'size',
+            'extra',
             'quantity',
             'cost'
         ]
@@ -56,11 +75,17 @@ class ProductEntryShowSerializer(serializers.ModelSerializer):
     
 class ProductEntryTinySerializer(serializers.ModelSerializer):
     product = ProductMiniSerializer(read_only=True)
+    size = ProductSizeShowSerializer(required=False)
+    color = ProductColorShowSerializer(required=False)
+    extra = ProductExtraShowSerializer(required=False)
     class Meta:
         model = ProductEntry
         fields = [
             'id',
             'product',
+            'color',
+            'size',
+            'extra',
             'quantity',
             'cost'
         ]
@@ -96,41 +121,41 @@ class CartCreateSerializer(serializers.ModelSerializer):
         if user is not None:
             try:
                 instance = Cart.objects.get(user=user, is_active=True)
-                instance.count = 0
-                instance.sub_total = 0.00
-                instance.shipping = 0.00
-                instance.total = 0.00
-                instance.discount = 0.00
-                try:
-                    instance.productentry_set.all().delete()
-                except:
-                    pass
-                if products is not None:
-                    for p in products:
-                        pd = p.get('product', None)
-                        quan = p.get('quantity')
-                        print(p.get('product'))
-                        if pd is not None:
-                            try:
-                                pe = ProductEntry.objects.get(product=pd, cart=instance)
-                                pe.delete()
-                                pe = ProductEntry.objects.create(**p, cart=instance)
-                                pe.save()
-                            except:
-                                pe = ProductEntry.objects.create(**p, cart=instance)
-                        else:
-                            print("Breakin")
-                            break
-                        count += 1
-                        sub_total = sub_total + float(pe.cost)
+                # instance.count = 0
+                # instance.sub_total = 0.00
+                # instance.shipping = 0.00
+                # instance.total = 0.00
+                # instance.discount = 0.00
+                # try:
+                #     instance.productentry_set.all().delete()
+                # except:
+                #     pass
+                # if products is not None:
+                #     for p in products:
+                #         pd = p.get('product', None)
+                #         quan = p.get('quantity')
+                #         print(p.get('product'))
+                #         if pd is not None:
+                #             try:
+                #                 pe = ProductEntry.objects.get(product=pd, cart=instance)
+                #                 pe.delete()
+                #                 pe = ProductEntry.objects.create(**p, cart=instance)
+                #                 pe.save()
+                #             except:
+                #                 pe = ProductEntry.objects.create(**p, cart=instance)
+                #         else:
+                #             print("Breakin")
+                #             break
+                #         count += 1
+                #         sub_total = sub_total + float(pe.cost)
 
-                total = (sub_total + shipping) - discount
-                instance.sub_total = sub_total
-                instance.total = total
-                instance.discount = discount
-                instance.shipping = shipping
-                instance.count = count
-                instance.save()
+                # total = (sub_total + shipping) - discount
+                # instance.sub_total = sub_total
+                # instance.total = total
+                # instance.discount = discount
+                # instance.shipping = shipping
+                # instance.count = count
+                # instance.save()
             except Cart.DoesNotExist:
                 instance = Cart.objects.create(
                     user=user, 

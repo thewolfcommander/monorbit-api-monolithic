@@ -81,7 +81,9 @@ class Network(models.Model):
     # Flags
     is_verified = models.BooleanField(default=False, help_text="This is for verification of uploaded documents")
     is_active = models.BooleanField(default=True)
-    is_premium = models.BooleanField(default=False)
+    is_basic = models.BooleanField(default=True)
+    is_economy = models.BooleanField(default=False)
+    is_elite = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     is_spam = models.BooleanField(default=False)
     is_video = models.BooleanField(default=False)
@@ -314,9 +316,23 @@ def network_url_id_generator(sender, instance, **kwargs):
         instance.urlid = tools.username_generator(instance.name)
         print("A network created having Username - {}".format(instance.urlid))
 
+    
+def check_for_plan(sender, instance, **kwargs):
+    if instance.is_elite:
+        instance.is_economy = False
+        instance.is_basic = False
+    elif instance.is_economy:
+        instance.is_elite = False
+        instance.is_basic = False
+    else:
+        instance.is_basic = True
+        instance.is_elite = False
+        instance.is_basic = False
+
 
 pre_save.connect(instance_id_generator, sender=Network)
 pre_save.connect(network_url_id_generator, sender=Network)
+pre_save.connect(check_for_plan, sender=Network)
 pre_save.connect(instance_id_generator, sender=NetworkImage)
 pre_save.connect(instance_id_generator, sender=NetworkVideo)
 pre_save.connect(instance_id_generator, sender=NetworkDocument)

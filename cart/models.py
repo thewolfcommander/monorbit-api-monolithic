@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import pre_save
 from accounts.models import User
-from product_catalog.models import Product
+from product_catalog.models import *
 
 from monorbit.utils import tools
 
@@ -60,6 +60,9 @@ class ProductEntry(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.IntegerField(default=1, null=True, blank=True)
+    size = models.ForeignKey(ProductSize, on_delete=models.CASCADE, null=True, blank=True)
+    color = models.ForeignKey(ProductColor, on_delete=models.CASCADE, null=True, blank=True)
+    extra = models.ForeignKey(ProductExtra, on_delete=models.CASCADE, null=True, blank=True)
     cost = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
 
     def __str__(self):

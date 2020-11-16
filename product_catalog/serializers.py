@@ -104,6 +104,7 @@ class ProductImageShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
         fields = [
+            'id',
             'label',
             'image'
         ]
@@ -113,6 +114,7 @@ class ProductVideoShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVideo
         fields = [
+            'id',
             'label',
             'video'
         ]
@@ -122,6 +124,7 @@ class ProductDocumentShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductDocument
         fields = [
+            'id',
             'label',
             'doc'
         ]
@@ -131,6 +134,7 @@ class ProductTagShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductTag
         fields = [
+            'id',
             'name',
         ]
 
@@ -139,6 +143,7 @@ class ProductSizeShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSize
         fields = [
+            'id',
             'size',
             'change_side',
             'price_change'
@@ -149,6 +154,7 @@ class ProductColorShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductColor
         fields = [
+            'id',
             'color',
             'change_side',
             'price_change'
@@ -159,6 +165,7 @@ class ProductSpecificationShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSpecification
         fields = [
+            'id',
             'key',
             'value',
             'measured_in'
@@ -169,6 +176,7 @@ class ProductExtraShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductExtra
         fields = [
+            'id',
             'key',
             'value',
             'change_side',

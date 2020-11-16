@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class NetworkCategoryListCreateView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = NetworkCategory.objects.all()
     serializer_class = NetworkCategorySerializer
     filterset_fields = [
@@ -19,7 +19,7 @@ class NetworkCategoryListCreateView(generics.ListCreateAPIView):
 
 
 class NetworkCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = NetworkCategory.objects.all()
     serializer_class = NetworkCategorySerializer
     lookup_field = 'id'
@@ -29,13 +29,13 @@ class NetworkCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class NetworkTypeListCreateView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = NetworkType.objects.all()
     serializer_class = NetworkTypeSerializer
 
 
 class NetworkTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = NetworkType.objects.all()
     serializer_class = NetworkTypeSerializer
     lookup_field = 'id'
@@ -45,7 +45,7 @@ class NetworkTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     
 class NetworkCreateView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = Network.objects.all()
     serializer_class = CreateNetworkSerializer
 
@@ -83,7 +83,7 @@ class FindNetwork(APIView):
 
 
 class NetworkListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = Network.objects.all()
     serializer_class = ShowNetworkSerializer
     filterset_fields = [
@@ -105,7 +105,7 @@ class NetworkListView(generics.ListAPIView):
 
 
 class NetworkDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [permissions.AllowAny, IsOwnerOrReadOnly]
     queryset = Network.objects.all()
     serializer_class = NetworkDetailSerializer
     lookup_field = 'urlid'
@@ -115,7 +115,7 @@ class NetworkDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     
 class NetworkDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [permissions.AllowAny, IsOwnerOrReadOnly]
     queryset = Network.objects.all()
     serializer_class = DeleteNetworkSerializer
     lookup_field = 'id'
@@ -125,43 +125,43 @@ class NetworkDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
     
 class CreateNetworkImage(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkImage.objects.all()
     serializer_class = NetworkImageCreateSerializer
 
 
 class CreateNetworkVideo(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkVideo.objects.all()
     serializer_class = NetworkVideoCreateSerializer
 
 
 class CreateNetworkDocument(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkDocument.objects.all()
     serializer_class = NetworkDocumentCreateSerializer
 
 
 class CreateNetworkOperationTiming(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkOperationTiming.objects.all()
     serializer_class = NetworkOperationTimingCreateSerializer
 
 
 class CreateNetworkOperationLocation(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkOperationLocation.objects.all()
     serializer_class = NetworkOperationLocationCreateSerializer
 
 
 class CreateNetworkReview(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.AllowAny,]
     queryset = NetworkReview.objects.all()
     serializer_class = NetworkReviewCreateSerializer
 
 
 class ListNetworkReview(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.AllowAny,]
     queryset = NetworkReview.objects.all().order_by('-created')
     serializer_class = NetworkReviewShowSerializer
     filterset_fields = [
@@ -174,7 +174,7 @@ class ListNetworkReview(generics.ListAPIView):
 
 
 class UpdateNetworkReview(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = NetworkReview.objects.all()
     serializer_class = NetworkReviewShowSerializer
     lookup_field = 'id'
@@ -184,13 +184,13 @@ class UpdateNetworkReview(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateNetworkJob(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.AllowAny,]
     queryset = NetworkJob.objects.all()
     serializer_class = NetworkJobCreateSerializer
 
 
 class ListNetworkJob(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.AllowAny,]
     queryset = NetworkJob.objects.all().order_by('-updated')
     serializer_class = NetworkJobShowSerializer
     filterset_fields = [
@@ -208,7 +208,7 @@ class ListNetworkJob(generics.ListAPIView):
 
 
 class UpdateNetworkJob(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = NetworkJob.objects.all()
     serializer_class = NetworkJobShowSerializer
     lookup_field = 'id'
@@ -219,13 +219,13 @@ class UpdateNetworkJob(generics.RetrieveUpdateDestroyAPIView):
     
 
 class CreateNetworkJobOffering(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.AllowAny,]
     queryset = NetworkJobOffering.objects.all()
     serializer_class = NetworkJobOfferingCreateSerializer
 
 
 class ListNetworkJobOffering(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.AllowAny,]
     queryset = NetworkJobOffering.objects.all().order_by('-updated')
     serializer_class = NetworkJobOfferingShowSerializer
     filterset_fields = [
@@ -240,7 +240,7 @@ class ListNetworkJobOffering(generics.ListAPIView):
 
 
 class UpdateNetworkJobOffering(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = NetworkJobOffering.objects.all()
     serializer_class = NetworkJobOfferingShowSerializer
     lookup_field = 'id'
@@ -250,13 +250,13 @@ class UpdateNetworkJobOffering(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateNetworkStaff(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.AllowAny,]
     queryset = NetworkStaff.objects.all()
     serializer_class = NetworkStaffCreateSerializer
 
 
 class ListNetworkStaff(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.AllowAny,]
     queryset = NetworkStaff.objects.all().order_by('-updated')
     serializer_class = NetworkStaffShowSerializer
     filterset_fields = [
@@ -272,14 +272,14 @@ class ListNetworkStaff(generics.ListAPIView):
 
 
 class ShowNetworkStaff(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.AllowAny,]
     queryset = NetworkStaff.objects.all().order_by('-updated')
     serializer_class = NetworkStaffShowSerializer
     lookup_field = 'id'
 
 
 class UpdateNetworkStaff(generics.UpdateAPIView, generics.DestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     queryset = NetworkStaff.objects.all()
     serializer_class = NetworkStaffUpdateSerializer
     lookup_field = 'id'

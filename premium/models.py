@@ -197,7 +197,9 @@ def instance_membership_calculator(sender, instance, **kwargs):
     plan = instance.activity.relation.plan
     payment = instance.payment
     if plan.name == "Basic":
-        instance.activity.relation.network.is_premium = False
+        instance.activity.relation.network.is_basic = True
+        instance.activity.relation.network.is_elite = False
+        instance.activity.relation.network.is_economy = False
         pass
     else:
         if payment == 0.00:
@@ -206,7 +208,9 @@ def instance_membership_calculator(sender, instance, **kwargs):
                     instance.activity.active = False
                     instance.active = False
                     instance.active_till = 0
-                    instance.activity.relation.network.is_premium = False
+                    instance.activity.relation.network.is_basic = True
+                    instance.activity.relation.network.is_elite = False
+                    instance.activity.relation.network.is_economy = False
                 else:
                     pass
             else:
@@ -218,12 +222,26 @@ def instance_membership_calculator(sender, instance, **kwargs):
                 instance.activity.trial_expiry = activity_expiry(30)
                 instance.expiry = activity_expiry(30)
                 instance.activity.trial_active_till = 30
-                instance.activity.relation.network.is_premium = True
+                if plan.name == "Economy":
+                    instance.activity.relation.network.is_basic = False
+                    instance.activity.relation.network.is_elite = False
+                    instance.activity.relation.network.is_economy = True
+                elif plan.name == "Elite":
+                    instance.activity.relation.network.is_basic = False
+                    instance.activity.relation.network.is_elite = True
+                    instance.activity.relation.network.is_economy = False
         else:
             instance.active = True
             instance.is_trial = False
             instance.activity.active = True
-            instance.activity.relation.network.is_premium = True
+            if plan.name == "Economy":
+                instance.activity.relation.network.is_basic = False
+                instance.activity.relation.network.is_elite = False
+                instance.activity.relation.network.is_economy = True
+            elif plan.name == "Elite":
+                instance.activity.relation.network.is_basic = False
+                instance.activity.relation.network.is_elite = True
+                instance.activity.relation.network.is_economy = False
             no_of_days = float(payment)/float(plan.price_per_day)
             instance.active_till = int(no_of_days)
     instance.expiry = activity_expiry(instance.active_till, instance.started)
