@@ -248,7 +248,6 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         if images is not None:
             for i in images:
                 ProductImage.objects.create(**i, product=product)
-            product.thumbnail_image = images[0]
             product.save()
 
         if videos is not None:
