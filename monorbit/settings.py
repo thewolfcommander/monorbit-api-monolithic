@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # Our owned apps
     'accounts',
     'addresses',
+    'adminer',
     'cart',
     'core',
     'greivances',
