@@ -32,6 +32,7 @@ class LoginView(APIView):
     def post(self, request):
         serializer = acc_serializers.ObtainTokenSerializer(data=request.data)
         if serializer.is_valid():
+            # Getting the user object for the mobile number input from user
             user_obj = acc_models.User.objects.get(
                 mobile_number=serializer.validated_data["mobile_number"]
             )
