@@ -15,6 +15,7 @@ class ProductEntryCreateSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'cart',
+            'product_status',
             'product',
             'color',
             'size',
@@ -45,6 +46,7 @@ class ProductEntryTinyCreateSerializer(serializers.ModelSerializer):
         model = ProductEntry
         fields = [
             'id',
+            'product_status',
             'product',
             'color',
             'size',
@@ -64,6 +66,7 @@ class ProductEntryShowSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'cart',
+            'product_status',
             'product',
             'color',
             'size',
@@ -82,6 +85,7 @@ class ProductEntryTinySerializer(serializers.ModelSerializer):
         model = ProductEntry
         fields = [
             'id',
+            'product_status',
             'product',
             'color',
             'size',
@@ -246,6 +250,7 @@ class WishlistProductEntryCreateSerializer(serializers.ModelSerializer):
 
 
 class WishlistProductEntryShowSerializer(serializers.ModelSerializer):
+    product = ProductShowSerializer(read_only=True)
     class Meta:
         model = WishlistProductEntry
         fields = [

@@ -22,3 +22,12 @@ Monorbit API
     - [ ] Setting Up Load Balancer
 
 ![Database Layout](/myapp_models.png)
+
+
+## Guide for Shell Operations
+
+- To Migrate - djMigrateSec
+- To makemigrations - djMakeMigrationsSec
+- To runserver - djStartSec
+- To make venv - djMakeEnvSec
+- To activate env - activateEnv

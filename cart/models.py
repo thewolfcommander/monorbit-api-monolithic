@@ -57,8 +57,22 @@ class Cart(models.Model):
 
     
 class ProductEntry(models.Model):
+    PRODUCT_STATUS = [
+        ('not_valid', 'Not Valid'),
+        ('in_cart', 'In Cart'),
+        ('order_created', 'Order Created'),
+        ('order_confirmed', 'Order Confirmed'),
+        ('order_shipped', 'Order shipped'),
+        ('order_dispatched', 'Order dispatched'),
+        ('order_out_for_delivery', 'Order out for delivery'),
+        ('order_delivered', 'Order Delivered'),
+        ('order_cancelled', 'Order Cancelled'),
+        ('order_returned', 'Order Returned'),
+        ('order_refunded', 'Order Refunded'),
+    ]
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
+    product_status = models.CharField(max_length=255, null=True, blank=True, choices=PRODUCT_STATUS, default="in_cart", help_text="This will determine order status for an individual product")
     quantity = models.IntegerField(default=1, null=True, blank=True)
     size = models.ForeignKey(ProductSize, on_delete=models.CASCADE, null=True, blank=True)
     color = models.ForeignKey(ProductColor, on_delete=models.CASCADE, null=True, blank=True)

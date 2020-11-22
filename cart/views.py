@@ -22,6 +22,7 @@ class ListProductEntry(generics.ListAPIView):
     queryset = ProductEntry.objects.all()
     filterset_fields = [
         'cart',
+        'product_status',
         'product',
         'quantity'
     ]
