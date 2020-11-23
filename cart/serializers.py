@@ -95,6 +95,31 @@ class ProductEntryTinySerializer(serializers.ModelSerializer):
         ]
 
     
+    
+class ProductEntryUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductEntry
+        fields = [
+            'id',
+            'product_status',
+            'product',
+            'color',
+            'size',
+            'extra',
+            'quantity',
+            'cost'
+        ]
+
+    def update(self, instance, validated_data):
+        instance.product_status = validated_data.get('product_status', instance.product_status)
+        instance.color = validated_data.get('color', instance.color)
+        instance.size = validated_data.get('size', instance.size)
+        instance.extra = validated_data.get('extra', instance.extra)
+        instance.quantity = validated_data.get('quantity', instance.quantity)
+        instance.save()
+        return instance
+
+    
 class CartCreateSerializer(serializers.ModelSerializer):
     # user = UserMiniSerializer(read_only=True)
     products = ProductEntryTinyCreateSerializer(many=True, required=False)

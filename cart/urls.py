@@ -12,6 +12,7 @@ urlpatterns = [
     path('entry/product/create/', CreateProductEntry.as_view(), name='product_entry_create'),
     path('entry/product/all/', ListProductEntry.as_view(), name='product_entry_all'),
     path('entry/product/detail/<int:id>/', UpdateProductEntry.as_view(), name='product_entry_detail'),
+    path('entry/product/update/<int:id>/status/', UpdateProductOrderStatus.as_view(), name='update_product_status'),
 
     # Wishlist
     path('wishlist/', GetOrCreateWishlist.as_view(), name='get_or_create_wishlist'),

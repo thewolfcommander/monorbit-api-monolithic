@@ -42,6 +42,8 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             instance.cart.user.save()
             instance.save()
             for p in instance.cart.productentry_set.all():
+                p.product_status = 'order_created'
+                p.save()
                 NetworkOrder.objects.create(
                     network=p.product.network,
                     order=instance

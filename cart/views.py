@@ -50,6 +50,16 @@ class UpdateProductEntry(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=204)
 
 
+class UpdateProductOrderStatus(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProductEntryUpdateSerializer
+    queryset = ProductEntry.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
 class CreateCart(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CartCreateSerializer
