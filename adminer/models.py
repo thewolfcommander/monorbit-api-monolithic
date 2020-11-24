@@ -9,7 +9,8 @@ class ContactUs(models.Model):
     This model will keep record of the users that will contact us
     """
     id = models.CharField(max_length=25, blank=True, primary_key=True, unique=True)
-    email_or_phone = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField(max_length=255, null=True, blank=True)
+    phone = models.CharField(max_length=255, null=True, blank=True)
     full_name = models.CharField(max_length=255, null=True, blank=True)
     message = models.TextField(null=True, blank=True)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
