@@ -9,7 +9,8 @@ class ContactUsListCreateView(generics.ListCreateAPIView):
     queryset = ContactUs.objects.all()
     permission_classes = [permissions.AllowAny]
     filterset_fields = [
-        'email_or_phone',
+        'email',
+        'phone',
         'is_email',
         'is_phone',
         'is_contacted',
