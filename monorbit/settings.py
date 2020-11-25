@@ -107,24 +107,24 @@ WSGI_APPLICATION = 'monorbit.wsgi.application'
 # host = config('SERVER_HOST', True)
 
 # if host:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-# else:
-    
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('AWS_RDS_DB_NAME', 'AWS_RDS_DB_NAME'),
-        'USER': config('AWS_RDS_USERNAME', 'AWS_RDS_USERNAME'),
-        'PASSWORD': config('AWS_RDS_PASSWORD', 'AWS_RDS_PASSWORD'),
-        'HOST': config('AWS_RDS_HOST', 'AWS_RDS_HOST'),
-        'PORT': 5432,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# else:
+    
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('AWS_RDS_DB_NAME', 'AWS_RDS_DB_NAME'),
+#         'USER': config('AWS_RDS_USERNAME', 'AWS_RDS_USERNAME'),
+#         'PASSWORD': config('AWS_RDS_PASSWORD', 'AWS_RDS_PASSWORD'),
+#         'HOST': config('AWS_RDS_HOST', 'AWS_RDS_HOST'),
+#         'PORT': 5432,
+#     }
+# }
 
 # add this below the database configuration
 import dj_database_url
