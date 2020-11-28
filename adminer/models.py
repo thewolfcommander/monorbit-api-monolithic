@@ -19,6 +19,7 @@ class ContactUs(models.Model):
     is_email = models.BooleanField(default=False)
     is_phone = models.BooleanField(default=False)
     is_contacted = models.BooleanField(default=False)
+    is_business = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

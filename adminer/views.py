@@ -14,6 +14,7 @@ class ContactUsListCreateView(generics.ListCreateAPIView):
         'is_email',
         'is_phone',
         'is_contacted',
+        'is_business',
         'created_at',
         'updated_at'
     ]

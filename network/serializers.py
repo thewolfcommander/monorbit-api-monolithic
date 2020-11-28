@@ -138,8 +138,6 @@ class CreateNetworkSerializer(serializers.ModelSerializer):
         if images is not None:
             for i in images:
                 NetworkImage.objects.create(**i, network=network)
-            network.thumbnail_image = NetworkImage.objects.filter(network=network).first().image
-            network.save()
 
         if videos is not None:
             for i in videos:
@@ -332,7 +330,7 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
             for i in timings:
                 j = timings_data.pop(0)
                 j.day = i.get('day', j.day)
-                j.opeing = i.get('opening', j.opening)
+                j.opening = i.get('opening', j.opening)
                 j.closing = i.get('closing', j.closing)
                 j.status = i.get('status', j.status)
                 j.save()
