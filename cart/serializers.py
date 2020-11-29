@@ -199,6 +199,7 @@ class CartCreateSerializer(serializers.ModelSerializer):
                         pe = ProductEntry.objects.create(**p, cart=instance)
                         count += 1
                         sub_total = sub_total + float(pe.cost)
+                        shipping += float(pe.product.shipping)
                 
                 else:
                     shipping = 0.00

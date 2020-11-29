@@ -84,7 +84,7 @@ class ProductEntry(models.Model):
 
     
 def product_cost_calculator(sender, instance, **kwargs):
-    instance.cost = float(instance.product.nsp) * int(instance.quantity)
+    instance.cost = (float(instance.product.nsp) * int(instance.quantity)) + float(instance.product.shipping)
 
 
 def instance_id(sender, instance, **kwargs):
