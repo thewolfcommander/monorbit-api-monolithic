@@ -1,7 +1,8 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, pagination
 
 from .serializers import *
 from .models import *
+from .pagination import *
 
 
 import logging
@@ -21,6 +22,7 @@ class ListProductDefaultCategory(generics.ListAPIView):
     filterset_fields = [
         'network_category'
     ]
+    pagination_class = CustomPageNumberPagination
 
 
 class UpdateProductDefaultCategory(generics.RetrieveUpdateDestroyAPIView):
@@ -46,6 +48,7 @@ class ListProductDefaultSubCategory(generics.ListAPIView):
     filterset_fields = [
         'category'
     ]
+    pagination_class = CustomPageNumberPagination
 
 
 class UpdateProductDefaultSubCategory(generics.RetrieveUpdateDestroyAPIView):
