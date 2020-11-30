@@ -114,29 +114,29 @@ class NetworkOrder(models.Model):
         return str(self.id)
 
     
-def stat_update_receiver(sender, instance, **kwargs):
-    try:
-        print("Step 1")
-        stat = NetworkStat.objects.get(network=instance.network)
-        print("Step 2")
-    except NetworkStat.DoesNotExist:
-        print("Step 3")
-        stat = NetworkStat.objects.create(network=instance.network)
-        print("Step 4")
-    if instance.order.status == 'Delivered' or instance.order.status == 'Confirmed':
-        print("Step 5")
-        if not instance.order.is_added_for_received_orders:
-            stat.orders_recieved += 1
-            instance.order.is_added_for_received_orders = True
-            print("Step 6")
-        if instance.order.is_paid and not instance.order.is_added_for_sales:
-            stat.total_sales += 1
-            instance.order.is_added_for_sales = True
-            print("Step 7")
-        if instance.order.is_paid and not instance.order.is_added_for_total_income:
-            stat.total_income = float(stat.total_income) + float(instance.order.total)
-            instance.order.is_added_for_total_income = True
-            print("Step 8")
+# def stat_update_receiver(sender, instance, **kwargs):
+#     try:
+#         print("Step 1")
+#         stat = NetworkStat.objects.get(network=instance.network)
+#         print("Step 2")
+#     except NetworkStat.DoesNotExist:
+#         print("Step 3")
+#         stat = NetworkStat.objects.create(network=instance.network)
+#         print("Step 4")
+#     if instance.order.status == 'Delivered' | instance.order.status == 'Confirmed':
+#         print("Step 5")
+#         if not instance.order.is_added_for_received_orders:
+#             stat.orders_recieved += 1
+#             instance.order.is_added_for_received_orders = True
+#             print("Step 6")
+#         if instance.order.is_paid and not instance.order.is_added_for_sales:
+#             stat.total_sales += 1
+#             instance.order.is_added_for_sales = True
+#             print("Step 7")
+#         if instance.order.is_paid and not instance.order.is_added_for_total_income:
+#             stat.total_income = float(stat.total_income) + float(instance.order.total)
+#             instance.order.is_added_for_total_income = True
+#             print("Step 8")
     
 
 
@@ -170,4 +170,4 @@ def id_initializer(sender, instance, **kwargs):
         instance.id = tools.random_string_generator(56)
 
 pre_save.connect(id_initializer, sender=UserDeviceRegistration)
-pre_save.connect(stat_update_receiver, sender=NetworkOrder)
+# pre_save.connect(stat_update_receiver, sender=NetworkOrder)

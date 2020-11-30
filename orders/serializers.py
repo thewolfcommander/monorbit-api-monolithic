@@ -4,10 +4,39 @@ from cart.serializers import CartShowSerializer, CartMegaDetailSerializer
 from addresses.serializers import AddressShowSerializer
 from .models import *
 from core.models import NetworkOrder
-from network.models import Network
+from network.models import Network, NetworkStat
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+
+def update_stats(network, order):
+    """
+    Helper function called every time an order updates
+    """
+    try:
+        try:
+            stat = NetworkStat.objects.get(network=network)
+        except NetworkStat.DoesNotExist:
+            stat = NetworkStat.objects.create(network=network)
+
+        if order.status == 'Delivered':
+            if not order.is_added_for_received_orders:
+                stat.orders_recieved += 1
+                order.is_added_for_received_orders = True
+            if order.is_paid and not order.is_added_for_sales:
+                stat.total_sales += 1
+                order.is_added_for_sales = True
+            if order.is_paid and not order.is_added_for_total_income:
+                stat.total_income = float(stat.total_income) + float(order.total)
+                order.is_added_for_total_income = True
+
+            order.save()
+            stat.save()
+        return "Done", True
+    except Exception as e:
+        return e, False
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):
@@ -51,6 +80,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                     network=p.product.network,
                     order=instance
                 )
+                message, status = update_stats(network=p.product.network, order=instance)
             return instance
         else:
             raise Exception("The Cart is not Correct. It has been used already")
