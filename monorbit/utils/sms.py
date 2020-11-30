@@ -24,27 +24,25 @@ def send(body, to_phone):
 
 def verify_mobile(mobile_number, otp):
     body = """
-    Hi, please enter the below OTP to verify your mobile number for Monorbit.
-    OTP - {}.
-    Please do not share this with anyone
+Your OTP for Monorbit is {} and valid for 10 minutes. Please Do not share this with anyone.
+In case of any problem, mail us at admin@monorbit.com
     """.format(otp)
     return send(body, mobile_number)
 
 
 def reset_password(mobile_number, otp):
     body = """
-    Hi, please enter the below OTP to reset your password for Monorbit.
-    OTP - {}.
-    Please do not share this with anyone
+Your OTP to reset password on Monorbit is {} and valid for 10 minutes. Please Do not share this with anyone.
+In case of any problem, mail us at admin@monorbit.com
     """.format(otp)
     return send(body, mobile_number)
 
 
 def greeting(mobile_number):
     body = """
-    Thank you for joining Monorbit Platform. We are happy to see you onboard.
-    We promise to grow your business with least effort from you.
-    Explore more here: https://www.monorbit.com
+Thank you for joining Monorbit Platform. We are happy to see you onboard.
+We promise to grow your business with least effort from you.
+Create you network here: https://business.monorbit.com
     """
     return send(body, mobile_number)
 
