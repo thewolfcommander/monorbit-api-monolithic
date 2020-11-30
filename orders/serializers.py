@@ -4,6 +4,7 @@ from cart.serializers import CartShowSerializer, CartMegaDetailSerializer
 from addresses.serializers import AddressShowSerializer
 from .models import *
 from core.models import NetworkOrder
+from network.models import Network
 
 import logging
 logger = logging.getLogger(__name__)
@@ -24,7 +25,9 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             'discount',
             'total',
             'tax',
-            'active'
+            'active',
+            'is_paid',
+            'payment_method'
         ]
 
     def create(self, validated_data):
@@ -70,6 +73,8 @@ class ListOrderSerializer(serializers.ModelSerializer):
             'total',
             'tax',
             'active'
+            'is_paid',
+            'payment_method'
         ]
 
 
@@ -92,6 +97,8 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             'total',
             'tax',
             'active'
+            'is_paid',
+            'payment_method'
         ]
 
     
@@ -111,11 +118,14 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
             'total',
             'tax',
             'active'
+            'is_paid',
+            'payment_method'
         ]
 
     def update(self, instance, validated_data):
         instance.status = validated_data.get('status', instance.status)
         if (instance.status == 'Delivered') or (instance.status == 'Cancelled') or (instance.status == 'Refunded') or (instance.status == 'Returned'):
             instance.active = False
+            instance.is_paid = validated_data.get('is_paid', instance.is_paid)
         instance.save()
         return instance

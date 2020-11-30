@@ -13,8 +13,11 @@ from .models import *
 from .serializers import *
 
 from product_catalog.models import Product
+from network.models import Network
+from orders.models import Order
 from product_catalog.serializers import ProductMiniSerializer
 from network.serializers import ShowNetworkSerializer
+from orders.serializers import ListOrderSerializer
 
 from monorbit.utils import mail, upload, files
 
@@ -331,14 +334,64 @@ class NetworkSearch(APIView):
 
     def get(self, request, format=None):
         query = request.query_params.get('query', None)
+        network_type = request.query_params.get('type', 1)
+        landmark =  request.query_params.get('landmark', None)
+        city =  request.query_params.get('city', None)
+        state =  request.query_params.get('state', None)
+        pincode =  request.query_params.get('pincode', None)
 
-        networks = Network.objects.filter(Q(name__icontains=query))
+        networks = Network.objects.filter(Q(name__icontains=query) & Q(landmark__icontains=landmark) & Q(city__icontains=city) & Q(state__icontains=state) & Q(pincode__icontains=pincode) & Q(network_type__id=network_type))
         # result_page =  self.paginate_queryset(products, request)
         # serializer = ProductMiniSerializer(result_page, many=True, context={'request':request})
 
         page = self.paginate_queryset(networks)
         if page is not None:
             serializer = ShowNetworkSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data) 
+
+    
+
+class OrderSearch(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def get(self, request, format=None):
+        query = request.query_params.get('query', None)
+
+        orders = Order.objects.filter(Q(id__icontains=query) | Q(day_id__icontains=query))
+        # result_page =  self.paginate_queryset(products, request)
+        # serializer = ProductMiniSerializer(result_page, many=True, context={'request':request})
+
+        page = self.paginate_queryset(orders)
+        if page is not None:
+            serializer = ListOrderSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
     @property

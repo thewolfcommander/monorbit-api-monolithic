@@ -23,6 +23,11 @@ ORDER_STATUS_CHOICES = (
     ('Archived', 'Archived'),
 )
 
+PAYMENT_METHOD = [
+    ('cod', 'Cash on Delivery'),
+    ('prepaid', 'Pre paid'),
+]
+
 
 class Order(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
@@ -36,7 +41,13 @@ class Order(models.Model):
     discount = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     tax = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
+    payment_method = models.CharField(max_length=255, choices=PAYMENT_METHOD, default='cod', null=True, blank=True)
     active = models.BooleanField(default=True)
+    is_paid = models.BooleanField(default=False)
+    is_added_for_received_orders = models.BooleanField(default=False)
+    is_added_for_sales = models.BooleanField(default=False)
+    is_added_for_total_income = models.BooleanField(default=False)
+    is_added_for_refund = models.BooleanField(default=False)
     updated = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 

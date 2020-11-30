@@ -80,6 +80,20 @@ class FindNetwork(APIView):
             }, status=400)
 
 
+class ShowNetworkStats(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = NetworkStat.objects.all().order_by('-updated')
+    serializer_class = NetworkStatShowSerializer
+    filterset_fields = [
+        'network',
+    ]
+
+
+class NetworkStatDetail(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = NetworkStat.objects.all().order_by('-updated')
+    serializer_class = NetworkStatShowSerializer
+    lookup_field = 'network__urlid'
 
 
 class NetworkListView(generics.ListAPIView):

@@ -1,6 +1,6 @@
 from django.core.validators import EmailValidator, RegexValidator
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.utils import timezone
 
 from accounts import models as acc_models
@@ -284,6 +284,22 @@ class NetworkJobOffering(models.Model):
         return str(self.id)
 
 
+class NetworkStat(models.Model):
+    """
+    This model will keep the information about the stats of the networks
+    """
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
+    network = models.ForeignKey(Network, on_delete=models.CASCADE)
+    total_income = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    orders_recieved = models.IntegerField(default=0, null=True, blank=True)
+    total_sales = models.IntegerField(default=0, null=True, blank=True, help_text="Total number of meaningful orders")
+    refunds = models.IntegerField(default=0, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
+
 
 """
 
@@ -329,10 +345,18 @@ def check_for_plan(sender, instance, **kwargs):
         instance.is_elite = False
         instance.is_basic = False
 
+    
+def stat_create_receiver(sender, instance, **kwargs):
+    try:
+        NetworkStat.objects.get(network=instance)
+    except NetworkStat.DoesNotExist:
+        NetworkStat.objects.create(network=instance)
+
 
 pre_save.connect(instance_id_generator, sender=Network)
 pre_save.connect(network_url_id_generator, sender=Network)
 pre_save.connect(check_for_plan, sender=Network)
+post_save.connect(stat_create_receiver, sender=Network)
 pre_save.connect(instance_id_generator, sender=NetworkImage)
 pre_save.connect(instance_id_generator, sender=NetworkVideo)
 pre_save.connect(instance_id_generator, sender=NetworkDocument)
@@ -342,6 +366,7 @@ pre_save.connect(instance_id_generator, sender=NetworkReview)
 pre_save.connect(instance_id_generator, sender=NetworkJob)
 pre_save.connect(instance_id_generator, sender=NetworkStaff)
 pre_save.connect(instance_id_generator, sender=NetworkJobOffering)
+pre_save.connect(instance_id_generator, sender=NetworkStat)
 
 pre_save.connect(image_label_generator, sender=NetworkImage)
 pre_save.connect(video_label_generator, sender=NetworkVideo)

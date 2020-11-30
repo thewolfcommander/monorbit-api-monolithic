@@ -43,4 +43,9 @@ urlpatterns = [
     path('staff/create/', CreateNetworkStaff.as_view(), name='create_staff',),
     path('staff/detail/<slug:id>/', ShowNetworkStaff.as_view(), name='show_staff',),
     path('staff/update/<slug:id>/', UpdateNetworkStaff.as_view(), name='update_staff',),
+
+
+    # Stats
+    path('stats/all/', ShowNetworkStats.as_view(), name='list_stats'),
+    path('stats/detail/<slug:network__urlid>/', NetworkStatDetail.as_view(), name='detail_stats'),
 ]

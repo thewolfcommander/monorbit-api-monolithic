@@ -219,6 +219,16 @@ class MiniNetworkSerializer(serializers.ModelSerializer):
             'followers',
         ]
 
+    
+class NetworkStatShowSerializer(serializers.ModelSerializer):
+    """
+    Stats serializer for network
+    """
+    network = MiniNetworkSerializer(read_only=True)
+    class Meta:
+        model = NetworkStat
+        fields = '__all__'
+
 
 class NetworkDetailSerializer(serializers.ModelSerializer):
     images = NetworkImageShowSerializer(many=True, required=False)

@@ -45,4 +45,5 @@ urlpatterns = [
     ),
     path('handler/products/search/', ProductsSearch.as_view(), name='products_search'),
     path('handler/networks/search/', NetworkSearch.as_view(), name='networks_search'),
+    path('handler/orders/search/', OrderSearch.as_view(), name='orders_search'),
 ]
