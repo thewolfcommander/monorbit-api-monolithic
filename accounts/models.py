@@ -168,7 +168,7 @@ class EmailVerifyOTP(models.Model):
     created = models.DateTimeField(auto_now_add=True, help_text="This is the timestamp at which OTP is created")
 
     def __str__(self):
-        return "{}-{}".format(str(self.user.mobile_number), str(self.token))
+        return "{}-{}".format(str(self.user.mobile_number), str(self.otp))
 
 
 class PasswordUpdateToken(models.Model):
