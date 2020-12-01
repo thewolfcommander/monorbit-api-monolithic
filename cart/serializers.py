@@ -77,7 +77,7 @@ class ProductEntryShowSerializer(serializers.ModelSerializer):
 
     
 class ProductEntryTinySerializer(serializers.ModelSerializer):
-    product = ProductMiniSerializer(read_only=True)
+    product = ProductShowSerializer(read_only=True)
     size = ProductSizeShowSerializer(required=False)
     color = ProductColorShowSerializer(required=False)
     extra = ProductExtraShowSerializer(required=False)
