@@ -102,7 +102,7 @@ class ListOrderSerializer(serializers.ModelSerializer):
             'discount',
             'total',
             'tax',
-            'active'
+            'active',
             'is_paid',
             'payment_method'
         ]
@@ -126,7 +126,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             'discount',
             'total',
             'tax',
-            'active'
+            'active',
             'is_paid',
             'payment_method'
         ]
@@ -147,7 +147,7 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
             'discount',
             'total',
             'tax',
-            'active'
+            'active',
             'is_paid',
             'payment_method'
         ]
