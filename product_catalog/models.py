@@ -105,6 +105,7 @@ class Product(models.Model):
     rating = models.DecimalField(default=5.0, max_digits=2, decimal_places=1)
     no_of_reviews = models.IntegerField(null=True, blank=True, default=0)
     available_in_stock = models.IntegerField(null=True, blank=True, default=1)
+    minimum_quantity_per_order = models.IntegerField(null=True, blank=True, default=1)
     
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
     default_category = models.ForeignKey(ProductDefaultCategory, on_delete=models.CASCADE, null=True, blank=True)
