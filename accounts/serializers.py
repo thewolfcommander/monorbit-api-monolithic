@@ -99,7 +99,7 @@ class UserLocalizationSerializer(serializers.ModelSerializer):
 
     
 class UserInfoSerializer(serializers.ModelSerializer):
-    localization = UserLocalizationSerializer(read_only=True, many=True)
+    # localization = UserLocalizationSerializer(read_only=True, many=True)
     class Meta:
         model = acc_models.User
         fields = [
@@ -132,7 +132,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
             'registered_on',
             'last_logged_in_time',
             'updated_on',
-            'localization',
+            # 'localization',
         ]
 
     def update(self, instance, validated_data):
