@@ -28,7 +28,7 @@ class UserListView(generics.ListAPIView):
     authentication_classes = ()
     permission_classes = []
     serializer_class = acc_serializers.UserInfoSerializer
-    queryset = acc_models.User
+    queryset = acc_models.User.objects.all()
 
     filterset_fields = [
         'mobile_number',
