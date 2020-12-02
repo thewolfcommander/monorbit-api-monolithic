@@ -21,6 +21,132 @@ def expiration_delta():
     return timezone.now() + timezone.timedelta(minutes=10)
 
 
+class UserListView(generics.ListAPIView):
+    """
+    This route will list all the users registered on monorbit
+    """
+    authentication_classes = ()
+    permission_classes = (permissions.IsAuthenticated)
+    serializer_class = acc_serializers.UserInfoSerializer
+    queryset = acc_models.User
+
+    filterset_fields = [
+        'mobile_number',
+        'id',
+        'hash_token',
+        'country_code',
+        'gender',
+        'registration_reference',
+        'city',
+        'pincode',
+        'network_created',
+        'otp_sent',
+        'password_otp_sent',
+        'order_count',
+        'is_consumer',
+        'followed_networks',
+        'is_creator',
+        'is_working_profile',
+        'is_active',
+        'is_agreed_to_terms',
+        'is_admin',
+        'is_mobile_verified',
+        'is_email_verified',
+        'is_logged_in',
+        'is_archived',
+    ]
+
+
+class AdminLoginView(APIView):
+    """
+    This login route will return useful user information only along with token only for admin users
+    """
+
+    authentication_classes = ()
+    permission_classes = ()
+
+    def post(self, request):
+        serializer = acc_serializers.ObtainTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            user_obj = acc_models.User.objects.get(
+                mobile_number=serializer.validated_data["mobile_number"]
+            )
+
+            if user_obj.is_active and user_obj.is_admin:
+                token = jwt_encode_handler(jwt_payload_handler(user_obj))
+                user_obj.is_logged_in = True
+                user_obj.last_logged_in_time = timezone.now()
+                user_obj.save()
+                return Response(
+                    data={
+                        "status": True,
+                        "token": token,
+                        "user": {
+                            "id": user_obj.id,
+                            "mobile_number": user_obj.mobile_number,
+                            "full_name": user_obj.full_name,
+                            "email": user_obj.email,
+                            "hash_token": user_obj.hash_token,
+                            "is_consumer": user_obj.is_consumer,
+                            "is_creator": user_obj.is_creator,
+                            "followed_networks": user_obj.followed_networks,
+                            "is_logged_in": user_obj.is_logged_in,
+                            "is_admin": user_obj.is_admin,
+                            "is_working_profile": user_obj.is_working_profile,
+                            "is_mobile_verified": user_obj.is_mobile_verified,
+                            "is_email_verified": user_obj.is_email_verified,
+                        },
+                        "message": "User logged in Successfully",
+                    },
+                    status=200,
+                )
+            else:
+                return Response(
+                    data={"status": False, "message": "Invalid User. Unable to Login"},
+                    status=400,
+                )
+        elif not serializer.is_valid():
+            try:
+                return Response(
+                    data={
+                        "message": "{}".format(
+                            str(serializer.errors["non_field_errors"][0])
+                        ),
+                        "status": False,
+                    },
+                    status=400,
+                )
+            except:
+                if "mobile_number" in serializer.errors:
+                    return Response(
+                        data={
+                            "message": "{} - Error".format(
+                                str(serializer.errors["mobile_number"][0])
+                            ),
+                            "status": False,
+                        },
+                        status=400,
+                    )
+                else:
+                    return Response(
+                        data={
+                            "message": "{} - Error".format(
+                                str(serializer.errors["password"][0])
+                            ),
+                            "status": False,
+                        },
+                        status=400,
+                    )
+        else:
+            return Response(
+                data={
+                    "message": "Some unknown Error occured. Please try again later.",
+                    "status": False,
+                },
+                status=400,
+            )
+
+
 class LoginView(APIView):
     """
     This login route will return useful user information only along with token

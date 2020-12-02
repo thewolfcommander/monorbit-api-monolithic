@@ -6,9 +6,11 @@ app_name = 'accounts'
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login_view'),
+    path('login/admin/', AdminLoginView.as_view(), name='admin_login_view'),
     path('logout/', LogoutView.as_view(), name='logout_view'),
     path('refresh-token/', RefreshToken.as_view(), name='refresh_token'),
     path('verify-token/', verify_jwt_token, name='verify_token'),
+    path('users/', UserListView.as_view(), name='list_all_users'),
     path('user-info/<slug:mobile_number>/', GetUserInfo.as_view(), name='user_info'),
     path('delete-user/<slug:mobile_number>/', DeleteAccount.as_view(), name='delete_user'),
     path('register/', RegisterView.as_view(), name='register_view'),
