@@ -223,6 +223,86 @@ class CreateProductExtra(generics.CreateAPIView):
     queryset = ProductExtra.objects.all()
 
 
+class UpdateProductImage(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = ProductImageCreateSerializer
+    queryset = ProductImage.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class UpdateProductVideo(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = ProductVideoCreateSerializer
+    queryset = ProductVideo.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class UpdateProductDocument(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = ProductDocumentCreateSerializer
+    queryset = ProductDocument.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class UpdateProductTag(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = ProductTagCreateSerializer
+    queryset = ProductTag.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class UpdateProductSize(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = ProductSizeCreateSerializer
+    queryset = ProductSize.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class UpdateProductColor(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = ProductColorCreateSerializer
+    queryset = ProductColor.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class UpdateProductSpecification(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = ProductSpecificationCreateSerializer
+    queryset = ProductSpecification.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class UpdateProductExtra(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = ProductExtraCreateSerializer
+    queryset = ProductExtra.objects.all()
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
 class CreateProductReview(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny,]
     serializer_class = ProductReviewCreateSerializer

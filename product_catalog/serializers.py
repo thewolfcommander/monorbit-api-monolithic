@@ -525,6 +525,7 @@ class ProductImageCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
         fields = [
+            'id',
             'product',
             'image',
         ]
@@ -534,6 +535,7 @@ class ProductVideoCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVideo
         fields = [
+            'id',
             'product',
             'video',
         ]
@@ -543,6 +545,7 @@ class ProductDocumentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductDocument
         fields = [
+            'id',
             'product',
             'doc',
         ]
@@ -552,6 +555,7 @@ class ProductTagCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductTag
         fields = [
+            'id',
             'product',
             'name',
         ]
@@ -561,6 +565,7 @@ class ProductSizeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSize
         fields = [
+            'id',
             'product',
             'size',
             'change_side',
@@ -572,6 +577,7 @@ class ProductColorCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductColor
         fields = [
+            'id',
             'product',
             'color',
             'change_side',
@@ -583,6 +589,7 @@ class ProductSpecificationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSpecification
         fields = [
+            'id',
             'key',
             'product',
             'value',
@@ -594,6 +601,7 @@ class ProductExtraCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductExtra
         fields = [
+            'id',
             'key',
             'product',
             'value',
