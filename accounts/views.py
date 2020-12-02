@@ -26,7 +26,7 @@ class UserListView(generics.ListAPIView):
     This route will list all the users registered on monorbit
     """
     authentication_classes = ()
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = []
     serializer_class = acc_serializers.UserInfoSerializer
     queryset = acc_models.User
 
