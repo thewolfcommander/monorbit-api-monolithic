@@ -39,7 +39,7 @@ urlpatterns = [
     ),
 
     path("handler/file/upload/", FileUploadView.as_view(), name="upload_file"),
-    path("handler/file/upload/test/", FileView.as_view(), name="upload_file2"),
+    # path("handler/file/upload/test/", FileView.as_view(), name="upload_file2"),
     path(
         "handler/network/orders/", ListAllNetworkOrders.as_view(), name="network_orders"
     ),

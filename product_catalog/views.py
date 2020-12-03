@@ -157,6 +157,13 @@ class CreateProduct(generics.CreateAPIView):
     serializer_class = ProductCreateSerializer
     queryset = Product.objects.all()
 
+    # def get_serializer_class(self):
+    #     print(self.request)
+    #     # if self.request.method:
+    #     #     self.serializer_class = ProductShowSerializer
+    #     # else:
+    #     self.serializer_class = ProductCreateSerializer
+
 
 class DetailProduct(generics.RetrieveDestroyAPIView):
     permission_classes = [permissions.AllowAny,]

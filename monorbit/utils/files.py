@@ -17,13 +17,15 @@ def get_ext(file):
     m = re.search(r'\.[A-Za-z0-9]+$', file)
     return m.group(0) if m else ""
 
+# print(get_ext("hello.gif"))
+
 def get_file_name(file):
     random_file_name = '-'.join([str(uuid.uuid4().hex[:14]), file])
     return random_file_name
 
 # print(get_file_name("myapp_models.png"))
 
-def upload(file, filetype):
+def upload(file, filetype, name):
     """
     FIle type should be - IMG, VID, DOC, AUD
     """
@@ -35,6 +37,7 @@ def upload(file, filetype):
     }
 
     data = file
+    # print(file)
 
     s3 = boto3.resource(
         's3',
@@ -45,19 +48,8 @@ def upload(file, filetype):
 
     REGION='us-west-2'
     today = datetime.now()
-    try:
-        file_ext = get_ext(file)
-    except:
-        if filetype == 'IMG':
-            file_ext = '.png'
-        elif filetype == 'VID':
-            file_ext = '.mp4'
-        elif filetype == 'DOC':
-            file_ext = '.pdf'
-        elif filetype == 'AUD':
-            file_ext = '.mp3'
-        else:
-            return False
+    # try:
+    file_ext = get_ext(name)
 
     if file_ext == "":
         file_ext = 'png'
@@ -68,7 +60,7 @@ def upload(file, filetype):
     response = object_acl.put(ACL='public-read')
     url = 'http://{}.s3.{}.amazonaws.com/{}/{}/{}/{}/{}/{}'.format(str(BUCKET_NAME), str(REGION), str(filetype), str(today.year), str(today.month), str(today.day), str(today.hour), str(filename))
 
-    return url
+    return url, file_ext
 
 # uploaded = upload('myapp_models.png', 'IMG')
 # print(uploaded)

@@ -209,6 +209,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             'tax',
             'shipping',
             'quantity_per_measurement',
+            'minimum_quantity_per_order',
             'short_description',
             'rating',
             'no_of_reviews',
@@ -306,6 +307,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
             'tax',
             'shipping',
             'quantity_per_measurement',
+            'minimum_quantity_per_order',
             'short_description',
             'rating',
             'no_of_reviews',
@@ -371,6 +373,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         instance.nsp = validated_data.get('nsp', instance.nsp)
         instance.tax = validated_data.get('tax', instance.tax)
         instance.quantity_per_measurement = validated_data.get('quantity_per_measurement', instance.quantity_per_measurement)
+        instance.minimum_quantity_per_order = validated_data.get('minimum_quantity_per_order', instance.minimum_quantity_per_order)
         instance.short_description = validated_data.get('short_description', instance.short_description)
         instance.available_in_stock = validated_data.get('available_in_stock', instance.available_in_stock)
         instance.is_active = validated_data.get('is_active', instance.is_active)
@@ -470,6 +473,7 @@ class ProductShowSerializer(serializers.ModelSerializer):
             'tax',
             'shipping',
             'quantity_per_measurement',
+            'minimum_quantity_per_order',
             'short_description',
             'rating',
             'no_of_reviews',
@@ -514,6 +518,7 @@ class ProductMiniSerializer(serializers.ModelSerializer):
             'tax',
             'shipping',
             'quantity_per_measurement',
+            'minimum_quantity_per_order',
             'short_description',
             'rating',
             'no_of_reviews',
