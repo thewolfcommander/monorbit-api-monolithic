@@ -245,8 +245,15 @@ class FileUploadView(APIView):
             raise ParseError("FIle should be provided")
         file_obj = request.data["file"]
         filetype = request.data["filetype"]
-        name = request.META["HTTP_NAME"]
-        url, ext = files.upload(file_obj, filetype, name)
+        try:
+            name = request.META["HTTP_NAME"]
+        except:
+            name = "hello.png"
+        try:
+            url, ext = files.upload(file_obj, filetype, name)
+        except Exception as e:
+            url = "none"
+            message = str(e)
         return Response(
             {
                 "status": True,
