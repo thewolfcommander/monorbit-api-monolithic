@@ -267,6 +267,41 @@ class FileUploadView(APIView):
         return Response({"message": "Hello world"})
 
 
+class MultiFileUploadView(APIView):
+    parser_class = [FileUploadParser]
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, format=None):
+        if "file1" not in request.data:
+            raise ParseError("Atleast one file should be provided")
+        total_files = []
+        total_files.append(request.data.get("file1", None))
+        total_files.append(request.data.get("file2", None))
+        total_files.append(request.data.get("file3", None))
+        total_files.append(request.data.get("file4", None))
+        total_files.append(request.data.get("file5", None))
+        # no_of_images = request.data['no_of_images']
+        names = request.data["names"]
+        loaded_urls = []
+        try:
+            for i in total_files:
+                if i is not None:
+                    url, ext = files.upload(i, 'IMG', names[0])
+                    loaded_urls.append(url)
+        except Exception as e:
+            raise ParseError(e)
+        return Response(
+            {
+                "status": True,
+                "message": "Files Uploaded",
+                "urls": loaded_urls,
+            },
+            status=201,
+        )
+
+    def get(self, request, format=None):
+        return Response({"message": "Hello world"})
+
 
 class FileView(APIView):
     parser_classes = [FileUploadParser]
