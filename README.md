@@ -1,6 +1,9 @@
 # monorbit-api-monolithic
 Monorbit API
 
+## About this branch
+In this branch we worked on raise proper error messages instead of simple responses
+
 ## Todo for Monorbit APIs
 
 - [ ] Create Network Order Analytics API
