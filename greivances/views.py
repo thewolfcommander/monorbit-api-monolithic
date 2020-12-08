@@ -65,10 +65,7 @@ class CreateFAQReaction(APIView):
         like_it_or_not = request.data.get('like_it_or_not', False)
 
         if faq is None:
-            return Response({
-                'status': False,
-                'message': 'Invalid FAQ. Please try again by correcting it.'
-            })
+            raise ValidationError(detail="Invalid FAQ. Please try again later by correcting it.", code=400)
 
         try:
             faq_obj = FAQ.objects.get(id=faq)
@@ -106,10 +103,7 @@ class CreateFAQReaction(APIView):
                     }
                 })
         except FAQ.DoesNotExist:
-            return Response({
-                'status': False,
-                'message': 'Invalid FAQ. Please try again by correcting it.'
-            })
+            raise ValidationError(detail="Invalid FAQ. Please try again later by correcting it.", code=404)
 
         
 class DeleteFAQReaction(generics.DestroyAPIView):
@@ -218,16 +212,10 @@ class GiveTicketReaction(APIView):
         ticket = request.data.get('ticket', None)
 
         if reaction is None:
-            return Response({
-                'status': False,
-                'message': "Invalid Reaction. Please give a proper reaction on the Ticket"
-            }, status=400)
+            raise ValidationError(detail="Invalid Reaction. Please give a proper reaction on the ticket.", code=400)
         
         if ticket is None:
-            return Response({
-                'status': False,
-                'message': "Invalid Ticket ID."
-            }, status=400)
+            raise ValidationError(detail="Invalid Ticket ID. Please try again later by correcting it.", code=400)
 
         try:
             ticket_obj = Ticket.objects.get(id=ticket)
@@ -238,19 +226,13 @@ class GiveTicketReaction(APIView):
                 ticket_obj.downvotes += 1
                 ticket_obj.save()
             else:
-                return Response({
-                    'status': False,
-                    'message': "Invalid Reaction"
-                }, status=400)
+                raise ValidationError(detail="Invalid Reaction.", code=400)
             return Response({
                 'status': True,
                 'message': "Hurray! You reacted"
             }, status=200)
         except Ticket.DoesNotExist:
-            return Response({
-                'status': False,
-                'message': "Invalid Ticket ID"
-            }, status=400)
+            raise ValidationError(detail="Invalid Ticket ID.", code=404)
 
         
 
@@ -261,17 +243,12 @@ class GiveTicketCommentReaction(APIView):
         reaction = request.data.get('reaction', None)
         comment = request.data.get('comment', None)
 
+        
         if reaction is None:
-            return Response({
-                'status': False,
-                'message': "Invalid Reaction. Please give a proper reaction on the comment"
-            }, status=400)
+            raise ValidationError(detail="Invalid Reaction. Please give a proper reaction on the ticket.", code=400)
         
         if comment is None:
-            return Response({
-                'status': False,
-                'message': "Invalid comment ID."
-            }, status=400)
+            raise ValidationError(detail="Please provide comment to give reaction", code=400)
 
         try:
             comment_obj = TicketComment.objects.get(id=comment)
@@ -282,16 +259,10 @@ class GiveTicketCommentReaction(APIView):
                 comment_obj.downvotes += 1
                 comment_obj.save()
             else:
-                return Response({
-                    'status': False,
-                    'message': "Invalid Reaction"
-                }, status=400)
+                raise ValidationError(detail="Invalid Reaction.", code=400)
             return Response({
                 'status': True,
                 'message': "Hurray! You reacted"
             }, status=200)
         except TicketComment.DoesNotExist:
-            return Response({
-                'status': False,
-                'message': "Invalid comment ID"
-            }, status=400)
+            raise ValidationError(detail="Invalid Comment ID.", code=404)

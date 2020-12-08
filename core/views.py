@@ -252,8 +252,7 @@ class FileUploadView(APIView):
         try:
             url, ext = files.upload(file_obj, filetype, name)
         except Exception as e:
-            url = "none"
-            message = str(e)
+            raise ValidationError(detail="Unable to upload file. Reason - {}".format(e), code=400)
         return Response(
             {
                 "status": True,
@@ -289,7 +288,7 @@ class MultiFileUploadView(APIView):
                     url, ext = files.upload(i, 'IMG', names[0])
                     loaded_urls.append(url)
         except Exception as e:
-            raise ParseError(e)
+            raise ValidationError(detail="Unable to upload file. Reason - {}".format(e), code=400)
         return Response(
             {
                 "status": True,

@@ -2,6 +2,7 @@ import json
 
 from rest_framework import generics, permissions
 from rest_framework.views import APIView, Response
+from rest_framework.serializers import ValidationError
 
 from .models import *
 from .serializers import *
@@ -116,15 +117,9 @@ class CreateNetworkMembershipActivity(APIView):
                             }
                     }, status=200)
             except NetworkMembershipPlan.DoesNotExist:
-                return Response(data={
-                    "status": False,
-                    "message": "Plan Doesn't exists"
-                }, status=400)
+                raise ValidationError(detail="Plan Doesn't exists", code=404)
         except Network.DoesNotExist:
-            return Response(data={
-                "status": False,
-                "message": "Network Doesn't exists"
-            }, status=400)
+            raise ValidationError(detail="Network Doesn't exists", code=404)
 
 
 class CreateNetworkBilling(generics.CreateAPIView):
@@ -210,16 +205,10 @@ class CreateRZPOrder(APIView):
         # }, status=201)
 
         if plan is None:
-            return Response({
-                'status': False,
-                'message': 'Invalid Plan'
-            }, status=400)
+            raise ValidationError(detail="Invalid Plan Details", code=400)
 
         if receipt is None:
-            return Response({
-                'status': False,
-                'message': 'Invalid Billing Profile'
-            }, status=400)
+            raise ValidationError(detail="Invalid Billing Profile", code=400)
         try:
             try:
                 plan_obj = NetworkMembershipPlan.objects.get(name=plan)
@@ -269,20 +258,11 @@ class CreateRZPOrder(APIView):
                         }
                     }, status=201)
                 except NetworkBilling.DoesNotExist:
-                    return Response({
-                        'status': False,
-                        'message': 'Invalid Network Billing Information'
-                    }, status=400)
+                    raise ValidationError(detail="Invalid Network Billing Information", code=404)
             except NetworkMembershipPlan.DoesNotExist:
-                return Response({
-                    'status': False,
-                    'message': 'Invalid Plan Detail'
-                }, status=400)
+                raise ValidationError(detail="Invalid Plan Detail", code=404)
         except Exception as e:
-            return Response({
-                'status': False,
-                'message': "Subscription Failed. Please Try again later. Reason - {}".format(e)
-            }, status=503)
+            raise ValidationError(detail="Subscription failed due to {}. Please try again later.".format(e), code=503)
 
 
 class PaymentVerification(APIView):
@@ -318,7 +298,6 @@ class PaymentVerification(APIView):
                     network_order_receipt=order_receipt
                 )
         except Exception as e:
-            print(e)
             pass
         return Response({
             'status': 'ok'
@@ -334,22 +313,13 @@ class CreateNetworkMembershipSubscription(APIView):
         network_order_receipt = request.data.get('network_order_receipt', None)
 
         if billing_profile is None:
-            return Response({
-                'status': False,
-                'message': "Please provide Billing Profile"
-            }, status=400)
+            raise ValidationError(detail="Please provide Billing Profile", code=400)
 
         if plan is None:
-            return Response({
-                'status': False,
-                'message': "Please provide Plan detail"
-            }, status=400)
+            raise ValidationError(detail="Please provide plan details", code=400)
         
         if network_order_receipt is None:
-            return Response({
-                'status': False,
-                'message': "Please provide network membership order receipt"
-            }, status=400)
+            raise ValidationError(detail="Please provide network membership order receipt", code=400)
 
         try:
             billing_obj = NetworkBilling.objects.get(id=billing_profile)
@@ -521,17 +491,12 @@ class CreateNetworkMembershipSubscription(APIView):
                             }
                         }, status=200)
                 except NetworkMembershipOrderReciept.DoesNotExist:
-                    return Response({
-                        'status': False,
-                        'message': "Invalid Order Receipt. Please try again with correct receipt"
-                    }, status=400)
+                    raise ValidationError(detail="Invalid Order Receipt. Please try again with correct receipt", code=404)
             except NetworkMembershipPlan.DoesNotExist:
                 return Response({
                     'status': False,
                     'message': "Invalid Plan ID. Please try again with correct plan"
                 }, status=400)
+                raise ValidationError(detail="Invalid Plan ID. Please try again with correct plan", code=404)
         except NetworkBilling.DoesNotExist:
-            return Response({
-                'status': False,
-                'message': "Invalid Billing Profile. Please try again with correct profile"
-            }, status=400)
+            raise ValidationError(detail="Invalid Billing Profile. Please try again with correct profile", code=404)
