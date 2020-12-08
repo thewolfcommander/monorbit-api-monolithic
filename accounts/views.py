@@ -186,15 +186,10 @@ class LoginView(APIView):
                             str(serializer.errors["non_field_errors"][0])
                         ), code=400)
             except:
-                if "mobile_number" in serializer.errors:
-                    raise ValidationError(detail="{} - Error".format(
-                                str(serializer.errors["mobile_number"][0])
-                            ), code=400)
-                    
-                else:
-                    raise ValidationError(detail="{} - Error".format(
-                                str(serializer.errors["password"][0])
-                            ), code=400)           
+                for i in serializer.errors:
+                    raise ValidationError(detail="{}".format(
+                                str(serializer.errors[i][0]), str(i)
+                            ), code=400)      
         else:
             raise ValidationError(detail="Some unknown Error occured. Please try again later.", code=400)
 
