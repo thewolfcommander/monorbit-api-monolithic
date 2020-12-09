@@ -117,8 +117,8 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    is_refundable = models.BooleanField(default=False, help_text="Is the current product is refundable?")
-    is_returnable = models.BooleanField(default=False, help_text="Is the current product is returnable?")
+    is_refundable = models.BooleanField(default=False, null=True, blank=True, help_text="Is the current product is refundable?")
+    is_returnable = models.BooleanField(default=False, null=True, blank=True, help_text="Is the current product is returnable?")
     is_active = models.BooleanField(default=True)
     is_archived = models.BooleanField(default=False)
     is_open_for_sharing = models.BooleanField(default=False)
