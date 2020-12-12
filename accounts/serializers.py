@@ -37,19 +37,26 @@ Serialized Data for User model
 
 
 class ObtainTokenSerializer(serializers.Serializer):
+    """
+    Serializer for Logiing in to the Monorbit
+    """
     mobile_number = serializers.CharField()
     password = serializers.CharField(max_length=20)
 
     def validate(self, attrs):
-
+        """
+        Validating the fields - mobile number and password
+        """
         mobile_number = attrs.get('mobile_number')
         password = attrs.get('password')
+        # Getting the user object from the database
         user_obj = acc_models.User.objects.filter(mobile_number=mobile_number, is_active=True, is_archived=False, is_agreed_to_terms=True).first()
 
+        # check if the user exists
         if user_obj is None:
             raise serializers.ValidationError("No user exists with this mobile number")
-            # return {"message": "No User exists with this email"}
 
+        # Check if password matches
         if not user_obj.check_password(password):
             raise serializers.ValidationError("Password entered is incorrect")
             # return {"message": "No User exists with this email"}
@@ -58,6 +65,9 @@ class ObtainTokenSerializer(serializers.Serializer):
 
     
 class UserRegistrationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating new user
+    """
     class Meta:
         model = acc_models.User
         fields = [
@@ -73,6 +83,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
+        """
+        Validating fields for any mistake in input
+        """
 
         mobile_number = attrs.get('mobile_number')
         password = attrs.get('password')
@@ -90,6 +103,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     
 class UserLocalizationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for User Localization
+    """
     class Meta:
         model = acc_models.UserLocalization
         fields = [
@@ -99,6 +115,9 @@ class UserLocalizationSerializer(serializers.ModelSerializer):
 
     
 class UserInfoSerializer(serializers.ModelSerializer):
+    """
+    Serializer for providing all user details
+    """
     # localization = UserLocalizationSerializer(read_only=True, many=True)
     class Meta:
         model = acc_models.User
@@ -136,6 +155,9 @@ class UserInfoSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
+        """
+        Updating the user's details
+        """
         instance.mobile_number = validated_data.get('mobile_number', instance.mobile_number)
         instance.full_name = validated_data.get('full_name', instance.full_name)
         instance.email = validated_data.get('email', instance.email)
@@ -149,6 +171,9 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 class UserDeleteSerializer(serializers.ModelSerializer):
+    """
+    Deactivating and deleting the user temporarily
+    """
     class Meta:
         model = acc_models.User
         fields = [
@@ -157,6 +182,9 @@ class UserDeleteSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
+        """
+        Updating the user's details
+        """
         instance.is_active = False
         instance.is_archived = True
         instance.save()
@@ -165,6 +193,9 @@ class UserDeleteSerializer(serializers.ModelSerializer):
 
     
 class UpdatePasswordSerializer(serializers.Serializer):
+    """
+    Serializer to update password
+    """
     model = acc_models.User
     new_password = serializers.CharField(required=True)
 

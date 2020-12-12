@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.hashers import check_password
 from rest_framework import generics, permissions, authentication
 from rest_framework.views import APIView, status, Response
+from rest_framework.serializers import ValidationError
 
 from rest_framework_jwt.utils import jwt_encode_handler, jwt_payload_handler
 
@@ -101,50 +102,23 @@ class AdminLoginView(APIView):
                     status=200,
                 )
             else:
-                return Response(
-                    data={"status": False, "message": "Invalid User. Unable to Login"},
-                    status=400,
-                )
+                raise ValidationError(detail="invalid User. Unable to Login", code=400)
         elif not serializer.is_valid():
             try:
-                return Response(
-                    data={
-                        "message": "{}".format(
+                raise ValidationError(detail= "{}".format(
                             str(serializer.errors["non_field_errors"][0])
-                        ),
-                        "status": False,
-                    },
-                    status=400,
-                )
+                        ), code=400)
             except:
                 if "mobile_number" in serializer.errors:
-                    return Response(
-                        data={
-                            "message": "{} - Error".format(
+                    raise ValidationError(detail="{} - Error".format(
                                 str(serializer.errors["mobile_number"][0])
-                            ),
-                            "status": False,
-                        },
-                        status=400,
-                    )
+                            ), code=400)
                 else:
-                    return Response(
-                        data={
-                            "message": "{} - Error".format(
+                    raise ValidationError(detail="{} - Error".format(
                                 str(serializer.errors["password"][0])
-                            ),
-                            "status": False,
-                        },
-                        status=400,
-                    )
+                            ), code=400)
         else:
-            return Response(
-                data={
-                    "message": "Some unknown Error occured. Please try again later.",
-                    "status": False,
-                },
-                status=400,
-            )
+            raise ValidationError(detail="Some unknown Error occured. Please try again later.", code=400)
 
 
 class LoginView(APIView):
@@ -204,50 +178,20 @@ class LoginView(APIView):
                     }
                     return Response(data=data, status=201)
             else:
-                return Response(
-                    data={"status": False, "message": "Invalid User. Unable to Login"},
-                    status=400,
-                )
+                raise ValidationError(detail="Invalid User. Unable to Login", code=400)
+                
         elif not serializer.is_valid():
             try:
-                return Response(
-                    data={
-                        "message": "{}".format(
+                raise ValidationError(detail="{}".format(
                             str(serializer.errors["non_field_errors"][0])
-                        ),
-                        "status": False,
-                    },
-                    status=400,
-                )
+                        ), code=400)
             except:
-                if "mobile_number" in serializer.errors:
-                    return Response(
-                        data={
-                            "message": "{} - Error".format(
-                                str(serializer.errors["mobile_number"][0])
-                            ),
-                            "status": False,
-                        },
-                        status=400,
-                    )
-                else:
-                    return Response(
-                        data={
-                            "message": "{} - Error".format(
-                                str(serializer.errors["password"][0])
-                            ),
-                            "status": False,
-                        },
-                        status=400,
-                    )
+                for i in serializer.errors:
+                    raise ValidationError(detail="{}".format(
+                                str(serializer.errors[i][0]), str(i)
+                            ), code=400)      
         else:
-            return Response(
-                data={
-                    "message": "Some unknown Error occured. Please try again later.",
-                    "status": False,
-                },
-                status=400,
-            )
+            raise ValidationError(detail="Some unknown Error occured. Please try again later.", code=400)
 
 
 class RegisterView(APIView):
@@ -282,42 +226,22 @@ class RegisterView(APIView):
                 }
                 return Response(data=data, status=201)
             else:
-                data = {
-                    "status": False,
-                    "message": "You have to accept the terms and conditions",
-                }
-                return Response(data=data, status=400)
+                raise ValidationError(detail="You have to accept the terms and conditions", code=400)
+                
         elif not serializer.is_valid():
             try:
-                return Response(
-                    data={
-                        "message": "{}".format(
+                raise ValidationError(detail="{}".format(
                             str(serializer.errors["non_field_errors"][0])
-                        ),
-                        "status": False,
-                    },
-                    status=400,
-                )
+                        ), code=400)
             except:
                 for i in serializer.errors:
-                    return Response(
-                        data={
-                            "message": "{} - Error in {}".format(
+                    raise ValidationError(detail="{} - Error in {}".format(
                                 str(serializer.errors[i][0]), str(i)
-                            ),
-                            "status": False,
-                        },
-                        status=400,
-                    )
+                            ), code=400)
         else:
-            return Response(
-                data={
-                    "message": "Some unknown Error occured. Please try again later.",
-                    "status": False,
-                },
-                status=400,
-            )
-        return Response(serializer.errors, status=400)
+            raise ValidationError(detail="Some unknown Error occured. Please try again later.", code=400)
+            
+        raise ValidationError(detail=serializer.errors, code=400)
 
 
 class VerifyOTPView(APIView):
@@ -346,10 +270,8 @@ class VerifyOTPView(APIView):
             if otp_obj.exists():
                 otp_obj = otp_obj.first()
                 if timezone.now() > (otp_obj.created + timezone.timedelta(minutes=10)):
-                    return Response(
-                        data={"message": "Invalid OTP. OTP Expired", "status": False},
-                        status=400,
-                    )
+                    raise ValidationError(detail="Invalid OTP. OTP Expired", code=400)
+                    
                 elif timezone.now() <= (
                     otp_obj.created + timezone.timedelta(minutes=10)
                 ):
@@ -381,38 +303,16 @@ class VerifyOTPView(APIView):
                         }
                         return Response(data=data, status=200)
                     else:
-                        return Response(
-                            data={
-                                "message": "Invalid OTP. May be a wrong otp",
-                                "status": False,
-                            },
-                            status=400,
-                        )
+                        raise ValidationError(detail="Invalid OTP. May be a wrong otp", code=400)       
                 else:
-                    return Response(
-                        data={"message": "Invalid Request.", "status": False},
-                        status=400,
-                    )
+                    raise ValidationError(detail="Invalid Request.", code=400)
             else:
-                return Response(
-                    data={
-                        "message": "Invalid OTP. May be a wrong otp",
-                        "status": False,
-                    },
-                    status=400,
-                )
+                raise ValidationError(detail="Invalid OTP. May be a wrong otp", code=400)
+                
         except acc_models.User.DoesNotExist:
-            return Response(
-                data={"message": "Invalid Mobile Number", "status": False}, status=400
-            )
+            raise ValidationError(detail="Invalid Mobile Number", code=400)
 
-        return Response(
-            data={
-                "message": "Something unusual happened. Please try again later.",
-                "status": False,
-            },
-            status=400,
-        )
+        raise ValidationError(detail="Something unusual happened. Please try again later.", code=400)
 
 
 class ResendMobileVerifyOTPView(APIView):
@@ -479,22 +379,11 @@ class ResendMobileVerifyOTPView(APIView):
                 #     }
                 # return Response(data, status=400)
             else:
-                data = {
-                    "status": False,
-                    "message": "You have requested maximum otp limit",
-                }
-                return Response(data, status=400)
+                raise ValidationError(detail="You have requested maximum otp limit", code=400)        
         else:
-            data = {"status": False, "message": "Invalid Mobile Number"}
-            return Response(data, status=400)
-
-        return Response(
-            data={
-                "message": "Something unusual happened. Please try again later.",
-                "status": False,
-            },
-            status=400,
-        )
+            raise ValidationError(detail="Invalid Mobile Number", code=400)
+        
+        raise ValidationError(detail="Something unusual happened. Please try again later.", code=400)
 
 
 class ForgotPasswordView(APIView):
@@ -504,8 +393,7 @@ class ForgotPasswordView(APIView):
     def post(self, request, format=None):
         mobile_number = request.data.get("mobile_number")
         if mobile_number is None:
-            data = {"status": False, "message": "Invalid Mobile Number"}
-            return Response(data, status=400)
+            raise ValidationError(detail="Invalid Mobile Number", code=400)
 
         usr_obj = acc_models.User.objects.filter(
             mobile_number=mobile_number, is_active=True
@@ -564,25 +452,11 @@ class ForgotPasswordView(APIView):
                 #     }
                 # return Response(data, status=400)
             else:
-                data = {
-                    "status": False,
-                    "message": "You have requested maximum otp limit",
-                }
-                return Response(data, status=400)
+                raise ValidationError(detail="You have requested maximum otp limit", code=400)      
         else:
-            data = {
-                "status": False,
-                "message": "No User related with this mobile number.",
-            }
-            return Response(data, status=400)
-
-        return Response(
-            data={
-                "message": "Something unusual happened. Please try again later.",
-                "status": False,
-            },
-            status=400,
-        )
+            raise ValidationError(detail="No User related with this mobile number.", code=400)
+        
+        raise ValidationError(detail="Something unusual happened. Please try again later.", code=400)
 
 
 class ResetPasswordView(APIView):
@@ -594,8 +468,7 @@ class ResetPasswordView(APIView):
         otp = request.data.get("otp")
         new_password = request.data.get("new_password")
         if mobile_number is None:
-            data = {"status": False, "message": "Mobile Number should be provided"}
-            return Response(data, status=400)
+            raise ValidationError(detail="Mobile Number should be provided", code=400)
         usr_obj = acc_models.User.objects.filter(
             mobile_number=mobile_number, is_active=True
         )
@@ -606,10 +479,7 @@ class ResetPasswordView(APIView):
                 if timezone.now() > (
                     otp_obj.first().created + timezone.timedelta(minutes=10)
                 ):
-                    return Response(
-                        data={"message": "Invalid OTP. OTP Expired", "status": False},
-                        status=400,
-                    )
+                    raise ValidationError(detail="Invalid OTP. OTP Expired", code=400)
                 elif timezone.now() <= (
                     otp_obj.first().created + timezone.timedelta(minutes=10)
                 ):
@@ -620,28 +490,15 @@ class ResetPasswordView(APIView):
                         data = {"status": True, "message": "Password reset successfull"}
                         return Response(data, status=200)
                     else:
-                        data = {"status": False, "message": "Invalid OTP"}
-                        return Response(data, status=400)
+                        raise ValidationError(detail="Invalid OTP", code=400)
                 else:
-                    data = {"status": False, "message": "Invalid OTP"}
-                    return Response(data, status=400)
+                    raise ValidationError(detail="Invalid OTP", code=400)
             else:
-                data = {"status": False, "message": "Invalid OTP"}
-                return Response(data, status=400)
+                raise ValidationError(detail="Invalid OTP", code=400)
         else:
-            data = {
-                "status": False,
-                "message": "No User related with this mobile number.",
-            }
-            return Response(data, status=400)
-
-        return Response(
-            data={
-                "message": "Something unusual happened. Please try again later.",
-                "status": False,
-            },
-            status=400,
-        )
+            raise ValidationError(detail="No User related with this mobile number.", code=400)
+        
+        raise ValidationError(detail="Something unusual happened. Please try again later.", code=400)
 
 
 class GetUserInfo(generics.RetrieveUpdateAPIView):
@@ -670,8 +527,7 @@ class RefreshToken(APIView):
                 status=200,
             )
         except Exception as exc:
-            return Response(str(exc), status=400)
-
+            raise ValidationError(detail=str(exc), code=400)
 
 class LogoutView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -689,8 +545,7 @@ class LogoutView(APIView):
                 status=200,
             )
         except Exception as exc:
-            return Response({"message": str(exc), "status": False}, status=400)
-
+            raise ValidationError(detail=str(exc), code=400)
 
 class DeleteAccount(generics.UpdateAPIView):
     permission_classes = (permissions.IsAuthenticated, IsOwner)
@@ -707,9 +562,7 @@ class SudoModeAuthenticationView(APIView):
         password = request.data.get("password", None)
 
         if password is None:
-            return Response(
-                {"status": False, "message": "You have to provide password"}, status=400
-            )
+            raise ValidationError(detail="You have to provide password", code=400)
 
         if check_password(password, user.password):
             return Response(
@@ -717,13 +570,7 @@ class SudoModeAuthenticationView(APIView):
                 status=200,
             )
         else:
-            return Response(
-                {
-                    "status": False,
-                    "message": "Your access is denied. Please check the password",
-                },
-                status=403,
-            )
+            raise ValidationError(detail="Your access is denied. Please check the password", code=403)
 
 
 class UserLanguage(APIView):
@@ -744,13 +591,7 @@ class UserLanguage(APIView):
                 status=200,
             )
         except acc_models.UserLocalization.DoesNotExist:
-            return Response(
-                {
-                    "status": False,
-                    "message": "Localization not found for current user.",
-                },
-                status=400,
-            )
+            raise ValidationError(detail="Localization not found for current user.", code=400)
 
     def post(self, request, format=None):
         user = request.user
@@ -760,22 +601,10 @@ class UserLanguage(APIView):
         interface_language_code = request.data.get("interface_language_code", None)
 
         if communication_language_code is None:
-            return Response(
-                {
-                    "status": False,
-                    "message": "No communication language provided. Please try again by providing a valid language.",
-                },
-                status=400,
-            )
+            raise ValidationError(detail="No communication language provided. Please try again by providing a valid language.", code=400)
 
         if interface_language_code is None:
-            return Response(
-                {
-                    "status": False,
-                    "message": "No interface language provided. Please try again by providing a valid language.",
-                },
-                status=400,
-            )
+            raise ValidationError(detail="No interface language provided. Please try again by providing a valid language.", code=400)
 
         try:
             instance = acc_models.UserLocalization.objects.get(user=user)
@@ -816,13 +645,7 @@ class EmailVerificationEnter(APIView):
         email = request.data.get("email", None)
         regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
         if email is None:
-            return Response(
-                {
-                    "status": False,
-                    "message": "Please provide an email address to continue",
-                },
-                status=400,
-            )
+            raise ValidationError(detail="Please provide an email address to continue", code=400)
 
         if re.search(regex, email):
             user = request.user
@@ -851,26 +674,11 @@ class EmailVerificationEnter(APIView):
                         status=200,
                     )
                 except:
-                    return Response(
-                        {
-                            "status": False,
-                            "message": "Sorry cannot send email at the moment. Please try again later.",
-                        },
-                        status=500,
-                    )
+                    raise ValidationError(detail="Sorry cannot send email at the moment. Please try again later.", code=500)
             else:
-                return Response(
-                    {
-                        "status": False,
-                        "message": "Unauthorized Request. Email address you entered is not accessible to your account.",
-                    },
-                    status=403,
-                )
+                raise ValidationError(detail="Unauthorized Request. Email address you entered is not accessible to your account.", code=403)
         else:
-            return Response(
-                {"status": False, "message": "Please enter a valid email address."},
-                status=400,
-            )
+            raise ValidationError(detail="Please enter a valid email address.", code=400)
 
 
 class VerifyEmailOTP(APIView):
@@ -881,21 +689,9 @@ class VerifyEmailOTP(APIView):
         otp = request.data.get("otp", None)
         regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
         if email is None:
-            return Response(
-                {
-                    "status": False,
-                    "message": "Please provide an email address to continue",
-                },
-                status=400,
-            )
+            raise ValidationError(detail="Please provide an email address to continue", code=400)
         if otp is None:
-            return Response(
-                {
-                    "status": False,
-                    "message": "Please provide otp sent on your email address to continue.",
-                },
-                status=400,
-            )
+            raise ValidationError(detail="Please provide otp sent on your email address to continue.", code=400)
 
         if re.search(regex, email):
             user = request.user
@@ -913,13 +709,7 @@ class VerifyEmailOTP(APIView):
                     if otp_obj.otp == otp:
                         if otp_obj.created >= timezone.now():
                             otp_obj.delete()
-                            return Response(
-                                {
-                                    "status": False,
-                                    "message": "Invalid OTP. OTP Expired.",
-                                },
-                                status=403,
-                            )
+                            raise ValidationError(detail="Invalid OTP. OTP Expired.", code=403)
                         else:
                             otp_obj.user.is_email_verified = True
                             otp_obj.user.save()
@@ -932,28 +722,10 @@ class VerifyEmailOTP(APIView):
                                 status=200,
                             )
                     else:
-                        return Response(
-                            {
-                                "otp": otp_obj.otp,
-                                "status": False,
-                                "message": "Invalid OTP",
-                            },
-                            status=400,
-                        )
+                        raise ValidationError(detail="Invalid OTP", code=400)
                 except acc_models.EmailVerifyOTP.DoesNotExist:
-                    return Response(
-                        {"status": False, "message": "Invalid OTP"}, status=400
-                    )
+                    raise ValidationError(detail="Invalid OTP", code=400)
             else:
-                return Response(
-                    {
-                        "status": False,
-                        "message": "Unauthorized Request. Email address you entered is not accessible to your account.",
-                    },
-                    status=403,
-                )
+                raise ValidationError(detail="Unauthorized Request. Email address you entered is not accessible to your account.", code=403)
         else:
-            return Response(
-                {"status": False, "message": "Please enter a valid email address."},
-                status=400,
-            )
+            raise ValidationError(detail="Please enter a valid email address.", code=400)

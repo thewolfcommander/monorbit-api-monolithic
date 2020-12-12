@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions
 from rest_framework.views import APIView, Response
+from rest_framework.serializers import ValidationError
 
 from .models import *
 from .serializers import *
@@ -57,27 +58,17 @@ class FindNetwork(APIView):
         username = request.data.get('username', None)
 
         if username is None:
-            return Response({
-                'status': False,
-                'message': "Username not available"
-            }, status=400)
-
+            raise ValidationError(detail="Username not available", code=400)
         try:
             instance = Network.objects.get(urlid=username)
-            return Response({
-                'status': False,
-                'message': "Username not available"
-            }, status=400)
+            raise ValidationError(detail="Username not available", code=400)
         except Network.DoesNotExist:
             return Response({
                 'status': True,
                 'message': 'Username available'
             }, status=200)
             
-        return Response({
-                'status': False,
-                'message': "Username not available"
-            }, status=400)
+        raise ValidationError(detail="Username not available", code=400)
 
 
 class ShowNetworkStats(generics.ListAPIView):
