@@ -493,10 +493,6 @@ class CreateNetworkMembershipSubscription(APIView):
                 except NetworkMembershipOrderReciept.DoesNotExist:
                     raise ValidationError(detail="Invalid Order Receipt. Please try again with correct receipt", code=404)
             except NetworkMembershipPlan.DoesNotExist:
-                return Response({
-                    'status': False,
-                    'message': "Invalid Plan ID. Please try again with correct plan"
-                }, status=400)
                 raise ValidationError(detail="Invalid Plan ID. Please try again with correct plan", code=404)
         except NetworkBilling.DoesNotExist:
             raise ValidationError(detail="Invalid Billing Profile. Please try again with correct profile", code=404)
