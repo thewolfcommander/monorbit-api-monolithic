@@ -2,7 +2,7 @@
 Monorbit API
 
 ## About this branch
-In this branch we worked on raise proper error messages instead of simple responses
+In this branch we worked on adding comments in the code
 
 ## Todo for Monorbit APIs
 
