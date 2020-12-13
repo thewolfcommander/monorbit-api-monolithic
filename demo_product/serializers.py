@@ -52,20 +52,6 @@ class ProductSubCategoryShowSerializer(serializers.ModelSerializer):
         ]
 
 
-
-
-class ProductCustomSubCategoryShowSerializer(serializers.ModelSerializer):
-    category = ProductCustomCategorySerializer(read_only=True)
-    class Meta:
-        model = ProductCustomSubCategory
-        fields = [
-            'id',
-            'category',
-            'name',
-            'image'
-        ]
-
-
 class ProductMeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductMeasurement
@@ -397,10 +383,8 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
 
 class ProductShowSerializer(serializers.ModelSerializer):
     network = ShowNetworkSerializer(read_only=True)
-    default_category = ProductDefaultCategoryShowSerializer(read_only=True)
-    custom_category = ProductCustomCategorySerializer(read_only=True)
-    default_subcategory = ProductDefaultSubCategoryShowSerializer(read_only=True)
-    custom_subcategory = ProductCustomSubCategoryShowSerializer(read_only=True)
+    category = ProductDefaultCategoryShowSerializer(read_only=True)
+    subcategory = ProductDefaultSubCategoryShowSerializer(read_only=True)
     measurement = ProductMeasurementSerializer(read_only=True)
     images = ProductImageShowSerializer(many=True, required=True)
     videos = ProductVideoShowSerializer(many=True, required=True)

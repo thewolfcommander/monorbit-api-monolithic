@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import pre_save
 from network.models import Network, NetworkCategory
 
 class ProductCategory(models.Model):
