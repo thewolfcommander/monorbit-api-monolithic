@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/v1/adminer/', include('adminer.urls', namespace='adminer')),
     path('api/v1/cart/', include('cart.urls', namespace='cart')),
     path('api/v1/core/', include('core.urls', namespace='core')),
+    path('api/v1/demo/catalog/product/', include('demo_product.urls', namespace='demo_product')),
     path('api/v1/profiles/job/', include('job_profiles.urls', namespace='job_profiles')),
     path('api/v1/greivances/', include('greivances.urls', namespace='greivances')),
     path('api/v1/network/', include('network.urls', namespace='network')),

@@ -5,13 +5,10 @@ from accounts.serializers import UserMiniSerializer
 from .models import *
 
 
-import logging
-logger = logging.getLogger(__name__)
 
-
-class ProductDefaultCategoryCreateSerializer(serializers.ModelSerializer):
+class ProductCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductDefaultCategory
+        model = ProductCategory
         fields = [
             'id',
             'network_category',
@@ -20,10 +17,10 @@ class ProductDefaultCategoryCreateSerializer(serializers.ModelSerializer):
         ]
 
     
-class ProductDefaultCategoryShowSerializer(serializers.ModelSerializer):
+class ProductCategoryShowSerializer(serializers.ModelSerializer):
     network_category = NetworkCategorySerializer(read_only=True)
     class Meta:
-        model = ProductDefaultCategory
+        model = ProductCategory
         fields = [
             'id',
             'network_category',
@@ -32,20 +29,9 @@ class ProductDefaultCategoryShowSerializer(serializers.ModelSerializer):
         ]
 
 
-class ProductCustomCategorySerializer(serializers.ModelSerializer):
+class ProductSubCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductCustomCategory
-        fields = [
-            'id',
-            'name',
-            'network',
-            'image'
-        ]
-
-
-class ProductDefaultSubCategoryCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductDefaultSubCategory
+        model = ProductSubCategory
         fields = [
             'id',
             'category',
@@ -54,33 +40,10 @@ class ProductDefaultSubCategoryCreateSerializer(serializers.ModelSerializer):
         ]
 
     
-class ProductDefaultSubCategoryShowSerializer(serializers.ModelSerializer):
-    category = ProductDefaultCategoryShowSerializer(read_only=True)
+class ProductSubCategoryShowSerializer(serializers.ModelSerializer):
+    category = ProductCategoryShowSerializer(read_only=True)
     class Meta:
-        model = ProductDefaultSubCategory
-        fields = [
-            'id',
-            'category',
-            'name',
-            'image'
-        ]
-
-
-class ProductCustomSubCategoryCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductCustomSubCategory
-        fields = [
-            'id',
-            'category',
-            'name',
-            'image'
-        ]
-
-
-class ProductCustomSubCategoryShowSerializer(serializers.ModelSerializer):
-    category = ProductCustomCategorySerializer(read_only=True)
-    class Meta:
-        model = ProductCustomSubCategory
+        model = ProductSubCategory
         fields = [
             'id',
             'category',
@@ -184,6 +147,7 @@ class ProductExtraShowSerializer(serializers.ModelSerializer):
         ]
 
 
+
 class ProductCreateSerializer(serializers.ModelSerializer):
     images = ProductImageShowSerializer(many=True, required=False)
     videos = ProductVideoShowSerializer(many=True, required=False)
@@ -206,25 +170,13 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             'mrp',
             'nsp',
             'discount_percent',
-            'tax',
-            'shipping',
             'quantity_per_measurement',
             'minimum_quantity_per_order',
             'short_description',
-            'rating',
-            'no_of_reviews',
-            'available_in_stock',
-            'network',
-            'default_category',
-            'custom_category',
-            'default_subcategory',
-            'custom_subcategory',
+            'category',
+            'subcategory',
             'measurement',
-            'is_refundable',
-            'is_returnable',
             'is_active',
-            'is_archived',
-            'is_open_for_sharing',
             'is_digital',
             'images',
             'videos',
@@ -306,25 +258,13 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
             'mrp',
             'nsp',
             'discount_percent',
-            'tax',
-            'shipping',
             'quantity_per_measurement',
             'minimum_quantity_per_order',
             'short_description',
-            'rating',
-            'no_of_reviews',
-            'available_in_stock',
-            'network',
-            'default_category',
-            'custom_category',
-            'default_subcategory',
-            'custom_subcategory',
+            'category',
+            'subcategory',
             'measurement',
             'is_active',
-            'is_refundable',
-            'is_returnable',
-            'is_archived',
-            'is_open_for_sharing',
             'is_digital',
             'images',
             'videos',
@@ -363,10 +303,8 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         extras_data = (instance.extras).all()
         extras_data = list(extras_data)
 
-        instance.default_category = validated_data.get('default_category', instance.default_category)
-        instance.custom_category = validated_data.get('custom_category', instance.custom_category)
-        instance.default_subcategory = validated_data.get('default_subcategory', instance.default_subcategory)
-        instance.custom_subcategory = validated_data.get('custom_subcategory', instance.custom_subcategory)
+        instance.category = validated_data.get('category', instance.category)
+        instance.subcategory = validated_data.get('subcategory', instance.subcategory)
         instance.measurement = validated_data.get('measurement', instance.measurement)
         instance.name = validated_data.get('name', instance.name)
         instance.slug = validated_data.get('slug', instance.slug)
@@ -375,16 +313,10 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         instance.thumbnail_image = validated_data.get('thumbnail_image', instance.thumbnail_image)
         instance.mrp = validated_data.get('mrp', instance.mrp)
         instance.nsp = validated_data.get('nsp', instance.nsp)
-        instance.tax = validated_data.get('tax', instance.tax)
         instance.quantity_per_measurement = validated_data.get('quantity_per_measurement', instance.quantity_per_measurement)
         instance.minimum_quantity_per_order = validated_data.get('minimum_quantity_per_order', instance.minimum_quantity_per_order)
         instance.short_description = validated_data.get('short_description', instance.short_description)
-        instance.available_in_stock = validated_data.get('available_in_stock', instance.available_in_stock)
         instance.is_active = validated_data.get('is_active', instance.is_active)
-        instance.is_refundable = validated_data.get('is_refundable', instance.is_refundable)
-        instance.is_returnable = validated_data.get('is_returnable', instance.is_returnable)
-        instance.is_archived = validated_data.get('is_archived', instance.is_archived)
-        instance.is_open_for_sharing = validated_data.get('is_open_for_sharing', instance.is_open_for_sharing)
         instance.is_digital = validated_data.get('is_digital', instance.is_digital)
         instance.save()
 
@@ -449,11 +381,8 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
 
 
 class ProductShowSerializer(serializers.ModelSerializer):
-    network = ShowNetworkSerializer(read_only=True)
-    default_category = ProductDefaultCategoryShowSerializer(read_only=True)
-    custom_category = ProductCustomCategorySerializer(read_only=True)
-    default_subcategory = ProductDefaultSubCategoryShowSerializer(read_only=True)
-    custom_subcategory = ProductCustomSubCategoryShowSerializer(read_only=True)
+    category = ProductCategoryShowSerializer(read_only=True)
+    subcategory = ProductSubCategoryShowSerializer(read_only=True)
     measurement = ProductMeasurementSerializer(read_only=True)
     images = ProductImageShowSerializer(many=True, required=True)
     videos = ProductVideoShowSerializer(many=True, required=True)
@@ -476,25 +405,13 @@ class ProductShowSerializer(serializers.ModelSerializer):
             'mrp',
             'nsp',
             'discount_percent',
-            'tax',
-            'shipping',
             'quantity_per_measurement',
             'minimum_quantity_per_order',
             'short_description',
-            'rating',
-            'no_of_reviews',
-            'available_in_stock',
-            'network',
-            'default_category',
-            'custom_category',
-            'default_subcategory',
-            'custom_subcategory',
+            'category',
+            'subcategory',
             'measurement',
-            'is_refundable',
-            'is_returnable',
             'is_active',
-            'is_archived',
-            'is_open_for_sharing',
             'is_digital',
             'images',
             'videos',
@@ -523,15 +440,9 @@ class ProductMiniSerializer(serializers.ModelSerializer):
             'mrp',
             'nsp',
             'discount_percent',
-            'tax',
-            'shipping',
             'quantity_per_measurement',
             'minimum_quantity_per_order',
             'short_description',
-            'rating',
-            'no_of_reviews',
-            'is_refundable',
-            'is_returnable',
             'images',
         ]
 
@@ -622,41 +533,4 @@ class ProductExtraCreateSerializer(serializers.ModelSerializer):
             'value',
             'change_side',
             'price_change'
-        ]
-
-
-class ProductReviewCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductReview
-        fields = [
-            'id',
-            'product',
-            'rating',
-            'comment',
-        ]
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-        review = ProductReview.objects.create(**validated_data, by=user)
-        init = float(review.product.rating)*float(review.product.no_of_reviews)
-        new_rate = (init+float(review.rating))/(review.product.no_of_reviews+1)
-        review.product.rating = new_rate
-        review.product.no_of_reviews += 1
-        review.product.save()
-        return review
-
-
-class ProductReviewShowSerializer(serializers.ModelSerializer):
-    by = UserMiniSerializer(read_only=True)
-    class Meta:
-        model = ProductReview
-        fields = [
-            'id',
-            'product',
-            'by',
-            'rating',
-            'comment',
-            'is_spam',
-            'created',
-            'is_active'
         ]
