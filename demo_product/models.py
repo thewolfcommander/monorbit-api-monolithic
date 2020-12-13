@@ -217,7 +217,7 @@ def document_label_generator(sender, instance, **kwargs):
 def product_datainit_generator(sender, instance, **kwargs):
     instance.slug = tools.unique_slug_generator(instance)
     if not instance.item_code:
-        instance.item_code = tools.label_gen(instance.network.id)
+        instance.item_code = tools.label_gen("DEMO")
     instance.discount_percent = ((float(instance.mrp)-float(instance.nsp))/float(instance.mrp))*100
 
 

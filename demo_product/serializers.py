@@ -316,7 +316,6 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         instance.quantity_per_measurement = validated_data.get('quantity_per_measurement', instance.quantity_per_measurement)
         instance.minimum_quantity_per_order = validated_data.get('minimum_quantity_per_order', instance.minimum_quantity_per_order)
         instance.short_description = validated_data.get('short_description', instance.short_description)
-        instance.available_in_stock = validated_data.get('available_in_stock', instance.available_in_stock)
         instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.is_digital = validated_data.get('is_digital', instance.is_digital)
         instance.save()
@@ -382,7 +381,6 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
 
 
 class ProductShowSerializer(serializers.ModelSerializer):
-    network = ShowNetworkSerializer(read_only=True)
     category = ProductCategoryShowSerializer(read_only=True)
     subcategory = ProductSubCategoryShowSerializer(read_only=True)
     measurement = ProductMeasurementSerializer(read_only=True)

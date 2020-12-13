@@ -183,7 +183,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 REST_FRAMEWORK = {
 
     'PAGE_SIZE': 20,
-    'DATETIME_FORMAT': '%s000',
+    'DATETIME_FORMAT': '%S000', #Change to 'S' in 's' for linux OS
     'DEFAULT_PAGINATION_CLASS': 'product_catalog.pagination.CustomPageNumberPagination',
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
