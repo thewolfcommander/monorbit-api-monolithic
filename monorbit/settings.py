@@ -275,7 +275,7 @@ Sentry Setup
 Docs : https://docs.sentry.io/platforms/python/django/?_ga=2.983862.60821945.1598358892-1072562326.1598358892
 """
 
-if True:
+if False:
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
 
