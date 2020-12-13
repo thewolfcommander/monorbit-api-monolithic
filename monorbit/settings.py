@@ -110,24 +110,24 @@ WSGI_APPLICATION = 'monorbit.wsgi.application'
 # host = config('SERVER_HOST', True)
 
 # if host:
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-# else:
-    
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('AWS_RDS_DB_NAME', 'AWS_RDS_DB_NAME'),
-#         'USER': config('AWS_RDS_USERNAME', 'AWS_RDS_USERNAME'),
-#         'PASSWORD': config('AWS_RDS_PASSWORD', 'AWS_RDS_PASSWORD'),
-#         'HOST': config('AWS_RDS_HOST', 'AWS_RDS_HOST'),
-#         'PORT': 5432,
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+# else:
+    
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('AWS_RDS_DB_NAME', 'AWS_RDS_DB_NAME'),
+        'USER': config('AWS_RDS_USERNAME', 'AWS_RDS_USERNAME'),
+        'PASSWORD': config('AWS_RDS_PASSWORD', 'AWS_RDS_PASSWORD'),
+        'HOST': config('AWS_RDS_HOST', 'AWS_RDS_HOST'),
+        'PORT': 5432,
+    }
+}
 
 # add this below the database configuration
 import dj_database_url
@@ -183,7 +183,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 REST_FRAMEWORK = {
 
     'PAGE_SIZE': 20,
-    'DATETIME_FORMAT': '%S000', #Change to 'S' in 's' for linux OS
+    'DATETIME_FORMAT': '%s000', #Change to 'S' in 's' for linux OS
     'DEFAULT_PAGINATION_CLASS': 'product_catalog.pagination.CustomPageNumberPagination',
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -275,7 +275,7 @@ Sentry Setup
 Docs : https://docs.sentry.io/platforms/python/django/?_ga=2.983862.60821945.1598358892-1072562326.1598358892
 """
 
-if False:
+if True:
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
 
