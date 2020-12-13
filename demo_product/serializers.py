@@ -383,8 +383,8 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
 
 class ProductShowSerializer(serializers.ModelSerializer):
     network = ShowNetworkSerializer(read_only=True)
-    category = ProductDefaultCategoryShowSerializer(read_only=True)
-    subcategory = ProductDefaultSubCategoryShowSerializer(read_only=True)
+    category = ProductCategoryShowSerializer(read_only=True)
+    subcategory = ProductSubCategoryShowSerializer(read_only=True)
     measurement = ProductMeasurementSerializer(read_only=True)
     images = ProductImageShowSerializer(many=True, required=True)
     videos = ProductVideoShowSerializer(many=True, required=True)
