@@ -49,6 +49,7 @@ class Network(models.Model):
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     urlid = models.CharField(max_length=255, unique=True, blank=True)
     network_url = models.URLField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True, help_text="This field will tell about the personal comment about the network. Only for admin purpose.")
     user = models.ForeignKey(acc_models.User, on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey(NetworkCategory, on_delete=models.CASCADE, null=True, blank=True)
     network_type = models.ForeignKey(NetworkType, on_delete=models.CASCADE, null=True, blank=True)
@@ -115,6 +116,39 @@ class Network(models.Model):
     @property
     def locations(self):
         return self.networkoperationlocation_set.all()
+
+    @property
+    def options(self):
+        return self.networkoption
+
+
+def network_option_update_receiver(sender, instance, **kwargs):
+    """
+    This receiver will update the network options every time the network saved
+    """
+    try:
+        option = instance.networkoption
+    except Exception as e:
+        print("#### {}".format(str(e)))
+        NetworkOption.objects.create(network=instance)
+
+pre_save.connect(network_option_update_receiver, sender=Network)
+
+class NetworkOption(models.Model):
+    """
+    These will be special options for setting up network's better functionalities
+    """
+    network = models.OneToOneField(Network, on_delete=models.CASCADE)
+    is_special_user = models.BooleanField(default=False, help_text="This field will tell whether the network is a special network on monorbit")
+    is_backer = models.BooleanField(default=False, help_text="This field will tell whether the network is the backer or sponsor of Monorbit Platform")
+    is_kyc = models.BooleanField(default=False, help_text="This field will tell whether the KYC of the network have been done or not")
+    is_address_private = models.BooleanField(default=False, help_text="This field when true will keep the address of the network private.")
+    is_phone_and_email_private = models.BooleanField(default=False, help_text="This field when true will keep the phone number and email of the network private")
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
+
 
     
 class NetworkImage(models.Model):
