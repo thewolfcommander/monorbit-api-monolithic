@@ -16,7 +16,7 @@ class ServiceCategory(models.Model):
     name = models.CharField(max_length=255,blank=True,null=True)
     image = models.CharField(max_length=512,null=True,blank=True,default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
     created = models.DateTimeField(auto_now_add=True)
-    network = models.ForeignKey(Network,on_delete=models.CASCADE,related_name='network')
+    network = models.ForeignKey(Network,on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.id)
@@ -25,7 +25,7 @@ class ServiceCategory(models.Model):
 class ServiceSubCategory(models.Model):
     id = models.CharField(max_length=20,primary_key=True,unique=True,blank=True)
     name = models.CharField(max_length=255,blank=True,null=True)
-    service_category = models.ForeignKey(ServiceCategory,on_delete=models.CASCADE,related_name='service_category')
+    service_category = models.ForeignKey(ServiceCategory,on_delete=models.CASCADE)
     image = models.CharField(max_length=512,blank=True,null=True,default='https://monorbit-alpha.s3-us-west-2.amazonaws.com/Content/images/undraw_team_up_ip2x.svg')
     created = models.DateTimeField(auto_now_add=True)
 
@@ -47,9 +47,9 @@ class Service(models.Model):
     short_description = models.TextField(null=True,blank=True)
     rating = models.DecimalField(default=5.0,max_digits=2,decimal_places=1)
     no_of_reviews = models.IntegerField(null=True,blank=True,default=0)
-    network = models.ForeignKey(Network,on_delete=models.CASCADE,related_name='network')
-    service_category = models.ForeignKey(ServiceCategory,on_delete=models.CASCADE,related_name='service_category')
-    service_sub_category = models.ForeignKey(ServiceSubCategory,on_delete=models.CASCADE,related_name='service_sub_category')
+    network = models.ForeignKey(Network,on_delete=models.CASCADE)
+    service_category = models.ForeignKey(ServiceCategory,on_delete=models.CASCADE)
+    service_sub_category = models.ForeignKey(ServiceSubCategory,on_delete=models.CASCADE)
     is_available = models.BooleanField(default=True,null=True,blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
