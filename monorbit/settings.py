@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'premium',
     'product_catalog',
     'transactions',
+    'services',
     
 ]
 
