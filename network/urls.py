@@ -48,4 +48,10 @@ urlpatterns = [
     # Stats
     path('stats/all/', ShowNetworkStats.as_view(), name='list_stats'),
     path('stats/detail/<slug:network__urlid>/', NetworkStatDetail.as_view(), name='detail_stats'),
+
+
+    # Options
+    path('options/create/', CreateNetworkOption.as_view(), name='create_network_option'),
+    path('options/all/', ListNetworkOption.as_view(), name='list_network_option'),
+    path('options/update/<int:id>/', UpdateNetworkOption.as_view(), name='update_network_option'),
 ]

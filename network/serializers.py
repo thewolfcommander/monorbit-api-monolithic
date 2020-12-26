@@ -74,6 +74,21 @@ class NetworkOperationLocationShowSerializer(serializers.ModelSerializer):
             'pincode'
         ]
 
+
+class NetworkOptionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkOption
+        fields = [
+            "id",
+            "is_kyc",
+            "is_special_user",
+            "is_backer",
+            "is_address_private",
+            "is_phone_and_email_private",
+            "last_updated"
+        ]
+
+
     
 class CreateNetworkSerializer(serializers.ModelSerializer):
     images = NetworkImageShowSerializer(many=True, required=False)
@@ -81,6 +96,7 @@ class CreateNetworkSerializer(serializers.ModelSerializer):
     documents = NetworkDocumentShowSerializer(many=True, required=False)
     timings = NetworkOperationTimingShowSerializer(many=True, required=False)
     locations = NetworkOperationLocationShowSerializer(many=True, required=False)
+    options = NetworkOptionCreateSerializer(read_only=True)
     class Meta:
         model = Network
         fields = [
@@ -106,7 +122,8 @@ class CreateNetworkSerializer(serializers.ModelSerializer):
             'is_elite',
             'documents',
             'locations',
-            'timings'
+            'timings',
+            'options',
         ]
 
     def create(self, validated_data):
@@ -118,8 +135,12 @@ class CreateNetworkSerializer(serializers.ModelSerializer):
 
         alt_email = validated_data.get('alt_email', None)
         alt_phone = validated_data.get('alt_phone', None)
+        validated_data.pop('user', None)
         request = self.context['request']
         user = request.user
+
+        if user.network_created == 3:
+            raise serializers.ValidationError(detail="You have created maximum number of network allowed", code=400)
 
         network = Network.objects.create(
             **validated_data, 
@@ -166,6 +187,7 @@ class ShowNetworkSerializer(serializers.ModelSerializer):
     timings = NetworkOperationTimingShowSerializer(many=True, required=False)
     category = NetworkCategorySerializer(read_only=True)
     network_type = NetworkTypeSerializer(read_only=True)
+    options = NetworkOptionCreateSerializer()
     class Meta:
         model = Network
         fields = [
@@ -196,10 +218,12 @@ class ShowNetworkSerializer(serializers.ModelSerializer):
             'is_spam',
             'is_video',
             'is_document',
+            'options',
         ]
 
 
 class MiniNetworkSerializer(serializers.ModelSerializer):
+    options = NetworkOptionCreateSerializer(read_only=True)
     class Meta:
         model = Network
         fields = [
@@ -217,7 +241,34 @@ class MiniNetworkSerializer(serializers.ModelSerializer):
             'rating',
             'no_of_reviews',
             'followers',
+            'options'
         ]
+
+
+class NetworkOptionShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkOption
+        fields = [
+            "id",
+            "network",
+            "is_kyc",
+            "is_special_user",
+            "is_backer",
+            "is_address_private",
+            "is_phone_and_email_private",
+            "last_updated"
+        ]
+
+    def create(self, validated_data):
+        """
+        This method will handle all the create operations for network options
+        """
+        network = validated_data.get('network')
+        try:
+            option = NetworkOption.objects.get(network=network)
+        except NetworkOption.DoesNotExist:
+            option = NetworkOption.objects.create(network=network)
+        return option
 
     
 class NetworkStatShowSerializer(serializers.ModelSerializer):
@@ -238,6 +289,7 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
     locations = NetworkOperationLocationShowSerializer(many=True, required=False)
     category = NetworkCategorySerializer(read_only=True)
     network_type = NetworkTypeSerializer(read_only=True)
+    options = NetworkOptionCreateSerializer()
     class Meta:
         model = Network
         fields = [
@@ -268,6 +320,7 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
             'rating',
             'no_of_reviews',
             'followers',
+            'options',
             'registered_stores',
             'is_verified',
             'is_archived',
