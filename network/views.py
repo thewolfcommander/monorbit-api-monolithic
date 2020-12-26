@@ -291,3 +291,39 @@ class UpdateNetworkStaff(generics.UpdateAPIView, generics.DestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+
+
+class CreateNetworkOption(generics.CreateAPIView):
+    permission_classes = [permissions.AllowAny,]
+    queryset = NetworkOption.objects.all()
+    serializer_class = NetworkOptionShowSerializer
+
+
+class ListNetworkOption(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny,]
+    queryset = NetworkOption.objects.all()
+    serializer_class = NetworkOptionShowSerializer
+    filterset_fields = [
+        'network',
+        'network__urlid',
+        'network__user__id',
+        'network__user__mobile_number',
+        'is_kyc',
+        'is_special_user',
+        'is_backer',
+        'is_address_private',
+        'is_phone_and_email_private'
+    ]
+
+
+class UpdateNetworkOption(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny]
+    queryset = NetworkOption.objects.all()
+    serializer_class = NetworkOptionShowSerializer
+    lookup_field = 'id'
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+

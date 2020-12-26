@@ -89,20 +89,6 @@ class NetworkOptionCreateSerializer(serializers.ModelSerializer):
         ]
 
 
-class NetworkOptionShowSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NetworkOption
-        fields = [
-            "id",
-            "network",
-            "is_kyc",
-            "is_special_user",
-            "is_backer",
-            "is_address_private",
-            "is_phone_and_email_private",
-            "last_updated"
-        ]
-
     
 class CreateNetworkSerializer(serializers.ModelSerializer):
     images = NetworkImageShowSerializer(many=True, required=False)
@@ -257,6 +243,32 @@ class MiniNetworkSerializer(serializers.ModelSerializer):
             'followers',
             'options'
         ]
+
+
+class NetworkOptionShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkOption
+        fields = [
+            "id",
+            "network",
+            "is_kyc",
+            "is_special_user",
+            "is_backer",
+            "is_address_private",
+            "is_phone_and_email_private",
+            "last_updated"
+        ]
+
+    def create(self, validated_data):
+        """
+        This method will handle all the create operations for network options
+        """
+        network = validated_data.get('network')
+        try:
+            option = NetworkOption.objects.get(network=network)
+        except NetworkOption.DoesNotExist:
+            option = NetworkOption.objects.create(network=network)
+        return option
 
     
 class NetworkStatShowSerializer(serializers.ModelSerializer):

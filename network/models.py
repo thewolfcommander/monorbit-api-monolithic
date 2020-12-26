@@ -132,7 +132,7 @@ def network_option_update_receiver(sender, instance, **kwargs):
         print("#### {}".format(str(e)))
         NetworkOption.objects.create(network=instance)
 
-pre_save.connect(network_option_update_receiver, sender=Network)
+# pre_save.connect(network_option_update_receiver, sender=Network)
 
 class NetworkOption(models.Model):
     """
