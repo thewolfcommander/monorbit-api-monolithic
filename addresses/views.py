@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 
 from .models import *
 from .serializers import *
+from accounts.permissions import IsOwner
 
 import logging
 logger = logging.getLogger(__name__)
@@ -34,7 +35,7 @@ class ListAllAddresses(generics.ListAPIView):
 
 
 class UpdateAddress(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsOwner]
     queryset = Address.objects.all()
     serializer_class = AddressShowSerializer
     lookup_field = 'id'
