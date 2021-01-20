@@ -27,7 +27,7 @@ class UserListView(generics.ListAPIView):
     This route will list all the users registered on monorbit
     """
     authentication_classes = ()
-    permission_classes = []
+    permission_classes = [permissions.IsAdminUser]
     serializer_class = acc_serializers.UserInfoSerializer
     queryset = acc_models.User.objects.all()
 
@@ -64,7 +64,7 @@ class AdminLoginView(APIView):
     """
 
     authentication_classes = ()
-    permission_classes = ()
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         serializer = acc_serializers.ObtainTokenSerializer(data=request.data)
@@ -127,7 +127,7 @@ class LoginView(APIView):
     """
 
     authentication_classes = ()
-    permission_classes = ()
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         serializer = acc_serializers.ObtainTokenSerializer(data=request.data)
@@ -406,9 +406,9 @@ class ForgotPasswordView(APIView):
                 if otp.exists():
                     otp.delete()
                 otp = acc_models.PasswordResetToken.objects.create(user=user)
+                sms.reset_password(mobile_number="+91{}".format(str(mobile_number)), otp=otp.token)
                 user.password_otp_sent += 1
                 user.save()
-                sms.reset_password(mobile_number="+91{}".format(str(mobile_number)), otp=otp.token)
                 try:
                     mail.send_reset_password_otp(user.email, otp.token)
                 except:
@@ -485,6 +485,7 @@ class ResetPasswordView(APIView):
                 ):
                     if otp_obj.first().token == otp:
                         user.set_password(new_password)
+                        user.password_otp_sent = 0
                         user.save()
                         otp_obj.delete()
                         data = {"status": True, "message": "Password reset successfull"}
@@ -555,7 +556,7 @@ class DeleteAccount(generics.UpdateAPIView):
 
 
 class SudoModeAuthenticationView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,IsOwner)
 
     def post(self, request, format=None):
         user = request.user
@@ -574,7 +575,7 @@ class SudoModeAuthenticationView(APIView):
 
 
 class UserLanguage(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,IsOwner)
 
     def get(self, request):
         user = request.user
@@ -639,7 +640,7 @@ class UserLanguage(APIView):
 
 
 class EmailVerificationEnter(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsOwner]
 
     def post(self, request, format=None):
         email = request.data.get("email", None)
@@ -682,7 +683,7 @@ class EmailVerificationEnter(APIView):
 
 
 class VerifyEmailOTP(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsOwner]
 
     def post(self, request, format=None):
         email = request.data.get("email", None)
