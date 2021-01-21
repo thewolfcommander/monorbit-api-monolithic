@@ -1,24 +1,26 @@
 from rest_framework import permissions
 
 
-class IsOwnerOrReadOnly(permissions.BasePermission):
-
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.user == request.user
-
-    
 class IsSubPartOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.network.user == request.user
 
+
+class IsSubPartDetailOwner(permissions.BasePermission):
+    def has_object_permission(self,request,view,obj):
+        if request.method in ["PUT","PATCH","DELETE"]:
+            return obj.network.user == request.user
+        elif request.method=="GET":
+            return request.user.is_authenticated    
+
+
+
 class IsSubSubPartOwner(permissions.BasePermission):
     def has_object_permission(self,request,view,obj):
-        return obj.job.network.user == request.user
+        return obj.category.network.user == request.user
 
 
-class  NetworkAdminPermission(permissions.BasePermission):
+class  ProductAdminPermission(permissions.BasePermission):
     """
     If user is admin then they can create network category.
     """
@@ -29,7 +31,8 @@ class  NetworkAdminPermission(permissions.BasePermission):
         elif request.method=="GET":
             return request.user.is_authenticated
 
-class NetworkDetailAdminPermission(permissions.BasePermission):
+
+class ProductDetailAdminPermission(permissions.BasePermission):
     """
     If user is admin then they can update network category
     """
@@ -39,7 +42,4 @@ class NetworkDetailAdminPermission(permissions.BasePermission):
         if request.method in ["PUT","PATCH","DELETE"]:
             return request.user.is_admin==True
         elif request.method=="GET":
-            return request.user.is_authenticated    
-
-
-
+            return request.user.is_authenticated

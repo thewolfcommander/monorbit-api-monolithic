@@ -3,6 +3,7 @@ from rest_framework import generics, permissions, pagination
 from .serializers import *
 from .models import *
 from .pagination import *
+from .permissions import *
 
 
 import logging
@@ -10,13 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 class CreateProductDefaultCategory(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [ProductAdminPermission]
     serializer_class = ProductDefaultCategoryCreateSerializer
     queryset = ProductDefaultCategory.objects.all()
 
 
 class ListProductDefaultCategory(generics.ListAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [permissions.AllowAny]
     serializer_class = ProductDefaultCategoryShowSerializer
     queryset = ProductDefaultCategory.objects.all()
     filterset_fields = [
@@ -26,7 +27,7 @@ class ListProductDefaultCategory(generics.ListAPIView):
 
 
 class UpdateProductDefaultCategory(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [ProductDetailAdminPermission]
     serializer_class = ProductDefaultCategoryShowSerializer
     queryset = ProductDefaultCategory.objects.all()
     lookup_field = 'id'
@@ -36,7 +37,7 @@ class UpdateProductDefaultCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateProductDefaultSubCategory(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [ProductAdminPermission]
     serializer_class = ProductDefaultSubCategoryCreateSerializer
     queryset = ProductDefaultSubCategory.objects.all()
 
@@ -52,7 +53,7 @@ class ListProductDefaultSubCategory(generics.ListAPIView):
 
 
 class UpdateProductDefaultSubCategory(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [ProductDetailAdminPermission]
     serializer_class = ProductDefaultSubCategoryShowSerializer
     queryset = ProductDefaultSubCategory.objects.all()
     lookup_field = 'id'
@@ -62,7 +63,7 @@ class UpdateProductDefaultSubCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ListCreateProductCustomCategory(generics.ListCreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
     serializer_class = ProductCustomCategorySerializer
     queryset = ProductCustomCategory.objects.all()
     filterset_fields = [
@@ -71,7 +72,7 @@ class ListCreateProductCustomCategory(generics.ListCreateAPIView):
 
 
 class UpdateProductCustomCategory(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsSubPartOwner]
     serializer_class = ProductCustomCategorySerializer
     queryset = ProductCustomCategory.objects.all()
     lookup_field = 'id'
@@ -81,13 +82,13 @@ class UpdateProductCustomCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateProductCustomSubCategory(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [permissions.IsAuthenticated,]
     serializer_class = ProductCustomSubCategoryCreateSerializer
     queryset = ProductCustomSubCategory.objects.all()
 
 
 class ListProductCustomSubCategory(generics.ListAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
     serializer_class = ProductCustomSubCategoryShowSerializer
     queryset = ProductCustomSubCategory.objects.all()
     filterset_fields = [
@@ -96,7 +97,7 @@ class ListProductCustomSubCategory(generics.ListAPIView):
 
 
 class UpdateProductCustomSubCategory(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsSubSubPartOwner,]
     serializer_class = ProductCustomSubCategoryShowSerializer
     queryset = ProductCustomSubCategory.objects.all()
     lookup_field = 'id'
@@ -106,7 +107,7 @@ class UpdateProductCustomSubCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ListCreateProductMeasurement(generics.ListCreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [ProductAdminPermission,]
     serializer_class = ProductMeasurementSerializer
     queryset = ProductMeasurement.objects.all()
     filterset_fields = [
@@ -115,7 +116,7 @@ class ListCreateProductMeasurement(generics.ListCreateAPIView):
 
 
 class UpdateProductMeasurement(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [ProductDetailAdminPermission,]
     serializer_class = ProductMeasurementSerializer
     queryset = ProductMeasurement.objects.all()
     lookup_field = 'id'
@@ -153,7 +154,7 @@ class ListProduct(generics.ListAPIView):
 
 
 class CreateProduct(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [permissions.IsAuthenticated,]
     serializer_class = ProductCreateSerializer
     queryset = Product.objects.all()
 
@@ -166,14 +167,14 @@ class CreateProduct(generics.CreateAPIView):
 
 
 class DetailProduct(generics.RetrieveDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsSubPartDetailOwner,]
     serializer_class = ProductShowSerializer
     queryset = Product.objects.all()
     lookup_field = 'slug'
 
 
 class UpdateProduct(generics.UpdateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsSubPartDetailOwner,]
     serializer_class = ProductUpdateSerializer
     queryset = Product.objects.all()
     lookup_field = 'slug'
