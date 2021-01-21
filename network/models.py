@@ -335,6 +335,30 @@ class NetworkStat(models.Model):
         return str(self.id)
 
 
+def activity_expiry(days, date=timezone.now()):
+    time = date + timezone.timedelta(days=days)
+    return time
+
+
+class NetworkTrial(models.Model):
+    """
+    This model will keep record of the trial period of the networks
+    """
+    APPLICABLE_OFFER = [
+        ("republic", "Republic"),
+        ("normal", "Normal")
+    ]
+    network = models.OneToOneField(Network, on_delete=models.CASCADE)
+    applicable_offer = models.CharField(max_length=255, choices=APPLICABLE_OFFER, null=True, blank=True, default="normal")
+    trial_days = models.IntegerField(default=30, null=True, blank=True)
+    expiry = models.DateField(default=timezone.now)
+    is_active = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
 """
 
 USEFUL SIGNALS FOR ABOVE MODELS
@@ -378,6 +402,13 @@ def check_for_plan(sender, instance, **kwargs):
         instance.is_basic = True
         instance.is_elite = False
         instance.is_basic = False
+
+    try:
+        trial = NetworkTrial.objects.get(network=instance)
+    except NetworkTrial.DoesNotExist:
+        trial = NetworkTrial.objects.create(network=instance, applicable_offer="republic", trial_days=90)
+        trial.expiry = activity_expiry(trial.trial_days)
+        trial.save()
 
     
 def stat_create_receiver(sender, instance, **kwargs):

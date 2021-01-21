@@ -5,7 +5,7 @@ Monorbit API
 [Remove Support].[Breaking Changes].[Minor Security Patch].[Improvement for Patch]
 
 ## About this branch
-In this branch we are working on Creating Demo Product Catalogs
+In this branch we are working on fixing the premium feature
 
 ## Todo for Monorbit APIs
 

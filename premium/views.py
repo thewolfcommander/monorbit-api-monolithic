@@ -43,7 +43,6 @@ class CreateNetworkMembershipActivity(APIView):
                         instance = NetworkMembershipActivity.objects.get(relation=relation)
                         instance.relation.plan = plan
                         instance.relation.save()
-                        instance.payment = float(payment)
                         instance.save()
                         return Response(data={
                             "status": True,
@@ -59,7 +58,6 @@ class CreateNetworkMembershipActivity(APIView):
                                     "name": instance.relation.network.name,
                                     "is_premium": instance.relation.network.is_premium
                                 },
-                                "payment": instance.payment,
                                 "expiry": instance.expiry,
                                 "active_till": instance.active_till,
                                 "active": instance.active

@@ -73,6 +73,9 @@ class NetworkMembershipPaymentInvoice(models.Model):
 
 
 class NetworkMembershipPlan(models.Model):
+    '''
+    This model will keep record of the details of the network membership plans that we have.
+    '''
     PLAN_CHOICES = [
         ('Basic', 'Basic'),
         ('Economy', 'Economy'),
@@ -91,6 +94,9 @@ class NetworkMembershipPlan(models.Model):
 
 
 class NetworkMembershipPlanFeatures(models.Model):
+    '''
+    This model will keep record of the different features that a network membership plan have.
+    '''
     plan = models.ForeignKey(NetworkMembershipPlan, on_delete=models.CASCADE)
     key = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -101,6 +107,9 @@ class NetworkMembershipPlanFeatures(models.Model):
 
     
 class NetworkMembershipRelation(models.Model):
+    """
+    This model will keep record of the relation between a network and a plan
+    """
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     network = models.OneToOneField(Network, on_delete=models.CASCADE)
     plan = models.ForeignKey(NetworkMembershipPlan, on_delete=models.CASCADE)
@@ -116,6 +125,9 @@ def activity_expiry(days, date=timezone.now()):
 
     
 class NetworkMembershipActivity(models.Model):
+    """
+    This activity determines the period of the membership
+    """
     id = models.CharField(max_length=10, primary_key=True, unique=True, blank=True)
     relation = models.ForeignKey(NetworkMembershipRelation, on_delete=models.CASCADE)
     created = models.DateField(default=timezone.now)
