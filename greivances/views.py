@@ -5,10 +5,11 @@ from rest_framework.views import APIView, Response
 
 from .models import *
 from .serializers import *
+from .permissions import *
 
 
 class ListCreateFAQCategory(generics.ListCreateAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdmin]
     serializer_class = FAQCategorySerializer
     queryset = FAQCategory.objects.all().order_by('-added')
     filterset_fields = [
@@ -18,7 +19,7 @@ class ListCreateFAQCategory(generics.ListCreateAPIView):
 
 
 class UpdateFAQCategory(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdmin]
     serializer_class = FAQCategorySerializer
     queryset = FAQCategory.objects.all()
     lookup_field = 'id'
@@ -28,13 +29,13 @@ class UpdateFAQCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateFAQ(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated,IsAdmin]
     serializer_class = FAQCreateSerializer
     queryset = FAQ.objects.all()
 
 
 class ListFAQ(generics.ListAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdmin]
     serializer_class = FAQShowSerializer
     queryset = FAQ.objects.all().order_by('popularity_score')
     filterset_fields = [
@@ -47,7 +48,7 @@ class ListFAQ(generics.ListAPIView):
 
 
 class UpdateFAQ(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsAdmin]
     serializer_class = FAQShowSerializer
     queryset = FAQ.objects.all()
     lookup_field = 'id'
@@ -107,7 +108,7 @@ class CreateFAQReaction(APIView):
 
         
 class DeleteFAQReaction(generics.DestroyAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAdminUser]
     serializer_class = FAQReactionSerializer
     queryset = FAQReaction.objects.all()
     lookup_field = 'id'
@@ -130,13 +131,13 @@ class DeleteFAQReaction(generics.DestroyAPIView):
 
     
 class ListCreateTicketCategory(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsAdmin]
     serializer_class = TicketCategorySerializer
     queryset = TicketCategory.objects.all()
 
 
 class UpdateTicketCategory(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsAdmin]
     serializer_class = TicketCategorySerializer
     queryset = TicketCategory.objects.all()
     lookup_field = 'id'
@@ -172,7 +173,7 @@ class ListTicket(generics.ListAPIView):
 
 
 class UpdateTicket(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdmin]
     serializer_class = ShowTicketSerializer
     queryset = Ticket.objects.all()
     lookup_field = 'id'
@@ -195,7 +196,7 @@ class ListCreateTicketComment(generics.ListCreateAPIView):
 
 
 class UpdateTicketComment(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsOwner]
     serializer_class = TicketCommentSerializer
     queryset = TicketComment.objects.all()
     lookup_field = 'id'

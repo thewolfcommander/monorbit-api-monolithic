@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 
 from .serializers import *
 from .models import *
+from .permissions import *
 
 
 import logging
@@ -27,7 +28,7 @@ class ListCreateJobProfile(generics.ListCreateAPIView):
 
 
 class UpdateJobProfile(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,JobProfilePermission]
     serializer_class = JobProfileSerializer
     queryset = JobProfile.objects.all()
     lookup_field = 'id'
