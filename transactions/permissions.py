@@ -17,7 +17,7 @@ class IsDeliveryApplicationOwner(permissions.BasePermission):
             return request.user
 
 class IsPermanentEmployeeApplicationOwner(permissions.BasePermission):
-    message="Only permanent employee can update their application."
+    message="Only permanent employee owner can update their application."
     def has_object_permission(self,request,view,obj):
         if request.method in ["PUT","PATCH","DELETE"]:
             return obj.permanent_employee.job_profile.user == request.user
