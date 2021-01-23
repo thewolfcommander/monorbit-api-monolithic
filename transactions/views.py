@@ -4,6 +4,7 @@ from rest_framework.views import Response
 
 from .models import *
 from .serializers import *
+from .permissions import *
 
 
 class CreateNetworkFollower(generics.CreateAPIView):
@@ -24,7 +25,7 @@ class ListNetworkFollowers(generics.ListAPIView):
 
 
 class DeleteNetworkFollower(generics.DestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsOwner]
     queryset = NetworkFollower.objects.all()
     serializer_class = ShowNetworkFollowerSerializer
     lookup_field = 'id'
@@ -60,7 +61,7 @@ class ListNetworkDeliveryBoyApplication(generics.ListAPIView):
 
 
 class UpdateNetworkDeliveryBoyApplication(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsDeliveryApplicationOwner]
     queryset = NetworkDeliveryBoyApplication.objects.all()
     serializer_class = ShowNetworkDeliveryBoyApplication
     lookup_field = 'id'
@@ -87,7 +88,7 @@ class ListNetworkPermanentEmployeeApplication(generics.ListAPIView):
 
 
 class UpdateNetworkPermanentEmployeeApplication(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsPermanentEmployeeApplicationOwner]
     queryset = NetworkPermanentEmployeeApplication.objects.all()
     serializer_class = ShowNetworkPermanentEmployeeApplication
     lookup_field = 'id'
@@ -114,7 +115,7 @@ class ListNetworkFreelancerApplication(generics.ListAPIView):
 
 
 class UpdateNetworkFreelancerApplication(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsFreelancerApllicationOwner]
     queryset = NetworkFreelancerApplication.objects.all()
     serializer_class = ShowNetworkFreelancerApplication
     lookup_field = 'id'
