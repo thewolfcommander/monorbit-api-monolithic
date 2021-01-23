@@ -25,7 +25,7 @@ class IsPermanentEmployeeApplicationOwner(permissions.BasePermission):
             return request.user
 
 class IsFreelancerApllicationOwner(permissions.BasePermission):
-    message="Only freelancer can update their application."
+    message="Only freelancer owner can update their application."
     def has_object_permission(self,request,view,obj):
         if request.method in ["PUT","PATCH","DELETE"]:
             return obj.freelancer.job_profile.user == request.user
