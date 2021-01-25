@@ -72,7 +72,7 @@ class NetworkFreelancerApplication(models.Model):
         ('rejected', 'Rejected'),
     ]
     offering = models.ForeignKey(NetworkJobOffering, on_delete=models.CASCADE, help_text="This would be the reference to the Network Job Offering Table. It means this application is going to made to that respective job offering by network.")
-    freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE, help_text="This would be the reference to the freelancer who is applying for the Job Offering"))
+    freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE, help_text="This would be the reference to the freelancer who is applying for the Job Offering")
     application_status = models.CharField(max_length=100, null=True, blank=True, choices=STATUS, default='applied', help_text="Job Application status")
     created = models.DateTimeField(auto_now_add=True, help_text="Timestamp at which the freelancer applied for the job")
     updated = models.DateTimeField(auto_now=True, help_text="Timestamp at which the application has been updated")
