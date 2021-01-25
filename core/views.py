@@ -11,6 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from .models import *
 from .serializers import *
+from .permissions import *
 
 from product_catalog.models import Product
 from network.models import Network
@@ -23,7 +24,7 @@ from monorbit.utils import mail, upload, files
 
 
 class ListCreateTipToGrow(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsAdmin]
     serializer_class = TipToGrowSerializer
     queryset = TipToGrow.objects.all()
     filterset_fields = ["upvotes", "downvotes", "active"]
@@ -51,7 +52,7 @@ class GetARandomTip(APIView):
 
 
 class UpdateTipToGrow(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsAdmin]
     serializer_class = TipToGrowSerializer
     queryset = TipToGrow.objects.all()
     lookup_field = "id"
@@ -130,7 +131,7 @@ class AllEmail(generics.ListAPIView):
 
 
 class ListCreateUserLoginActivity(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
     serializer_class = UserLoginActivitySerializer
     queryset = UserLoginActivity.objects.all().order_by("-timestamp")
     filterset_fields = [
@@ -171,8 +172,8 @@ class ListCreateUserDeviceRegistration(generics.ListCreateAPIView):
     ]
 
 
-class UpdateUserDeviceRegistration(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+class UpdateUserDeviceRegistration(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated,UserDeviceOwner]
     serializer_class = UserDeviceRegistrationSerializer
     queryset = UserDeviceRegistration.objects.all().order_by("-timestamp")
     lookup_field = "id"
@@ -227,7 +228,7 @@ class ListAllNetworkOrders(generics.ListAPIView):
 
 
 class UpdateNetworkOrder(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser,NetworkOrderOwner]
     serializer_class = NetworkOrderSerializer
     queryset = NetworkOrder.objects.all()
     lookup_field = "id"

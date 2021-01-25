@@ -184,55 +184,59 @@ class UpdateProduct(generics.UpdateAPIView):
 
     
 class CreateProductImage(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductImageCreateSerializer
     queryset = ProductImage.objects.all()
 
+    # def perform_create(self,serializer):
+    #     print(serializer["product"])
+
+
 
 class CreateProductVideo(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductVideoCreateSerializer
     queryset = ProductVideo.objects.all()
 
 
 class CreateProductDocument(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductDocumentCreateSerializer
     queryset = ProductDocument.objects.all()
 
 
 class CreateProductTag(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductTagCreateSerializer
     queryset = ProductTag.objects.all()
 
 
 class CreateProductSize(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductSizeCreateSerializer
     queryset = ProductSize.objects.all()
 
 
 class CreateProductColor(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductColorCreateSerializer
     queryset = ProductColor.objects.all()
 
 
 class CreateProductSpecification(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductSpecificationCreateSerializer
     queryset = ProductSpecification.objects.all()
 
 
 class CreateProductExtra(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductExtraCreateSerializer
     queryset = ProductExtra.objects.all()
 
 
 class UpdateProductImage(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductImageCreateSerializer
     queryset = ProductImage.objects.all()
     lookup_field = 'id'
@@ -242,7 +246,7 @@ class UpdateProductImage(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductVideo(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductVideoCreateSerializer
     queryset = ProductVideo.objects.all()
     lookup_field = 'id'
@@ -252,7 +256,7 @@ class UpdateProductVideo(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductDocument(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductDocumentCreateSerializer
     queryset = ProductDocument.objects.all()
     lookup_field = 'id'
@@ -262,7 +266,7 @@ class UpdateProductDocument(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductTag(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductTagCreateSerializer
     queryset = ProductTag.objects.all()
     lookup_field = 'id'
@@ -272,7 +276,7 @@ class UpdateProductTag(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductSize(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductSizeCreateSerializer
     queryset = ProductSize.objects.all()
     lookup_field = 'id'
@@ -282,7 +286,7 @@ class UpdateProductSize(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductColor(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductColorCreateSerializer
     queryset = ProductColor.objects.all()
     lookup_field = 'id'
@@ -292,7 +296,7 @@ class UpdateProductColor(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductSpecification(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductSpecificationCreateSerializer
     queryset = ProductSpecification.objects.all()
     lookup_field = 'id'
@@ -302,7 +306,7 @@ class UpdateProductSpecification(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductExtra(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductExtraCreateSerializer
     queryset = ProductExtra.objects.all()
     lookup_field = 'id'
@@ -312,7 +316,7 @@ class UpdateProductExtra(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateProductReview(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProductReviewCreateSerializer
     queryset = ProductReview.objects.all()
 
@@ -331,7 +335,7 @@ class ListProductReview(generics.ListAPIView):
 
 
 class UpdateProductReview(generics.UpdateAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [IsReviewOwner]
     serializer_class = ProductReviewShowSerializer
     queryset = ProductReview.objects.all()
     lookup_field = 'id'

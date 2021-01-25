@@ -4,6 +4,7 @@ from rest_framework.views import Response, APIView
 
 from .serializers import *
 from cart.models import *
+from .permissions import *
 
 
 import logging
@@ -29,7 +30,7 @@ class ListProductEntry(generics.ListAPIView):
 
 
 class UpdateProductEntry(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsCartProductOwner]
     serializer_class = ProductEntryShowSerializer
     queryset = ProductEntry.objects.all()
     lookup_field = 'id'
@@ -51,7 +52,7 @@ class UpdateProductEntry(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductOrderStatus(generics.UpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [ProductOrderStatus]
     serializer_class = ProductEntryUpdateSerializer
     queryset = ProductEntry.objects.all()
     lookup_field = 'id'
@@ -81,7 +82,7 @@ class ListCart(generics.ListAPIView):
 
 
 class UpdateCart(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsCartOwner]
     serializer_class = CartShowSerializer
     queryset = Cart.objects.all()
     lookup_field = 'id'
@@ -110,7 +111,7 @@ class GetOrCreateWishlist(APIView):
 
     
 class ShowWishlistDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsCartOwner]
     serializer_class = WishlistShowSerializer
     queryset = Wishlist.objects.all()
     lookup_field = 'id'
@@ -123,7 +124,7 @@ class AddWishlistProductEntry(generics.CreateAPIView):
 
 
 class DeleteWishlistProductEntry(generics.DestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,AddWishlistPermission]
     serializer_class = WishlistProductEntryCreateSerializer
     queryset = WishlistProductEntry.objects.all()
     lookup_field = 'id'

@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 
 from .serializers import *
 from .models import *
+from .permissions import *
 
 
 import logging
@@ -27,7 +28,7 @@ class ListCreateJobProfile(generics.ListCreateAPIView):
 
 
 class UpdateJobProfile(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,JobProfilePermission]
     serializer_class = JobProfileSerializer
     queryset = JobProfile.objects.all()
     lookup_field = 'id'
@@ -48,7 +49,7 @@ class ListCreateDeliveryBoyVehicle(generics.ListCreateAPIView):
 
 
 class UpdateDeliveryBoyVehicle(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,DeliveryBoyVehiclePermission]
     serializer_class = DeliveryBoyVehicleSerializer
     queryset = DeliveryBoyVehicle.objects.all()
     lookup_field = 'id'
@@ -75,7 +76,7 @@ class CreateDeliveryBoys(generics.CreateAPIView):
 
 
 class UpdateDeliveryBoy(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,DeliveryBoyPermanentEmployeeAndFreelancer]
     serializer_class = DeliveryBoyShowSerializer
     queryset = DeliveryBoy.objects.all()
     lookup_field = 'id'
@@ -102,7 +103,7 @@ class CreatePermanentEmployee(generics.CreateAPIView):
 
 
 class UpdatePermanentEmployee(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,DeliveryBoyPermanentEmployeeAndFreelancer]
     serializer_class = PermanentEmployeeShowSerializer
     queryset = PermanentEmployee.objects.all()
     lookup_field = 'id'
@@ -129,7 +130,7 @@ class CreateFreelancer(generics.CreateAPIView):
 
 
 class UpdateFreelancer(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,DeliveryBoyPermanentEmployeeAndFreelancer]
     serializer_class = FreelancerShowSerializer
     queryset = Freelancer.objects.all()
     lookup_field = 'id'

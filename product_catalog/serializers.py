@@ -535,7 +535,7 @@ class ProductMiniSerializer(serializers.ModelSerializer):
             'images',
         ]
 
-  
+
 class ProductImageCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
@@ -544,7 +544,7 @@ class ProductImageCreateSerializer(serializers.ModelSerializer):
             'product',
             'image',
         ]
-
+        
 
 class ProductVideoCreateSerializer(serializers.ModelSerializer):
     class Meta:
