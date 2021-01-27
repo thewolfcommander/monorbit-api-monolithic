@@ -9,6 +9,10 @@ from .permissions import *
 
 
 class ListCreateFAQCategory(generics.ListCreateAPIView):
+    """
+    Creating FAQ category to help users.Only admin can create.
+    List of FAQ category.
+    """
     permission_classes = [IsAdmin]
     serializer_class = FAQCategorySerializer
     queryset = FAQCategory.objects.all().order_by('-added')
@@ -19,6 +23,10 @@ class ListCreateFAQCategory(generics.ListCreateAPIView):
 
 
 class UpdateFAQCategory(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Getting single FAQ category.
+    Update(put ,patch, delete) Single FAQ category. Only admin can.
+    """
     permission_classes = [IsAdmin]
     serializer_class = FAQCategorySerializer
     queryset = FAQCategory.objects.all()
@@ -29,12 +37,18 @@ class UpdateFAQCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateFAQ(generics.CreateAPIView):
+    """
+    Creating FAQ to help users.Only admin can create.
+    """
     permission_classes = [permissions.IsAuthenticated,IsAdmin]
     serializer_class = FAQCreateSerializer
     queryset = FAQ.objects.all()
 
 
 class ListFAQ(generics.ListAPIView):
+    """
+    List FAQ
+    """
     permission_classes = [IsAdmin]
     serializer_class = FAQShowSerializer
     queryset = FAQ.objects.all().order_by('popularity_score')
@@ -48,6 +62,10 @@ class ListFAQ(generics.ListAPIView):
 
 
 class UpdateFAQ(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Getting single FAQ.
+    Update(put ,patch, delete) Single FAQ . Only admin can.
+    """
     permission_classes = [permissions.IsAuthenticated,IsAdmin]
     serializer_class = FAQShowSerializer
     queryset = FAQ.objects.all()
@@ -58,9 +76,13 @@ class UpdateFAQ(generics.RetrieveUpdateDestroyAPIView):
 
     
 class CreateFAQReaction(APIView):
+    """
+    Users Reaction on FAQ.
+    """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None):
+        # Get following data from request
         user = request.user
         faq = request.data.get('faq', None)
         like_it_or_not = request.data.get('like_it_or_not', False)
@@ -69,14 +91,17 @@ class CreateFAQReaction(APIView):
             raise ValidationError(detail="Invalid FAQ. Please try again later by correcting it.", code=400)
 
         try:
+            # find FAQ object using requested "faq". And create reaction object
             faq_obj = FAQ.objects.get(id=faq)
             reaction = FAQReaction.objects.create(
                 faq=faq_obj,
                 user=user,
                 like_it_or_not=like_it_or_not
             )
+            # if user like the faq (True) then proceed.
             if reaction.like_it_or_not:
                 reaction.faq.no_of_upvotes += 1
+                # increase popularity score (so that we can sort according to this)
                 reaction.faq.popularity_score = float(reaction.faq.popularity_score) + 0.01
                 reaction.faq.save()
                 return Response({
@@ -90,7 +115,9 @@ class CreateFAQReaction(APIView):
                     }
                 })
             else:
+                # if user don't like faq (False)
                 reaction.faq.no_of_downvotes += 1
+                # decrease popularity score (so that we can sort according to this)
                 reaction.faq.popularity_score = float(reaction.faq.popularity_score) - 0.01
                 reaction.faq.save()
                 return Response({
@@ -108,6 +135,9 @@ class CreateFAQReaction(APIView):
 
         
 class DeleteFAQReaction(generics.DestroyAPIView):
+    """
+    Deleting FAQ Reaction. Only admin can.
+    """
     permission_classes = [permissions.IsAdminUser]
     serializer_class = FAQReactionSerializer
     queryset = FAQReaction.objects.all()
@@ -115,6 +145,7 @@ class DeleteFAQReaction(generics.DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         try:
+            # Get object by requested "id"
             instance = self.get_object()
             if instance.like_it_or_not:
                 instance.faq.no_of_upvotes -= 1
@@ -131,12 +162,18 @@ class DeleteFAQReaction(generics.DestroyAPIView):
 
     
 class ListCreateTicketCategory(generics.ListCreateAPIView):
+    """
+    Create TicketCategory. Ticket is used in prolems identification.
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsAdmin]
     serializer_class = TicketCategorySerializer
     queryset = TicketCategory.objects.all()
 
 
 class UpdateTicketCategory(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update Ticket category.
+    """
     permission_classes = [permissions.IsAuthenticated,IsAdmin]
     serializer_class = TicketCategorySerializer
     queryset = TicketCategory.objects.all()
@@ -147,12 +184,18 @@ class UpdateTicketCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateTicket(generics.CreateAPIView):
+    """
+    Create Ticket (Problem)
+    """
     permission_classes = [permissions.AllowAny]
     serializer_class = CreateTicketSerializer
     queryset = Ticket.objects.all()
 
 
 class ListTicket(generics.ListAPIView):
+    """
+    List of Tickets (Problems)
+    """
     permission_classes = [permissions.AllowAny]
     serializer_class = ShowTicketSerializer
     queryset = Ticket.objects.all()
@@ -173,7 +216,10 @@ class ListTicket(generics.ListAPIView):
 
 
 class UpdateTicket(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAdmin]
+    """
+    Update Ticket( Ticket owner will do) 
+    """
+    permission_classes = [IsOwner]
     serializer_class = ShowTicketSerializer
     queryset = Ticket.objects.all()
     lookup_field = 'id'
@@ -183,6 +229,9 @@ class UpdateTicket(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ListCreateTicketComment(generics.ListCreateAPIView):
+    """
+    Comment on Ticket(problem). Anyone can do.
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = TicketCommentSerializer
     queryset = TicketComment.objects.all()
@@ -196,6 +245,9 @@ class ListCreateTicketComment(generics.ListCreateAPIView):
 
 
 class UpdateTicketComment(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update Comment on ticket(problem). Comment Owner can do.
+    """
     permission_classes = [permissions.IsAuthenticated,IsOwner]
     serializer_class = TicketCommentSerializer
     queryset = TicketComment.objects.all()
@@ -206,6 +258,9 @@ class UpdateTicketComment(generics.RetrieveUpdateDestroyAPIView):
 
 
 class GiveTicketReaction(APIView):
+    """
+    Reaction on Ticket(problem). Anyone can comment on user ticket(problem)
+    """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None):
@@ -238,6 +293,9 @@ class GiveTicketReaction(APIView):
         
 
 class GiveTicketCommentReaction(APIView):
+    """
+    Anyone can comment on "comment of a ticket(problem)"
+    """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None):
