@@ -8,12 +8,18 @@ import logging
 logger = logging.getLogger(__name__)
 
 class CreateAddress(generics.CreateAPIView):
+    """
+    View for Create addresses of users. 
+    """
     permission_classes = [permissions.IsAuthenticated]
     queryset = Address.objects.all()
     serializer_class = AddressCreateSerializer
 
 
 class ListAllAddresses(generics.ListAPIView):
+    """
+    List of all addresses of users.
+    """
     permission_classes = [permissions.IsAuthenticated]
     queryset = Address.objects.all()
     serializer_class = AddressShowSerializer
@@ -35,6 +41,10 @@ class ListAllAddresses(generics.ListAPIView):
 
 
 class UpdateAddress(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Address update( put,patch and delete) views. User, who created address can updated their own address.
+    Anyone can get address (If authenticated).
+    """
     permission_classes = [permissions.IsAuthenticated,IsOwner]
     queryset = Address.objects.all()
     serializer_class = AddressShowSerializer
