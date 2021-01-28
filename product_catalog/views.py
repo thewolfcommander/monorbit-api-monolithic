@@ -11,12 +11,18 @@ logger = logging.getLogger(__name__)
 
 
 class CreateProductDefaultCategory(generics.CreateAPIView):
+    """
+    Default category of product which is provided by monorbit. Only Admin can create product category.
+    """
     permission_classes = [ProductAdminPermission]
     serializer_class = ProductDefaultCategoryCreateSerializer
     queryset = ProductDefaultCategory.objects.all()
 
 
 class ListProductDefaultCategory(generics.ListAPIView):
+    """
+    Product default category list, will provided to network creator.
+    """
     permission_classes = [permissions.AllowAny]
     serializer_class = ProductDefaultCategoryShowSerializer
     queryset = ProductDefaultCategory.objects.all()
@@ -27,6 +33,9 @@ class ListProductDefaultCategory(generics.ListAPIView):
 
 
 class UpdateProductDefaultCategory(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Updating (put, patch, delete) product default category. Only admin can do it.
+    """
     permission_classes = [ProductDetailAdminPermission]
     serializer_class = ProductDefaultCategoryShowSerializer
     queryset = ProductDefaultCategory.objects.all()
@@ -37,12 +46,18 @@ class UpdateProductDefaultCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateProductDefaultSubCategory(generics.CreateAPIView):
+    """
+    Default subcategory of product which is provided by monorbit. Only Admin can create product subcategory.
+    """
     permission_classes = [ProductAdminPermission]
     serializer_class = ProductDefaultSubCategoryCreateSerializer
     queryset = ProductDefaultSubCategory.objects.all()
 
 
 class ListProductDefaultSubCategory(generics.ListAPIView):
+    """
+    Product default subcategory list, will provided to network creator.
+    """
     permission_classes = [permissions.AllowAny,]
     serializer_class = ProductDefaultSubCategoryShowSerializer
     queryset = ProductDefaultSubCategory.objects.all()
@@ -53,6 +68,9 @@ class ListProductDefaultSubCategory(generics.ListAPIView):
 
 
 class UpdateProductDefaultSubCategory(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Updating (put, patch, delete) product default subcategory. Only admin can do it.
+    """
     permission_classes = [ProductDetailAdminPermission]
     serializer_class = ProductDefaultSubCategoryShowSerializer
     queryset = ProductDefaultSubCategory.objects.all()
@@ -63,6 +81,10 @@ class UpdateProductDefaultSubCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ListCreateProductCustomCategory(generics.ListCreateAPIView):
+    """
+    Network creator can introduce new product category.
+    List of all product custom categories.
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
     serializer_class = ProductCustomCategorySerializer
     queryset = ProductCustomCategory.objects.all()
@@ -72,6 +94,9 @@ class ListCreateProductCustomCategory(generics.ListCreateAPIView):
 
 
 class UpdateProductCustomCategory(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Network creator can update(put, patch, delete) their product custom categories.
+    """
     permission_classes = [IsSubPartOwner]
     serializer_class = ProductCustomCategorySerializer
     queryset = ProductCustomCategory.objects.all()
@@ -82,12 +107,18 @@ class UpdateProductCustomCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateProductCustomSubCategory(generics.CreateAPIView):
+    """
+    Network creator can introduce new product subcategory.
+    """
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class = ProductCustomSubCategoryCreateSerializer
     queryset = ProductCustomSubCategory.objects.all()
 
 
 class ListProductCustomSubCategory(generics.ListAPIView):
+    """
+    List of all product custom subcategories.
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
     serializer_class = ProductCustomSubCategoryShowSerializer
     queryset = ProductCustomSubCategory.objects.all()
@@ -97,6 +128,9 @@ class ListProductCustomSubCategory(generics.ListAPIView):
 
 
 class UpdateProductCustomSubCategory(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Network creator can update(put, patch, delete) their product custom subcategories.
+    """
     permission_classes = [IsSubSubPartOwner,]
     serializer_class = ProductCustomSubCategoryShowSerializer
     queryset = ProductCustomSubCategory.objects.all()
@@ -107,6 +141,14 @@ class UpdateProductCustomSubCategory(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ListCreateProductMeasurement(generics.ListCreateAPIView):
+    """
+    Product measurements ('kg', 'Kilogram'),
+        ('gm', 'Gram'),
+        ('mg', 'Miligram'),
+        ('l', 'Kilogram'),
+    Only admin can create.
+    List of all Product Measurements, will provided to network creator.
+    """
     permission_classes = [ProductAdminPermission,]
     serializer_class = ProductMeasurementSerializer
     queryset = ProductMeasurement.objects.all()
@@ -116,6 +158,9 @@ class ListCreateProductMeasurement(generics.ListCreateAPIView):
 
 
 class UpdateProductMeasurement(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Only admin can update product measurements.
+    """
     permission_classes = [ProductDetailAdminPermission,]
     serializer_class = ProductMeasurementSerializer
     queryset = ProductMeasurement.objects.all()
@@ -126,6 +171,9 @@ class UpdateProductMeasurement(generics.RetrieveUpdateDestroyAPIView):
 
     
 class ListProduct(generics.ListAPIView):
+    """
+    List of products.
+    """
     permission_classes = [permissions.AllowAny,]
     serializer_class = ProductShowSerializer
     queryset = Product.objects.all()
@@ -154,6 +202,9 @@ class ListProduct(generics.ListAPIView):
 
 
 class CreateProduct(generics.CreateAPIView):
+    """
+    Network creator can add their products in network.
+    """
     permission_classes = [permissions.IsAuthenticated,]
     serializer_class = ProductCreateSerializer
     queryset = Product.objects.all()
@@ -167,6 +218,9 @@ class CreateProduct(generics.CreateAPIView):
 
 
 class DetailProduct(generics.RetrieveDestroyAPIView):
+    """
+    Network creator can delete their products.
+    """
     permission_classes = [IsSubPartDetailOwner,]
     serializer_class = ProductShowSerializer
     queryset = Product.objects.all()
@@ -174,6 +228,9 @@ class DetailProduct(generics.RetrieveDestroyAPIView):
 
 
 class UpdateProduct(generics.UpdateAPIView):
+    """
+    Network creator can update(put and patch) their products.
+    """
     permission_classes = [IsSubPartDetailOwner,]
     serializer_class = ProductUpdateSerializer
     queryset = Product.objects.all()
@@ -184,6 +241,9 @@ class UpdateProduct(generics.UpdateAPIView):
 
     
 class CreateProductImage(generics.CreateAPIView):
+    """
+    Product Image will be uploaded here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductImageCreateSerializer
     queryset = ProductImage.objects.all()
@@ -194,48 +254,72 @@ class CreateProductImage(generics.CreateAPIView):
 
 
 class CreateProductVideo(generics.CreateAPIView):
+    """
+    Product video will be uploaded here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductVideoCreateSerializer
     queryset = ProductVideo.objects.all()
 
 
 class CreateProductDocument(generics.CreateAPIView):
+    """
+    Product document(pamplets,poster) will be uploaded here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductDocumentCreateSerializer
     queryset = ProductDocument.objects.all()
 
 
 class CreateProductTag(generics.CreateAPIView):
+    """
+    Tags related to product.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductTagCreateSerializer
     queryset = ProductTag.objects.all()
 
 
 class CreateProductSize(generics.CreateAPIView):
+    """
+    Product size will be uploaded here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductSizeCreateSerializer
     queryset = ProductSize.objects.all()
 
 
 class CreateProductColor(generics.CreateAPIView):
+    """
+    Product color will be uploaded here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductColorCreateSerializer
     queryset = ProductColor.objects.all()
 
 
 class CreateProductSpecification(generics.CreateAPIView):
+    """
+    Product specification will be uploaded here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductSpecificationCreateSerializer
     queryset = ProductSpecification.objects.all()
 
 
 class CreateProductExtra(generics.CreateAPIView):
+    """
+    Product extra property will be uploaded here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariant]
     serializer_class = ProductExtraCreateSerializer
     queryset = ProductExtra.objects.all()
 
 
 class UpdateProductImage(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Product image will be updated(put,patch,delete) here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductImageCreateSerializer
     queryset = ProductImage.objects.all()
@@ -246,6 +330,9 @@ class UpdateProductImage(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductVideo(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Product video will be updated(put,patch,delete) here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductVideoCreateSerializer
     queryset = ProductVideo.objects.all()
@@ -256,6 +343,9 @@ class UpdateProductVideo(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductDocument(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Product document will be updated(put,patch,delete) here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductDocumentCreateSerializer
     queryset = ProductDocument.objects.all()
@@ -266,6 +356,9 @@ class UpdateProductDocument(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductTag(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Tags related to product will be updated(put,patch,delete) here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductTagCreateSerializer
     queryset = ProductTag.objects.all()
@@ -276,6 +369,9 @@ class UpdateProductTag(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductSize(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Product size will be updated(put,patch,delete) here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductSizeCreateSerializer
     queryset = ProductSize.objects.all()
@@ -286,6 +382,9 @@ class UpdateProductSize(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductColor(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Product color will be updated(put,patch,delete) here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductColorCreateSerializer
     queryset = ProductColor.objects.all()
@@ -296,6 +395,9 @@ class UpdateProductColor(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductSpecification(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Product specification will be updated(put,patch,delete) here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductSpecificationCreateSerializer
     queryset = ProductSpecification.objects.all()
@@ -306,6 +408,9 @@ class UpdateProductSpecification(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdateProductExtra(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Product extra proverties will be updated(put,patch,delete) here.(Only network creator and product owner)
+    """
     permission_classes = [IsProductOwnersVariantDetail]
     serializer_class = ProductExtraCreateSerializer
     queryset = ProductExtra.objects.all()
@@ -316,12 +421,18 @@ class UpdateProductExtra(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateProductReview(generics.CreateAPIView):
+    """
+    Normal user will give review(comment) and rating to any product according to his experience.
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProductReviewCreateSerializer
     queryset = ProductReview.objects.all()
 
 
 class ListProductReview(generics.ListAPIView):
+    """
+    List of all reviews, given to a product.
+    """
     permission_classes = [permissions.AllowAny,]
     serializer_class = ProductReviewShowSerializer
     queryset = ProductReview.objects.all()
@@ -335,6 +446,9 @@ class ListProductReview(generics.ListAPIView):
 
 
 class UpdateProductReview(generics.UpdateAPIView):
+    """
+    Normal user who give review, can update their review.
+    """
     permission_classes = [IsReviewOwner]
     serializer_class = ProductReviewShowSerializer
     queryset = ProductReview.objects.all()
