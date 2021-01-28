@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 
 from .models import *
 from .serializers import *
+from .permissions import *
 
 import logging
 logger = logging.getLogger(__name__)
