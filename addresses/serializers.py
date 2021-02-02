@@ -7,6 +7,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 class AddressCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for add addresses when user ordered(may be billing or shipping address)
+    """
     class Meta:
         model = Address
         fields = [
@@ -47,6 +50,9 @@ class AddressCreateSerializer(serializers.ModelSerializer):
 
     
 class AddressShowSerializer(serializers.ModelSerializer):
+    """
+    Serializer for showing address.
+    """
     user = UserMiniSerializer(read_only=True)
     class Meta:
         model = Address
@@ -73,6 +79,9 @@ class AddressShowSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
+        """
+        Updating address.
+        """
         instance.name = validated_data.get('name', instance.name)
         instance.alt_name = validated_data.get('alt_name', instance.alt_name)
         instance.address_1 = validated_data.get('address_1', instance.address_1)

@@ -7,6 +7,9 @@ from orders.serializers import OrderDetailSerializer
 
 
 class TipToGrowSerializer(serializers.ModelSerializer):
+    """
+    Serializer for tips to grow (create and update)
+    """
     class Meta:
         model = TipToGrow
         fields = ["id", "tip", "upvotes", "downvotes", "active", "added", "updated"]
@@ -21,6 +24,9 @@ class TipToGrowSerializer(serializers.ModelSerializer):
 
 
 class EmailSentToUsersSerializer(serializers.ModelSerializer):
+    """
+    Serializer for sending email from monorbit to monorbit users.
+    """
     class Meta:
         model = EmailSentToUsers
         fields = [
@@ -37,6 +43,9 @@ class EmailSentToUsersSerializer(serializers.ModelSerializer):
 
 
 class UserLoginActivitySerializer(serializers.ModelSerializer):
+    """
+    Serializer for user login device info.
+    """
     user = UserMiniSerializer(read_only=True)
 
     class Meta:
@@ -54,6 +63,9 @@ class UserLoginActivitySerializer(serializers.ModelSerializer):
 
 
 class UserDeviceRegistrationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user registration device info.
+    """
     user = UserMiniSerializer(read_only=True)
 
     class Meta:
@@ -76,6 +88,9 @@ class UserDeviceRegistrationSerializer(serializers.ModelSerializer):
 
 
 class NetworkOrderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for network orders.
+    """
     network = ShowNetworkSerializer(read_only=True)
     order = OrderDetailSerializer(read_only=True)
 

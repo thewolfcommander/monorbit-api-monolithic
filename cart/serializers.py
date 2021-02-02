@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class ProductEntryCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Product entry in Cart.
+    """
     class Meta:
         model = ProductEntry
         fields = [
@@ -25,15 +28,19 @@ class ProductEntryCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        # getting cart and product id from requested data(validated_data)
         product = validated_data.get('product')
         cart = validated_data.get('cart')
         try:
+            # Getting productentry object based on product id and cart id
             instance = ProductEntry.objects.get(product=product, cart=cart)
             instance.quantity = validated_data.get('quantity')
             instance.save()
         except ProductEntry.DoesNotExist:
+            # if productentry does not exist create new product entry via validated_data
             instance = ProductEntry.objects.create(**validated_data)
             instance.cart.count += 1
+            # increase sub_total and total
             instance.cart.sub_total = float(instance.cart.sub_total) + float(instance.cost)
             instance.cart.total = (float(instance.cart.sub_total) + float(instance.cart.shipping)) - float(instance.cart.discount)
             instance.cart.save()
@@ -42,6 +49,9 @@ class ProductEntryCreateSerializer(serializers.ModelSerializer):
 
 
 class ProductEntryTinyCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for show little info related to product entry.
+    """
     class Meta:
         model = ProductEntry
         fields = [
@@ -57,6 +67,9 @@ class ProductEntryTinyCreateSerializer(serializers.ModelSerializer):
 
     
 class ProductEntryShowSerializer(serializers.ModelSerializer):
+    """
+    Serializer for show product entry details.
+    """
     product = ProductShowSerializer(read_only=True)
     size = ProductSizeShowSerializer(required=False)
     color = ProductColorShowSerializer(required=False)
@@ -97,6 +110,9 @@ class ProductEntryTinySerializer(serializers.ModelSerializer):
     
     
 class ProductEntryUpdateSerializer(serializers.ModelSerializer):
+    """
+    Product entry update by this serializer.
+    """
     class Meta:
         model = ProductEntry
         fields = [
@@ -121,6 +137,9 @@ class ProductEntryUpdateSerializer(serializers.ModelSerializer):
 
     
 class CartCreateSerializer(serializers.ModelSerializer):
+    """
+    Creating cart via this serializer.
+    """
     # user = UserMiniSerializer(read_only=True)
     products = ProductEntryTinyCreateSerializer(many=True, required=False)
     class Meta:
@@ -140,8 +159,10 @@ class CartCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        # getting products and user from request data(validated_data).
         products = validated_data.pop('products', None)
         user = validated_data.get('user', None)
+        # initial cart have following five ingridients will zero.
         count = 0
         sub_total = 0.00
         shipping = 0.00
@@ -149,6 +170,7 @@ class CartCreateSerializer(serializers.ModelSerializer):
         discount = 0.00
         if user is not None:
             try:
+                # get cart of user(requested user if they exist.)
                 instance = Cart.objects.get(user=user, is_active=True)
                 # instance.count = 0
                 # instance.sub_total = 0.00
@@ -186,6 +208,7 @@ class CartCreateSerializer(serializers.ModelSerializer):
                 # instance.count = count
                 # instance.save()
             except Cart.DoesNotExist:
+                # if cart does not exist the create.
                 instance = Cart.objects.create(
                     user=user, 
                     sub_total=sub_total, 
@@ -195,6 +218,7 @@ class CartCreateSerializer(serializers.ModelSerializer):
                     is_active=True
                 )
                 if products is not None:
+                    # loop through products and add in productentry one by one.
                     for p in products:
                         pe = ProductEntry.objects.create(**p, cart=instance)
                         count += 1
@@ -204,7 +228,7 @@ class CartCreateSerializer(serializers.ModelSerializer):
                 else:
                     shipping = 0.00
                 total = (sub_total + shipping) - discount
-
+                # write cart
                 instance.sub_total = sub_total
                 instance.total = total
                 instance.discount = discount
@@ -220,6 +244,9 @@ class CartCreateSerializer(serializers.ModelSerializer):
 
         
 class CartShowSerializer(serializers.ModelSerializer):
+    """
+    Serializer for showing cart info.
+    """
     user = UserMiniSerializer(read_only=True)
     products = ProductEntryTinySerializer(many=True, required=False)
     class Meta:
@@ -260,6 +287,9 @@ class CartMegaDetailSerializer(serializers.ModelSerializer):
 
 
 class WishlistProductEntryCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for adding product in wishlist.
+    """
     class Meta:
         model = WishlistProductEntry
         fields = [
@@ -276,6 +306,9 @@ class WishlistProductEntryCreateSerializer(serializers.ModelSerializer):
 
 
 class WishlistProductEntryShowSerializer(serializers.ModelSerializer):
+    """
+    Showing wishlist product.
+    """
     product = ProductShowSerializer(read_only=True)
     class Meta:
         model = WishlistProductEntry
@@ -286,6 +319,9 @@ class WishlistProductEntryShowSerializer(serializers.ModelSerializer):
 
 
 class WishlistShowSerializer(serializers.ModelSerializer):
+    """
+    Showing wishlist.
+    """
     user = UserMiniSerializer(read_only=True)
     products = WishlistProductEntryShowSerializer(many=True, required=False)
     class Meta:
@@ -301,6 +337,9 @@ class WishlistShowSerializer(serializers.ModelSerializer):
 
     
 class WishlistCreateSerializer(serializers.ModelSerializer):
+    """
+    Creating wish list.
+    """
     user = UserMiniSerializer(read_only=True)
     products = WishlistProductEntryCreateSerializer(many=True, required=False)
     class Meta:
