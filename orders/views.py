@@ -2,18 +2,25 @@ from rest_framework import generics, permissions
 
 from .models import *
 from .serializers import *
+from .permissions import *
 
 import logging
 logger = logging.getLogger(__name__)
 
 
 class CreateOrder(generics.CreateAPIView):
+    """
+    normal user create order of a product of cart.
+    """
     serializer_class = OrderCreateSerializer
     queryset = Order.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
 
 class ListAllOrders(generics.ListAPIView):
+    """
+    List of all orders.
+    """
     serializer_class = ListOrderSerializer
     queryset = Order.objects.all()
     permission_classes = [permissions.IsAuthenticated]
@@ -31,6 +38,9 @@ class ListAllOrders(generics.ListAPIView):
 
 
 class OrderDetail(generics.RetrieveAPIView):
+    """
+    normal user can get single their order.
+    """
     serializer_class = OrderDetailSerializer
     queryset = Order.objects.all()
     permission_classes = [permissions.IsAuthenticated]
@@ -38,6 +48,9 @@ class OrderDetail(generics.RetrieveAPIView):
 
 
 class UpdateOrder(generics.UpdateAPIView, generics.DestroyAPIView):
+    """
+    normal user can update and delete their orders.
+    """
     serializer_class = OrderUpdateSerializer
     queryset = Order.objects.all()
     permission_classes = [permissions.IsAuthenticated]

@@ -11,6 +11,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 class NetworkCategoryListCreateView(generics.ListCreateAPIView):
+    """
+    Only admin can create network category. And provide list of network category to user who want to create their network.
+    Network category such as "Food", "Footwear" etc.
+    """
     permission_classes = [NetworkAdminPermission]
     queryset = NetworkCategory.objects.all()
     serializer_class = NetworkCategorySerializer
@@ -20,6 +24,9 @@ class NetworkCategoryListCreateView(generics.ListCreateAPIView):
 
 
 class NetworkCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Only Admin can Update Network Category.
+    """
     permission_classes = [NetworkDetailAdminPermission]
     queryset = NetworkCategory.objects.all()
     serializer_class = NetworkCategorySerializer
@@ -30,12 +37,19 @@ class NetworkCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class NetworkTypeListCreateView(generics.ListCreateAPIView):
+    """
+    Only admin can create network type. And provide list of network type to user who want to create their network.
+    Network type such as "wholeseller", "retailer" etc.
+    """
     permission_classes = [NetworkAdminPermission]
     queryset = NetworkType.objects.all()
     serializer_class = NetworkTypeSerializer
 
 
 class NetworkTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Only Admin can Update Network type.
+    """
     permission_classes = [NetworkDetailAdminPermission]
     queryset = NetworkType.objects.all()
     serializer_class = NetworkTypeSerializer
@@ -46,12 +60,18 @@ class NetworkTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     
 class NetworkCreateView(generics.CreateAPIView):
+    """
+    A authenticated user can create their network and start thier bussiness here.
+    """
     permission_classes = [permissions.IsAuthenticated]
     queryset = Network.objects.all()
     serializer_class = CreateNetworkSerializer
 
 
 class FindNetwork(APIView):
+    """
+    Anyone can find network (search for network), if they have username(urlid) of network.
+    """
     permission_classes = [permissions.AllowAny,]
 
     def post(self, request, format=None):
@@ -72,6 +92,9 @@ class FindNetwork(APIView):
 
 
 class ShowNetworkStats(generics.ListAPIView):
+    """
+    Stats (Analytics of network). In which network owner can see total orders, total sells etc.
+    """
     permission_classes = [permissions.IsAuthenticated]
     # queryset = NetworkStat.objects.all().order_by('-updated')
     serializer_class = NetworkStatShowSerializer
@@ -85,6 +108,9 @@ class ShowNetworkStats(generics.ListAPIView):
 
 
 class NetworkStatDetail(generics.RetrieveAPIView):
+    """
+    Single Stats (Analytic of network). In which network owner can see total orders, total sells etc.
+    """
     permission_classes = [permissions.IsAuthenticated,IsSubPartOwner]
     queryset = NetworkStat.objects.all().order_by('-updated')
     serializer_class = NetworkStatShowSerializer
@@ -92,6 +118,9 @@ class NetworkStatDetail(generics.RetrieveAPIView):
 
 
 class NetworkListView(generics.ListAPIView):
+    """
+    List of all network.
+    """
     permission_classes = [permissions.AllowAny]
     queryset = Network.objects.all()
     serializer_class = ShowNetworkSerializer
@@ -114,6 +143,9 @@ class NetworkListView(generics.ListAPIView):
 
 
 class NetworkDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Network owner can update their network. (Delete permanently)
+    """
     permission_classes = [permissions.AllowAny, IsOwnerOrReadOnly]
     queryset = Network.objects.all()
     serializer_class = NetworkDetailSerializer
@@ -124,6 +156,9 @@ class NetworkDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     
 class NetworkDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Network owner can update their network. (delete temporary => is_active=False or is_archieved=False)
+    """
     permission_classes = [permissions.AllowAny, IsOwnerOrReadOnly]
     queryset = Network.objects.all()
     serializer_class = DeleteNetworkSerializer
@@ -134,42 +169,63 @@ class NetworkDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
     
 class CreateNetworkImage(generics.CreateAPIView):
+    """
+    Network owner can create an image for thier network.
+    """
     permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkImage.objects.all()
     serializer_class = NetworkImageCreateSerializer
 
 
 class CreateNetworkVideo(generics.CreateAPIView):
+    """
+    Network owner can create video for thier network.
+    """
     permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkVideo.objects.all()
     serializer_class = NetworkVideoCreateSerializer
 
 
 class CreateNetworkDocument(generics.CreateAPIView):
+    """
+    Network owner can upload document(pamplet, parcha etc) of their network.
+    """
     permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkDocument.objects.all()
     serializer_class = NetworkDocumentCreateSerializer
 
 
 class CreateNetworkOperationTiming(generics.CreateAPIView):
+    """
+    Network owner can decide timing of network.
+    """
     permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkOperationTiming.objects.all()
     serializer_class = NetworkOperationTimingCreateSerializer
 
 
 class CreateNetworkOperationLocation(generics.CreateAPIView):
+    """
+    Network owner can decide where(location) they are able to deliver thier product and services.
+    """
     permission_classes = [permissions.AllowAny, IsSubPartOwner]
     queryset = NetworkOperationLocation.objects.all()
     serializer_class = NetworkOperationLocationCreateSerializer
 
 
 class CreateNetworkReview(generics.CreateAPIView):
+    """
+    Normal user can review and rate any network based on their product and services.
+    """
     permission_classes = [permissions.IsAuthenticated,]
     queryset = NetworkReview.objects.all()
     serializer_class = NetworkReviewCreateSerializer
 
 
 class ListNetworkReview(generics.ListAPIView):
+    """
+    List of all review and rating of network.
+    """
     permission_classes = [permissions.AllowAny,]
     queryset = NetworkReview.objects.all().order_by('-created')
     serializer_class = NetworkReviewShowSerializer
@@ -183,6 +239,9 @@ class ListNetworkReview(generics.ListAPIView):
 
 
 class UpdateNetworkReview(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Normal user who has reviewed any network, can update the review and rating.
+    """
     permission_classes = [IsSubPartOwner]
     queryset = NetworkReview.objects.all()
     serializer_class = NetworkReviewShowSerializer
@@ -193,12 +252,18 @@ class UpdateNetworkReview(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateNetworkJob(generics.CreateAPIView):
+    """
+    Network owner can create jobs if their network need any manpower.
+    """
     permission_classes = [permissions.IsAuthenticated,]
     queryset = NetworkJob.objects.all()
     serializer_class = NetworkJobCreateSerializer
 
 
 class ListNetworkJob(generics.ListAPIView):
+    """
+    List of all network jobs.
+    """
     permission_classes = [permissions.AllowAny,]
     queryset = NetworkJob.objects.all().order_by('-updated')
     serializer_class = NetworkJobShowSerializer
@@ -217,6 +282,9 @@ class ListNetworkJob(generics.ListAPIView):
 
 
 class UpdateNetworkJob(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Network owner can update their jobs of network.
+    """
     permission_classes = [IsSubPartOwner]
     queryset = NetworkJob.objects.all()
     serializer_class = NetworkJobShowSerializer
@@ -228,12 +296,18 @@ class UpdateNetworkJob(generics.RetrieveUpdateDestroyAPIView):
     
 
 class CreateNetworkJobOffering(generics.CreateAPIView):
+    """
+    Normal user can offer a job.
+    """
     permission_classes = [permissions.IsAuthenticated,]
     queryset = NetworkJobOffering.objects.all()
     serializer_class = NetworkJobOfferingCreateSerializer
 
 
 class ListNetworkJobOffering(generics.ListAPIView):
+    """
+    List of job offerings by normal users.
+    """
     permission_classes = [permissions.AllowAny,]
     queryset = NetworkJobOffering.objects.all().order_by('-updated')
     serializer_class = NetworkJobOfferingShowSerializer
@@ -249,6 +323,9 @@ class ListNetworkJobOffering(generics.ListAPIView):
 
 
 class UpdateNetworkJobOffering(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Normal user who has created job offering can update their job offering.
+    """
     permission_classes = [permissions.IsAuthenticated,IsSubSubPartOwner]
     queryset = NetworkJobOffering.objects.all()
     serializer_class = NetworkJobOfferingShowSerializer
@@ -259,12 +336,18 @@ class UpdateNetworkJobOffering(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateNetworkStaff(generics.CreateAPIView):
+    """
+    Network owner can create network staff, so that they can manage their staff.
+    """
     permission_classes = [permissions.IsAuthenticated,]
     queryset = NetworkStaff.objects.all()
     serializer_class = NetworkStaffCreateSerializer
 
 
 class ListNetworkStaff(generics.ListAPIView):
+    """
+    List of network staffs.
+    """
     permission_classes = [permissions.AllowAny,]
     queryset = NetworkStaff.objects.all().order_by('-updated')
     serializer_class = NetworkStaffShowSerializer
@@ -281,6 +364,9 @@ class ListNetworkStaff(generics.ListAPIView):
 
 
 class ShowNetworkStaff(generics.RetrieveAPIView):
+    """
+    Show single network staff.
+    """
     permission_classes = [permissions.AllowAny,]
     queryset = NetworkStaff.objects.all().order_by('-updated')
     serializer_class = NetworkStaffShowSerializer
@@ -288,6 +374,9 @@ class ShowNetworkStaff(generics.RetrieveAPIView):
 
 
 class UpdateNetworkStaff(generics.UpdateAPIView, generics.DestroyAPIView):
+    """
+    Network owner can update network staff(manage their staff).
+    """
     permission_classes = [permissions.IsAuthenticated,IsSubSubPartOwner]
     queryset = NetworkStaff.objects.all()
     serializer_class = NetworkStaffUpdateSerializer
@@ -299,12 +388,18 @@ class UpdateNetworkStaff(generics.UpdateAPIView, generics.DestroyAPIView):
 
 
 class CreateNetworkOption(generics.CreateAPIView):
+    """
+    Network other details. (privacy purpose)
+    """
     permission_classes = [permissions.IsAuthenticated,]
     queryset = NetworkOption.objects.all()
     serializer_class = NetworkOptionShowSerializer
 
 
 class ListNetworkOption(generics.ListAPIView):
+    """
+    List of network option.
+    """
     permission_classes = [permissions.AllowAny,]
     queryset = NetworkOption.objects.all()
     serializer_class = NetworkOptionShowSerializer
@@ -322,6 +417,9 @@ class ListNetworkOption(generics.ListAPIView):
 
 
 class UpdateNetworkOption(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Network owner can update their network option.
+    """
     permission_classes = [permissions.IsAuthenticated,IsSubPartOwner]
     queryset = NetworkOption.objects.all()
     serializer_class = NetworkOptionShowSerializer

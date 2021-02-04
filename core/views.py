@@ -24,6 +24,10 @@ from monorbit.utils import mail, upload, files
 
 
 class ListCreateTipToGrow(generics.ListCreateAPIView):
+    """
+    Create Tips and Get List of all tips.
+    Only Admin can create tips. Anyone can get tips.
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsAdmin]
     serializer_class = TipToGrowSerializer
     queryset = TipToGrow.objects.all()
@@ -31,6 +35,9 @@ class ListCreateTipToGrow(generics.ListCreateAPIView):
 
 
 class GetARandomTip(APIView):
+    """
+    Showing random tips to user.
+    """
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
@@ -52,6 +59,9 @@ class GetARandomTip(APIView):
 
 
 class UpdateTipToGrow(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update(put, patch,delete) tips. Only Admin can update
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsAdmin]
     serializer_class = TipToGrowSerializer
     queryset = TipToGrow.objects.all()
@@ -62,10 +72,14 @@ class UpdateTipToGrow(generics.RetrieveUpdateDestroyAPIView):
 
 
 class SendEmail(APIView):
+    """
+    Sending monorbit email to users.
+    """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None):
         from_email = request.data.get("from_email", "support@monorbit.com")
+        # Getting user mail info from request
         email_type = request.data.get("email_type")
         to_email = request.data.get("to_email")
         subject = request.data.get("subject")
@@ -75,7 +89,7 @@ class SendEmail(APIView):
         status_message = ""
         network_status = 200
 
-        # Send email here
+        # creatting EmailSentToUsers object.
         info = EmailSentToUsers.objects.create(
             email_type=email_type,
             sent_from_ip_address=client_address,
@@ -85,6 +99,7 @@ class SendEmail(APIView):
             message=message,
         )
         try:
+            # Sending email from monorbit to users
             mail.send_simple_message(
                 subject=info.subject,
                 from_email=info.email_sent_from,
@@ -124,6 +139,9 @@ class SendEmail(APIView):
 
 
 class AllEmail(generics.ListAPIView):
+    """
+    List of all email sent to the users.
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = EmailSentToUsersSerializer
     queryset = EmailSentToUsers.objects.all()
@@ -131,6 +149,9 @@ class AllEmail(generics.ListAPIView):
 
 
 class ListCreateUserLoginActivity(generics.ListCreateAPIView):
+    """
+    Getting users login device info and creating objects.
+    """
     permission_classes = [permissions.IsAdminUser]
     serializer_class = UserLoginActivitySerializer
     queryset = UserLoginActivity.objects.all().order_by("-timestamp")
@@ -144,7 +165,10 @@ class ListCreateUserLoginActivity(generics.ListCreateAPIView):
     ]
 
 
-class UpdateUserLoginActivity(generics.ListCreateAPIView):
+class UpdateUserLoginActivity(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Updating (put, patch and delete) user login device info in model. Only admin can do it.
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserLoginActivitySerializer
     queryset = UserLoginActivity.objects.all().order_by("-timestamp")
@@ -155,6 +179,9 @@ class UpdateUserLoginActivity(generics.ListCreateAPIView):
 
 
 class ListCreateUserDeviceRegistration(generics.ListCreateAPIView):
+    """
+    Getting users registration device info and creating objects.
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserDeviceRegistrationSerializer
     queryset = UserDeviceRegistration.objects.all().order_by("-timestamp")
@@ -173,6 +200,9 @@ class ListCreateUserDeviceRegistration(generics.ListCreateAPIView):
 
 
 class UpdateUserDeviceRegistration(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Updating (put, patch and delete) user registration device info in model. Only admin can do it.
+    """
     permission_classes = [permissions.IsAuthenticated,UserDeviceOwner]
     serializer_class = UserDeviceRegistrationSerializer
     queryset = UserDeviceRegistration.objects.all().order_by("-timestamp")
@@ -183,6 +213,9 @@ class UpdateUserDeviceRegistration(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ListAllNetworkOrders(generics.ListAPIView):
+    """
+    List of all network orders.
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = NetworkOrderSerializer
     queryset = NetworkOrder.objects.all().order_by("-timestamp")
@@ -228,6 +261,10 @@ class ListAllNetworkOrders(generics.ListAPIView):
 
 
 class UpdateNetworkOrder(generics.RetrieveUpdateDestroyAPIView):
+    """
+    updating network orders.
+    Only admin and network order owner can do.
+    """
     permission_classes = [permissions.IsAdminUser,NetworkOrderOwner]
     serializer_class = NetworkOrderSerializer
     queryset = NetworkOrder.objects.all()
@@ -238,19 +275,25 @@ class UpdateNetworkOrder(generics.RetrieveUpdateDestroyAPIView):
 
 
 class FileUploadView(APIView):
+    """
+    Uploading file (PNG, JPG, MP4 etc.)
+    """
     parser_class = [FileUploadParser]
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None):
         if "file" not in request.data:
             raise ParseError("FIle should be provided")
+        # getting data from request.
         file_obj = request.data["file"]
         filetype = request.data["filetype"]
         try:
+            # Getting file name from headers
             name = request.META["HTTP_NAME"]
         except:
             name = "hello.png"
         try:
+            # uploading file and getting url
             url, ext = files.upload(file_obj, filetype, name)
         except Exception as e:
             raise ValidationError(detail="Unable to upload file. Reason - {}".format(e), code=400)
@@ -268,6 +311,9 @@ class FileUploadView(APIView):
 
 
 class MultiFileUploadView(APIView):
+    """
+    Uploading multiple file (PNG, JPG, MP4 etc.)
+    """
     parser_class = [FileUploadParser]
     permission_classes = [permissions.AllowAny]
 
@@ -275,6 +321,7 @@ class MultiFileUploadView(APIView):
         if "file1" not in request.data:
             raise ParseError("Atleast one file should be provided")
         total_files = []
+        # getting data from request and appending to total_files list
         total_files.append(request.data.get("file1", None))
         total_files.append(request.data.get("file2", None))
         total_files.append(request.data.get("file3", None))
@@ -286,6 +333,7 @@ class MultiFileUploadView(APIView):
         try:
             for i in total_files:
                 if i is not None:
+                    # uploading files and getting urls, and appending loaded_urls list 
                     url, ext = files.upload(i, 'IMG', names[0])
                     loaded_urls.append(url)
         except Exception as e:
@@ -303,37 +351,42 @@ class MultiFileUploadView(APIView):
         return Response({"message": "Hello world"})
 
 
-class FileView(APIView):
-    parser_classes = [FileUploadParser]
-    permission_classes = [permissions.AllowAny]
+# class FileView(APIView):
+#     parser_classes = [FileUploadParser]
+#     permission_classes = [permissions.AllowAny]
 
-    def post(self, request, *args, **kwargs):
-        if "file" not in request.data:
-            raise ParseError("FIle should be provided")
-        file_obj = request.data["file"]
-        filetype = request.data["filetype"]
-        url = upload.upload_file(file_obj, filetype)
-        return Response(
-            {
-                "status": True,
-                "message": "File Uploaded",
-                "url": url,
-            },
-            status=201,
-        )
+#     def post(self, request, *args, **kwargs):
+#         if "file" not in request.data:
+#             raise ParseError("FIle should be provided")
+#         file_obj = request.data["file"]
+#         filetype = request.data["filetype"]
+#         url = upload.upload_file(file_obj, filetype)
+#         return Response(
+#             {
+#                 "status": True,
+#                 "message": "File Uploaded",
+#                 "url": url,
+#             },
+#             status=201,
+#         )
 
 
 class ProductsSearch(APIView):
+    """
+    Searching for product.
+    """
     permission_classes = [permissions.AllowAny]
     pagination_class = PageNumberPagination
 
     def get(self, request, format=None):
+        # Getting query and network from requested path.
         query = request.query_params.get('query', None)
         network = request.query_params.get('network', None)
 
         if network is None:
             raise ValidationError(detail="You have to provide network in order to search", code=400)
         else:
+            # filtering products using query in product's "name", "brand_name", and "short_description", and network
             products = Product.objects.filter(Q(name__icontains=query) | Q(brand_name__icontains=query) | Q(short_description__icontains=query), network=network)
             # result_page =  self.paginate_queryset(products, request)
             # serializer = ProductMiniSerializer(result_page, many=True, context={'request':request})
@@ -373,6 +426,9 @@ class ProductsSearch(APIView):
     
 
 class NetworkSearch(APIView):
+    """
+    Search network based on query, network_type, landmark, city, state,pincode (getting this from requested path.)
+    """
     permission_classes = [permissions.AllowAny]
     pagination_class = PageNumberPagination
 
@@ -423,12 +479,16 @@ class NetworkSearch(APIView):
     
 
 class OrderSearch(APIView):
+    """
+    Searching order based on query from requested path.
+    """
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = PageNumberPagination
 
     def get(self, request, format=None):
         query = request.query_params.get('query', None)
 
+        # Use query to filter order by "id" and "day_id"
         orders = Order.objects.filter(Q(id__icontains=query) | Q(day_id__icontains=query))
         # result_page =  self.paginate_queryset(products, request)
         # serializer = ProductMiniSerializer(result_page, many=True, context={'request':request})

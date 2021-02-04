@@ -11,6 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 class JobProfileSerializer(serializers.ModelSerializer):
+    """
+    Job profile serializer of a user who wants a job through monorbit.
+    """
     user = UserMiniSerializer(read_only=True, required=False)
 
     class Meta:
@@ -48,6 +51,9 @@ class JobProfileSerializer(serializers.ModelSerializer):
 
 
 class DeliveryBoyVehicleSerializer(serializers.ModelSerializer):
+    """
+    Delivery Boy's vehicle serializer contains details of vehicle.
+    """
     class Meta:
         model = DeliveryBoyVehicle
         fields = [
@@ -71,6 +77,9 @@ class DeliveryBoyVehicleSerializer(serializers.ModelSerializer):
 
 
 class DeliveryBoyShowSerializer(serializers.ModelSerializer):
+    """
+    This serializer show the list of job_profiles and their status.
+    """
     job_profile = JobProfileSerializer()
     vehicles = DeliveryBoyVehicleSerializer(read_only=True, many=True)
 
@@ -88,6 +97,7 @@ class DeliveryBoyShowSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
+        # extract job from validated data because job_profile is different model.
         job = validated_data.pop("job_profile", None)
         profile = instance.job_profile
 

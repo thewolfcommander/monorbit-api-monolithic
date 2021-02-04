@@ -67,6 +67,7 @@ class AdminLoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
+        # accessing serializer
         serializer = acc_serializers.ObtainTokenSerializer(data=request.data)
         if serializer.is_valid():
             user_obj = acc_models.User.objects.get(
@@ -74,6 +75,7 @@ class AdminLoginView(APIView):
             )
 
             if user_obj.is_active and user_obj.is_admin:
+                # getting token from jwt
                 token = jwt_encode_handler(jwt_payload_handler(user_obj))
                 user_obj.is_logged_in = True
                 user_obj.last_logged_in_time = timezone.now()
@@ -138,6 +140,7 @@ class LoginView(APIView):
             )
 
             if user_obj.is_active:
+                # Checking if user's mobile number is verified or not. If mobile number is verified then logged in, otherwise send otp.(for following if block)
                 if user_obj.is_mobile_verified:
                     token = jwt_encode_handler(jwt_payload_handler(user_obj))
                     user_obj.is_logged_in = True
@@ -166,9 +169,12 @@ class LoginView(APIView):
                         status=200,
                     )
                 else:
+                    # Creating OTP object
                     otp_obj = acc_models.EmailVerifyOTP.objects.create(user=user_obj)
+                    # updating otp_sent count so that we can send maximum 3 otp.
                     user_obj.otp_sent += 1
                     user_obj.save()
+                    # sending otp to mobile number
                     mobile = "+91{}".format(str(serializer.validated_data["mobile_number"]))
                     sms.verify_mobile(mobile_number=mobile, otp=otp_obj.otp)
                     data = {
@@ -207,17 +213,22 @@ class RegisterView(APIView):
         if serializer.is_valid():
             is_agreed_to_terms = serializer.validated_data["is_agreed_to_terms"]
             password = serializer.validated_data["password"]
+            # Checking that User is agreed to terms and conditions or not. If is_agreed_to_terms is True then proceed, otherwise raise error. (for following If block) 
             if is_agreed_to_terms:
                 usr = serializer.save()
+                # Creating OTP object
                 otp_obj = acc_models.EmailVerifyOTP.objects.create(user=usr)
+                # updating otp_sent count so that we can send maximum 3 otp.
                 usr.otp_sent += 1
                 usr.set_password(password)
                 string = "MONO{}".format(
                     str(serializer.validated_data["mobile_number"])
                 )
+                # Generating unique hash token for each user
                 usr.hash_token = tools.label_gen(string)
                 usr.save()
                 mobile = "+91{}".format(str(serializer.validated_data["mobile_number"]))
+                # sending mobile otp to user
                 sms.verify_mobile(mobile_number=mobile, otp=otp_obj.otp)
                 data = {
                     "status": True,
@@ -256,9 +267,12 @@ class VerifyOTPView(APIView):
             return Response(data, status=400)
 
         try:
+            # Fetching user obj from user model based on mobile number.
             usr_obj = acc_models.User.objects.get(mobile_number=mobile_number)
+            # using above user obj, fetching otp obj.
             otp_obj = acc_models.EmailVerifyOTP.objects.filter(user=usr_obj)
-
+            
+            # Checking if user's mobile number is verified or not. If verified then send response that "Mobile number is already verified".
             if usr_obj.is_mobile_verified:
                 return Response(
                     data={
@@ -267,14 +281,18 @@ class VerifyOTPView(APIView):
                     },
                     status=200,
                 )
+            # If otp_obj exist then fetch the first object, compare the current timezone with otp_obj timezone(when object created) + 10 minutes.            
             if otp_obj.exists():
                 otp_obj = otp_obj.first()
+                # if current timezone is greater than otp_obj timezone+10 minutes then raise error OTP expired.
                 if timezone.now() > (otp_obj.created + timezone.timedelta(minutes=10)):
                     raise ValidationError(detail="Invalid OTP. OTP Expired", code=400)
-                    
+
+                # Otherwise proceed.  
                 elif timezone.now() <= (
                     otp_obj.created + timezone.timedelta(minutes=10)
                 ):
+                    # check request data OTP is equal to otp_obj's otp. If True then rewrite usr_object. After that delete otp_obj.
                     if otp_obj.otp == otp:
                         token = jwt_encode_handler(jwt_payload_handler(usr_obj))
                         usr_obj.is_logged_in = True
@@ -314,7 +332,7 @@ class VerifyOTPView(APIView):
 
         raise ValidationError(detail="Something unusual happened. Please try again later.", code=400)
 
-
+# Resending Mobile Otp
 class ResendMobileVerifyOTPView(APIView):
     authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
@@ -325,20 +343,27 @@ class ResendMobileVerifyOTPView(APIView):
             data = {"status": False, "message": "Invalid Mobile Number"}
             return Response(data, status=400)
 
+        # Fetching user obj from user model based on mobile number and is_active.
         usr_obj = acc_models.User.objects.filter(
             mobile_number=mobile_number, is_active=True
         )
+        # Checking user exist or not. If user exist then proceed.
         if usr_obj.exists():
             user = usr_obj.first()
+            # checking user mobile number is verfied or not. If True then send message "User is Already Verified".
             if user.is_mobile_verified:
                 data = {"status": True, "message": "User is Already Verified"}
                 return Response(data, status=200)
 
+            # if user mobile number is not verified and otp_send count is less than or equal to 3, then proceed.
             elif user.is_mobile_verified == False and user.otp_sent <= 3:
+                # check if otp object is already exist for request user. if exist then first delete it.
                 otp = acc_models.EmailVerifyOTP.objects.filter(user=user)
                 if otp.exists():
                     otp.delete()
+                # create new otp object for request user.
                 otp = acc_models.EmailVerifyOTP.objects.create(user=user)
+                # send OTP to mobile number
                 sms.verify_mobile(mobile_number="+91{}".format(str(mobile_number)), otp=otp.otp)
                 data = {
                     "status": True,
@@ -394,22 +419,29 @@ class ForgotPasswordView(APIView):
         mobile_number = request.data.get("mobile_number")
         if mobile_number is None:
             raise ValidationError(detail="Invalid Mobile Number", code=400)
-
+        
+        # Fetching user obj from user model based on mobile number and is_active.
         usr_obj = acc_models.User.objects.filter(
             mobile_number=mobile_number, is_active=True
         )
         if usr_obj.exists():
             user = usr_obj.first()
 
+            # check if password_otp_sent (to user) is less than or equal. If True then proceed.
             if user.password_otp_sent <= 3:
+                # check if password otp object is already exist for request user. if exist then first delete it.
                 otp = acc_models.PasswordResetToken.objects.filter(user=user)
                 if otp.exists():
                     otp.delete()
+                # create new password otp object for request user.
                 otp = acc_models.PasswordResetToken.objects.create(user=user)
+                # send otp to user mobile number.
                 sms.reset_password(mobile_number="+91{}".format(str(mobile_number)), otp=otp.token)
+                # update password_otp_sent by +1.
                 user.password_otp_sent += 1
                 user.save()
                 try:
+                    # send otp to user mail if email exist otherwise pass.
                     mail.send_reset_password_otp(user.email, otp.token)
                 except:
                     pass
@@ -464,25 +496,31 @@ class ResetPasswordView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
+        # Get mobile_number, otp and new_password to reset password.
         mobile_number = request.data.get("mobile_number")
         otp = request.data.get("otp")
         new_password = request.data.get("new_password")
         if mobile_number is None:
             raise ValidationError(detail="Mobile Number should be provided", code=400)
+        # Fetching user obj from user model based on mobile number and is_active.
         usr_obj = acc_models.User.objects.filter(
             mobile_number=mobile_number, is_active=True
         )
         if usr_obj.exists():
             user = usr_obj.first()
+            # Fetch password otp object based on above user.
             otp_obj = acc_models.PasswordResetToken.objects.filter(user=user)
             if otp_obj.exists():
+                # if current timezone is greater than otp_obj timezone+10 minutes then raise error OTP expired.
                 if timezone.now() > (
                     otp_obj.first().created + timezone.timedelta(minutes=10)
                 ):
                     raise ValidationError(detail="Invalid OTP. OTP Expired", code=400)
+                # Otherwise proceed
                 elif timezone.now() <= (
                     otp_obj.first().created + timezone.timedelta(minutes=10)
                 ):
+                    # check otp_obj's token is equal to requested otp.if True, then reset the password, password_otp_sent count will 0 and delete otp_obj.
                     if otp_obj.first().token == otp:
                         user.set_password(new_password)
                         user.password_otp_sent = 0
@@ -501,7 +539,7 @@ class ResetPasswordView(APIView):
         
         raise ValidationError(detail="Something unusual happened. Please try again later.", code=400)
 
-
+# Getting user info by mobile number.
 class GetUserInfo(generics.RetrieveUpdateAPIView):
     permission_classes = (permissions.IsAuthenticated, IsOwner)
     serializer_class = acc_serializers.UserInfoSerializer
@@ -511,7 +549,7 @@ class GetUserInfo(generics.RetrieveUpdateAPIView):
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
-
+# Refresh JWT token
 class RefreshToken(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -530,6 +568,7 @@ class RefreshToken(APIView):
         except Exception as exc:
             raise ValidationError(detail=str(exc), code=400)
 
+# User Logout
 class LogoutView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -548,13 +587,14 @@ class LogoutView(APIView):
         except Exception as exc:
             raise ValidationError(detail=str(exc), code=400)
 
+# Deleting user account (is_active=False)
 class DeleteAccount(generics.UpdateAPIView):
     permission_classes = (permissions.IsAuthenticated, IsOwner)
     serializer_class = acc_serializers.UserDeleteSerializer
     queryset = acc_models.User.objects.all()
     lookup_field = "mobile_number"
 
-
+# For advanced edit of user's info. User have to enter their password.
 class SudoModeAuthenticationView(APIView):
     permission_classes = (permissions.IsAuthenticated,IsOwner)
 
@@ -564,7 +604,8 @@ class SudoModeAuthenticationView(APIView):
 
         if password is None:
             raise ValidationError(detail="You have to provide password", code=400)
-
+        
+        # check the enter request password is eqaul to save password.
         if check_password(password, user.password):
             return Response(
                 {"status": True, "message": "You have permission to do the stuff"},
@@ -573,7 +614,7 @@ class SudoModeAuthenticationView(APIView):
         else:
             raise ValidationError(detail="Your access is denied. Please check the password", code=403)
 
-
+# Get and set user language
 class UserLanguage(APIView):
     permission_classes = (permissions.IsAuthenticated,IsOwner)
 
@@ -581,6 +622,7 @@ class UserLanguage(APIView):
         user = request.user
 
         try:
+            # creating user localization with default communication_language_code is "en" and communication_language_code is "en".
             instance = acc_models.UserLocalization.objects.create(user=user)
             return Response(
                 {
@@ -608,7 +650,9 @@ class UserLanguage(APIView):
             raise ValidationError(detail="No interface language provided. Please try again by providing a valid language.", code=400)
 
         try:
+            # Fetch user's current language code.
             instance = acc_models.UserLocalization.objects.get(user=user)
+            # overwrite with request communication_language_code and interface_language_code
             instance.communication_language_code = communication_language_code
             instance.interface_language_code = interface_language_code
             instance.save()
@@ -622,6 +666,7 @@ class UserLanguage(APIView):
                 status=200,
             )
         except acc_models.UserLocalization.DoesNotExist:
+            # if current user have not set communication_language_code and interface_language_code, then create object.
             instance = acc_models.UserLocalization.objects.create(
                 user=user,
                 communication_language_code=communication_language_code,
@@ -643,13 +688,17 @@ class EmailVerificationEnter(APIView):
     permission_classes = [permissions.IsAuthenticated,IsOwner]
 
     def post(self, request, format=None):
+        # Get email from request
         email = request.data.get("email", None)
+        # Email verication regular expression
         regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
         if email is None:
             raise ValidationError(detail="Please provide an email address to continue", code=400)
-
+        
+        # check request email is pass regex. If True, then proceed
         if re.search(regex, email):
             user = request.user
+            # Check if email is verified or not. If already verified then return "Your email has been already verified. keep it up on board."
             if user.is_email_verified:
                 return Response(
                     {
@@ -657,14 +706,20 @@ class EmailVerificationEnter(APIView):
                         "message": "Your email has been already verified. keep it up on board.",
                     }
                 )
+            # check request email is current user's email. If True then proceed.
             if user.email == email:
                 try:
+                    # check otp object is already exist for current user.
                     otp = acc_models.EmailVerifyOTP.objects.get(user=user)
+                    # delete already exist otp object.
                     otp.delete()
+                    # create new otp object.
                     otp = acc_models.EmailVerifyOTP.objects.create(user=user)
                 except acc_models.EmailVerifyOTP.DoesNotExist:
+                    # check otp object is not already exist for current user, then create otp object
                     otp = acc_models.EmailVerifyOTP.objects.create(user=user)
                 try:
+                    # send otp to user's email
                     mail.send_otp_email_verification(user.email, otp.otp)
                     return Response(
                         {
@@ -686,16 +741,21 @@ class VerifyEmailOTP(APIView):
     permission_classes = [permissions.IsAuthenticated,IsOwner]
 
     def post(self, request, format=None):
+        # Get email from request
         email = request.data.get("email", None)
+        # Get otp from request
         otp = request.data.get("otp", None)
+        # Email verication regular expression
         regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
         if email is None:
             raise ValidationError(detail="Please provide an email address to continue", code=400)
         if otp is None:
             raise ValidationError(detail="Please provide otp sent on your email address to continue.", code=400)
-
+        
+        # check request email is pass regex. If True, then proceed
         if re.search(regex, email):
             user = request.user
+            # Check if email is verified or not. If already verified then return "Your email has been already verified. keep it up on board."
             if user.is_email_verified:
                 return Response(
                     {
@@ -703,10 +763,12 @@ class VerifyEmailOTP(APIView):
                         "message": "Your email has been already verified. keep it up on board.",
                     }
                 )
-
+            # check request email is current user's email. If True then proceed.
             if user.email == email:
                 try:
+                    # check otp object is already exist for current user.
                     otp_obj = acc_models.EmailVerifyOTP.objects.get(user=user)
+                    # compare request otp with otp_obj's otp. If True then proceed.
                     if otp_obj.otp == otp:
                         if otp_obj.created >= timezone.now():
                             otp_obj.delete()

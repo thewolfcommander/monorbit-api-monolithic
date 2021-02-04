@@ -6,6 +6,9 @@ from accounts.serializers import UserMiniSerializer
 
 
 class FAQCategorySerializer(serializers.ModelSerializer):
+    """
+    Serializer for FAQ category.(create and update)
+    """
     added_by = UserMiniSerializer(read_only=True)
     class Meta:
         model = FAQCategory
@@ -37,6 +40,9 @@ class FAQCategorySerializer(serializers.ModelSerializer):
 
     
 class FAQCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for FAQ.(create)
+    """
     class Meta:
         model = FAQ
         fields = [
@@ -60,6 +66,9 @@ class FAQCreateSerializer(serializers.ModelSerializer):
 
 
 class FAQShowSerializer(serializers.ModelSerializer):
+    """
+    Serializer for show FAQ and update FAQ.
+    """
     added_by = UserMiniSerializer(read_only=True)
     category = FAQCategorySerializer(read_only=True)
     class Meta:
@@ -87,6 +96,9 @@ class FAQShowSerializer(serializers.ModelSerializer):
 
 
 class FAQReactionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for FQA Reaction where who reacted, will store.
+    """
     faq = FAQShowSerializer()
     user = UserMiniSerializer(read_only=True)
     class Meta:
@@ -101,6 +113,9 @@ class FAQReactionSerializer(serializers.ModelSerializer):
 
     
 class TicketCategorySerializer(serializers.ModelSerializer):
+    """
+    Serializer for ticket category.
+    """
     class Meta:
         model = TicketCategory
         fields = [
@@ -122,6 +137,9 @@ class TicketAttachmentCreateSerializer(serializers.ModelSerializer):
 
     
 class CreateTicketSerializer(serializers.ModelSerializer):
+    """
+    Creating a ticket for each problem.
+    """
     user = UserMiniSerializer(read_only=True)
     attachments = TicketAttachmentCreateSerializer(many=True)
     class Meta:
@@ -189,6 +207,9 @@ class CreateTicketSerializer(serializers.ModelSerializer):
 
     
 class ShowTicketSerializer(serializers.ModelSerializer):
+    """
+    Showing the problems(tickets) and updating
+    """
     category = FAQCategorySerializer(read_only=True)
     user = UserMiniSerializer(read_only=True)
     attachments = TicketAttachmentCreateSerializer(many=True)
