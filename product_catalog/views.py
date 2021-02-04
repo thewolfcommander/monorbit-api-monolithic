@@ -191,6 +191,7 @@ class ListProduct(generics.ListAPIView):
         'network',
         'default_category',
         'custom_category',
+        'is_stock_unlimited',
         'default_subcategory',
         'custom_subcategory',
         'measurement',

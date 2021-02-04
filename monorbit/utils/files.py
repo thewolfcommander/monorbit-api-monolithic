@@ -58,7 +58,7 @@ def upload(file, filetype, name):
     s3.Bucket(BUCKET_NAME).put_object(Key=filepath, Body=data)
     object_acl = s3.ObjectAcl(BUCKET_NAME, filepath)
     response = object_acl.put(ACL='public-read')
-    url = 'http://{}.s3.{}.amazonaws.com/{}/{}/{}/{}/{}/{}'.format(str(BUCKET_NAME), str(REGION), str(filetype), str(today.year), str(today.month), str(today.day), str(today.hour), str(filename))
+    url = 'https://{}.s3.{}.amazonaws.com/{}/{}/{}/{}/{}/{}'.format(str(BUCKET_NAME), str(REGION), str(filetype), str(today.year), str(today.month), str(today.day), str(today.hour), str(filename))
 
     return url, file_ext
 
