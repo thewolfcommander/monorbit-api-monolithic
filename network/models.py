@@ -488,7 +488,7 @@ def check_for_plan(sender, instance, **kwargs):
 
     try:
         trial = NetworkTrial.objects.get(network=instance)
-    except NetworkTrial.DoesNotExist:
+    except:
         trial = NetworkTrial.objects.create(network=instance, applicable_offer="republic", trial_days=90)
         trial.expiry = activity_expiry(trial.trial_days)
         trial.save()
