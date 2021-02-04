@@ -486,12 +486,12 @@ def check_for_plan(sender, instance, **kwargs):
         instance.is_elite = False
         instance.is_basic = False
 
-    try:
-        trial = NetworkTrial.objects.get(network=instance)
-    except:
-        trial = NetworkTrial.objects.create(network=instance, applicable_offer="republic", trial_days=90)
-        trial.expiry = activity_expiry(trial.trial_days)
-        trial.save()
+    # try:
+    #     trial = NetworkTrial.objects.get(network=instance)
+    # except:
+    #     trial = NetworkTrial.objects.create(network=instance, applicable_offer="republic", trial_days=90)
+    #     trial.expiry = activity_expiry(trial.trial_days)
+    #     trial.save()
 
     
 def stat_create_receiver(sender, instance, **kwargs):
