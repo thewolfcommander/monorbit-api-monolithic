@@ -125,6 +125,7 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True, help_text="Timestamp at which the product have been updated")
 
     is_refundable = models.BooleanField(default=False, null=True, blank=True, help_text="Is the current product is refundable?")
+    is_stock_unlimited = models.BooleanField(default=False, null=True, blank=True, help_text="Is the stock is unlimited for the product")
     is_returnable = models.BooleanField(default=False, null=True, blank=True, help_text="Is the current product is returnable?")
     is_active = models.BooleanField(default=True, help_text="Is the current product is active or being deactivated?")
     is_archived = models.BooleanField(default=False, help_text="Is the current product have been moved to the archived vault?")

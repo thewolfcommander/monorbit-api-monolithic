@@ -214,6 +214,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             'rating',
             'no_of_reviews',
             'available_in_stock',
+            'is_stock_unlimited',
             'network',
             'default_category',
             'custom_category',
@@ -314,6 +315,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
             'rating',
             'no_of_reviews',
             'available_in_stock',
+            'is_stock_unlimited',
             'network',
             'default_category',
             'custom_category',
@@ -380,6 +382,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         instance.minimum_quantity_per_order = validated_data.get('minimum_quantity_per_order', instance.minimum_quantity_per_order)
         instance.short_description = validated_data.get('short_description', instance.short_description)
         instance.available_in_stock = validated_data.get('available_in_stock', instance.available_in_stock)
+        instance.is_stock_unlimited = validated_data.get('is_stock_unlimited', instance.is_stock_unlimited)
         instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.is_refundable = validated_data.get('is_refundable', instance.is_refundable)
         instance.is_returnable = validated_data.get('is_returnable', instance.is_returnable)
@@ -484,6 +487,7 @@ class ProductShowSerializer(serializers.ModelSerializer):
             'rating',
             'no_of_reviews',
             'available_in_stock',
+            'is_stock_unlimited',
             'network',
             'default_category',
             'custom_category',
@@ -526,6 +530,7 @@ class ProductMiniSerializer(serializers.ModelSerializer):
             'tax',
             'shipping',
             'quantity_per_measurement',
+            'is_stock_unlimited',
             'minimum_quantity_per_order',
             'short_description',
             'rating',

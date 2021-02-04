@@ -116,6 +116,8 @@ class CreateNetworkSerializer(serializers.ModelSerializer):
             'alt_phone',
             'alt_email',
             'images',
+            'lat',
+            'lng',
             'videos',
             'is_basic',
             'is_economy',
@@ -212,6 +214,8 @@ class ShowNetworkSerializer(serializers.ModelSerializer):
             'followers',
             'is_verified',
             'is_active',
+            'lat',
+            'lng',
             'is_basic',
             'is_economy',
             'is_elite',
@@ -238,6 +242,8 @@ class MiniNetworkSerializer(serializers.ModelSerializer):
             'address',
             'landmark',
             'pincode',
+            'lat',
+            'lng',
             'rating',
             'no_of_reviews',
             'followers',
@@ -312,6 +318,8 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
             'gst',
             'adhaar',
             'pan',
+            'lat',
+            'lng',
             'timings',
             'images',
             'videos',
@@ -369,6 +377,8 @@ class NetworkDetailSerializer(serializers.ModelSerializer):
         instance.gst = validated_data.get('gst', instance.gst)
         instance.adhaar = validated_data.get('adhaar', instance.adhaar)
         instance.pan = validated_data.get('pan', instance.pan)
+        instance.lat = validated_data.get('lat', instance.lat)
+        instance.lng = validated_data.get('lng', instance.lng)
         instance.save()
 
         if images is not None:

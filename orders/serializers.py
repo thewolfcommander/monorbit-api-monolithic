@@ -75,6 +75,8 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             instance.save()
             for p in instance.cart.productentry_set.all():
                 p.product_status = 'order_created'
+                p.product.available_in_stock = int(p.product.available_in_stock) - 1
+                p.product.save()
                 p.save()
                 NetworkOrder.objects.create(
                     network=p.product.network,
