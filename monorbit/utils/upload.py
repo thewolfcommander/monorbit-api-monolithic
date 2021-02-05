@@ -41,7 +41,7 @@ def upload_file(file, filetype):
         # response = s3_client.upload_file(file, BUCKET_NAME, 'hello.png')
 
         with open(file, "rb") as f:
-            response = s3_client.upload_fileobj(file, BUCKET_NAME, '{}/{}/{}/{}/{}/{}'.format(filetype, today.year, today.month, today.day, today.hour, filename),ExtraArgs={'ContentType': 'text/x-python'})
+            response = s3_client.upload_fileobj(file, BUCKET_NAME, '{}/{}/{}/{}/{}/{}'.format(filetype, today.year, today.month, today.day, today.hour, filename),ContentType='image/jpeg')
         url = 'https://{}.s3.{}.amazonaws.com/{}/{}/{}/{}/{}/{}'.format(str(BUCKET_NAME), str(REGION), str(filetype), str(today.year), str(today.month), str(today.day), str(today.hour), str(filename))
         return url
     except ClientError as e:
