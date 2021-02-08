@@ -16,8 +16,10 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register_view'),
     path('verify-mobile/', VerifyOTPView.as_view(), name='verify_mobile'),
     path('resend-mobile-otp/', ResendMobileVerifyOTPView.as_view(), name='resend_mobile_otp'),
-    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
-    path('reset-password/', ResetPasswordView.as_view(), name='reset_password'),
+
+    path('forgot-password/send-otp/', SendResetPasswordOTP.as_view(), name='send_forgot_password_otp'),
+    path('forgot-password/validate-otp/', ResetPasswordVerifyOTPView.as_view(), name='validate_forgot_password_otp'),
+    path('forgot-password/reset/', ResetPasswordView.as_view(), name='reset_password'),
 
     path('verify-email/enter/', EmailVerificationEnter.as_view(), name='enter_email_verification'),
     path('verify-email/verify/', VerifyEmailOTP.as_view(), name='verify_email_otp'),

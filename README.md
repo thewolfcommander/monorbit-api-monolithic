@@ -5,12 +5,12 @@ Monorbit API
 [Remove Support].[Breaking Changes].[Minor Security Patch].[Improvement for Patch]
 
 ## About this branch
-In this branch we are working on fixing the premium feature
+In this branch we are working on fixing the flow for reset password functionality
 
 ## Todo for Monorbit APIs
 
-- [ ] Create Network Order Analytics API
-    - [ ] Network Can view orders for specific period of time
+- [x] Create Network Order Analytics API
+    - [x] Network Can view orders for specific period of time
 - [x] Create Helping portal
     - [x] User can create tickets 
     - [x] User can view tickets
@@ -22,9 +22,9 @@ In this branch we are working on fixing the premium feature
 - [ ] Miscelaneous
     - [x] Setup S3 Storage
     - [x] Setup Image uploading feature
-    - [ ] Integrate Image Optimization and compression
-    - [ ] Setup AWS RDS Instance
-    - [ ] Connect RDS to EC2 Instance
+    - [x] Integrate Image Optimization and compression
+    - [x] Setup AWS RDS Instance
+    - [x] Connect RDS to EC2 Instance
     - [ ] Setting Up Load Balancer
 
 ![Database Layout](/myapp_models.png)
