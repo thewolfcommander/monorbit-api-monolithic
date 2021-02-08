@@ -55,7 +55,7 @@ def upload(file, filetype, name):
         file_ext = 'png'
     filename = "MONO-{}-{}{}{}{}{}{}{}{}".format(filetype, today.year, today.month, today.day, today.hour, today.minute, today.second, today.microsecond, file_ext)
     filepath = '{}/{}/{}/{}/{}/{}'.format(filetype, today.year, today.month, today.day, today.hour, filename)
-    s3.Bucket(BUCKET_NAME).put_object(Key=filepath, Body=data)
+    s3.Bucket(BUCKET_NAME).put_object(Key=filepath, Body=data,ContentType='image/jpeg')
     object_acl = s3.ObjectAcl(BUCKET_NAME, filepath)
     response = object_acl.put(ACL='public-read')
     url = 'https://{}.s3.{}.amazonaws.com/{}/{}/{}/{}/{}/{}'.format(str(BUCKET_NAME), str(REGION), str(filetype), str(today.year), str(today.month), str(today.day), str(today.hour), str(filename))
