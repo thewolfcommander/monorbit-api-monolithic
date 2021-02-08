@@ -411,87 +411,94 @@ class ResendMobileVerifyOTPView(APIView):
         raise ValidationError(detail="Something unusual happened. Please try again later.", code=400)
 
 
-class ForgotPasswordView(APIView):
+class SendResetPasswordOTP(APIView):
+    """
+    This API will send the OTP on the user's mobile for password reset request only if the user found for the Monorbit
+    """
     authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
+        """
+        Method for handling post request on the API
+        """
         mobile_number = request.data.get("mobile_number")
         if mobile_number is None:
             raise ValidationError(detail="Invalid Mobile Number", code=400)
-        
-        # Fetching user obj from user model based on mobile number and is_active.
+
         usr_obj = acc_models.User.objects.filter(
             mobile_number=mobile_number, is_active=True
         )
+
         if usr_obj.exists():
-            user = usr_obj.first()
+            user = usr_obj.first()    # Getting the very first instance of the user
 
             # check if password_otp_sent (to user) is less than or equal. If True then proceed.
             if user.password_otp_sent <= 3:
-                # check if password otp object is already exist for request user. if exist then first delete it.
+                # Check if the password OTP Object is already exist for request user. If exists then extend it's time and send it.
                 otp = acc_models.PasswordResetToken.objects.filter(user=user)
                 if otp.exists():
-                    otp.delete()
-                # create new password otp object for request user.
-                otp = acc_models.PasswordResetToken.objects.create(user=user)
-                # send otp to user mobile number.
-                sms.reset_password(mobile_number="+91{}".format(str(mobile_number)), otp=otp.token)
-                # update password_otp_sent by +1.
-                user.password_otp_sent += 1
-                user.save()
-                try:
-                    # send otp to user mail if email exist otherwise pass.
-                    mail.send_reset_password_otp(user.email, otp.token)
-                except:
-                    pass
-                data = {
-                    "status": True,
-                    "message": "OTP Sent successfully",
-                }
-                return Response(data, status=200)
-                # subject = "No Reply | Encap OTP to verify email | Link will expire in 30 minutes"
-                # from_email = "encapsummary@gmail.com"
-                # to_email = user.email
-                # message = """
-                # Hi user,
-                # Here's your otp to verify the email. Enter this otp to the application.
-                # Warning: Do not share this with anyone
-                # OTP - {}
-                # The otp will expire in 30 minutes.
-                # Regards, Encapsummary
-                # """.format(otp.otp)
-                # try:
-                #     send_mail(
-                #         subject,
-                #         message,
-                #         from_email,
-                #         [to_email,]
-                #     )
-                #     user.otp_sent += 1
-                #     user.save()
-                #     data = {
-                #         'status': True,
-                #         'otp': otp.otp,
-                #         'message': 'OTP Sent Successfully'
-                #     }
-                #     return Response(data, status=400)
-                # except:
-                #     otp.delete()
-                #     data = {
-                #         'status': False,
-                #         'message': 'Can\'t send otp'
-                #     }
-                # return Response(data, status=400)
+                    otp_obj = otp.first()
+                    if timezone.now() > (otp_obj.created + timezone.timedelta(minutes=10)):
+                        otp.delete()
+                        # create new password otp object for request user.
+                        otp_obj = acc_models.PasswordResetToken.objects.create(user=user)
+                        # send otp to user mobile number.
+                        sms.reset_password(mobile_number="+91{}".format(str(mobile_number)), otp=otp_obj.token)
+                        # update password_otp_sent by +1.
+                        user.password_otp_sent += 1
+                        user.save()
+                        try:
+                            # send otp to user mail if email exist otherwise pass.
+                            mail.send_reset_password_otp(user.email, otp_obj.token)
+                        except:
+                            pass
+                        data = {
+                            "status": True,
+                            "message": "OTP Sent successfully",
+                        }
+                        return Response(data, status=200)
+                    else:
+                        # send otp to user mobile number.
+                        sms.reset_password(mobile_number="+91{}".format(str(mobile_number)), otp=otp_obj.token)
+                        # update password_otp_sent by +1.
+                        user.password_otp_sent += 1
+                        user.save()
+                        try:
+                            # send otp to user mail if email exist otherwise pass.
+                            mail.send_reset_password_otp(user.email, otp_obj.token)
+                        except:
+                            pass
+                        data = {
+                            "status": True,
+                            "message": "OTP Sent successfully",
+                        }
+                        return Response(data, status=200)
+                else:
+                    # create new password otp object for request user.
+                    otp = acc_models.PasswordResetToken.objects.create(user=user)
+                    # send otp to user mobile number.
+                    sms.reset_password(mobile_number="+91{}".format(str(mobile_number)), otp=otp.token)
+                    # update password_otp_sent by +1.
+                    user.password_otp_sent += 1
+                    user.save()
+                    try:
+                        # send otp to user mail if email exist otherwise pass.
+                        mail.send_reset_password_otp(user.email, otp.token)
+                    except:
+                        pass
+                    data = {
+                        "status": True,
+                        "message": "OTP Sent successfully",
+                    }
+                    return Response(data, status=200)
             else:
-                raise ValidationError(detail="You have requested maximum otp limit", code=400)      
+                raise ValidationError(detail="You have requested maximum number of OTP", code=400)
         else:
-            raise ValidationError(detail="No User related with this mobile number.", code=400)
-        
-        raise ValidationError(detail="Something unusual happened. Please try again later.", code=400)
+            raise ValidationError(detail="Invalid User.", code=404)        
 
 
-class ResetPasswordView(APIView):
+class ResetPasswordVerifyOTPView(APIView):
     authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
 
@@ -499,9 +506,11 @@ class ResetPasswordView(APIView):
         # Get mobile_number, otp and new_password to reset password.
         mobile_number = request.data.get("mobile_number")
         otp = request.data.get("otp")
-        new_password = request.data.get("new_password")
         if mobile_number is None:
             raise ValidationError(detail="Mobile Number should be provided", code=400)
+
+        if otp is None:
+            raise ValidationError(detail="OTP should be provided", code=400)
         # Fetching user obj from user model based on mobile number and is_active.
         usr_obj = acc_models.User.objects.filter(
             mobile_number=mobile_number, is_active=True
@@ -522,22 +531,47 @@ class ResetPasswordView(APIView):
                 ):
                     # check otp_obj's token is equal to requested otp.if True, then reset the password, password_otp_sent count will 0 and delete otp_obj.
                     if otp_obj.first().token == otp:
-                        user.set_password(new_password)
-                        user.password_otp_sent = 0
-                        user.save()
-                        otp_obj.delete()
-                        data = {"status": True, "message": "Password reset successfull"}
+                        data = {"status": True, "message": "OTP Verified Successfully", "user": user.id}
                         return Response(data, status=200)
                     else:
-                        raise ValidationError(detail="Invalid OTP", code=400)
+                        raise ValidationError(detail="Invalid OTP. 1", code=400)
                 else:
-                    raise ValidationError(detail="Invalid OTP", code=400)
+                    raise ValidationError(detail="Invalid OTP. 2", code=400)
             else:
-                raise ValidationError(detail="Invalid OTP", code=400)
+                raise ValidationError(detail="Invalid OTP. 3", code=400)
         else:
             raise ValidationError(detail="No User related with this mobile number.", code=400)
-        
-        raise ValidationError(detail="Something unusual happened. Please try again later.", code=400)
+
+
+class ResetPasswordView(APIView):
+    """
+    This API will reset the user password
+    """
+    permission_classes = [permissions.AllowAny,]
+
+    def post(self, request, format=None):
+        user = request.data.get('user')
+        new_password = request.data.get('new_password')
+
+        if user is None:
+            raise ValidationError(detail="Invalid User", code=400)
+
+        if new_password is None:
+            raise ValidationError(detail="New Password not provided. Please try again by providing the new password")
+
+
+        try:
+            user_obj = acc_models.User.objects.get(id=user)
+            user_obj.set_password(new_password)
+            user_obj.password_otp_sent = 0
+            user_obj.save()
+
+            return Response(data={
+                'status': True,
+                'message': "Password Changed Successfully. You can login now."
+            }, status=200)
+        except acc_models.User.DoesNotExist:
+            raise ValidationError(detail="Invalid User. User not found", code=400)
 
 # Getting user info by mobile number.
 class GetUserInfo(generics.RetrieveUpdateAPIView):
