@@ -101,6 +101,20 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             # return {"message": "No User exists with this email"}
         return attrs
 
+class GuestUserRegistrationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating guest user.
+    """
+    class Meta:
+        model = acc_models.User
+        fields = [
+            'mobile_number',
+            'full_name',
+            'is_guest',
+            'is_agreed_to_terms',
+        ]
+
+
     
 class UserLocalizationSerializer(serializers.ModelSerializer):
     """

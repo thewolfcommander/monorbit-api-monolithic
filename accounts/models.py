@@ -92,6 +92,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_email_verified = models.BooleanField(default=False, help_text="This will determine whether the email address is verified or not")
     is_logged_in = models.BooleanField(default=False, help_text="This will determine whether the user is logged in or not.")
     is_archived = models.BooleanField(default=False, help_text="This will determine whether the user have deleted his/her account or not.")
+    is_guest = models.BooleanField(default=False,help_text="This will determine whether the user have guest or not")
 
     # Different Date Related Fields
     registered_on = models.DateTimeField(default=timezone.now, help_text="This will determine when the user registered")

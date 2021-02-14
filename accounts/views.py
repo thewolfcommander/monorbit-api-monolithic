@@ -27,7 +27,7 @@ class UserListView(generics.ListAPIView):
     This route will list all the users registered on monorbit
     """
     authentication_classes = ()
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny,]
     serializer_class = acc_serializers.UserInfoSerializer
     queryset = acc_models.User.objects.all()
 
@@ -253,6 +253,100 @@ class RegisterView(APIView):
             raise ValidationError(detail="Some unknown Error occured. Please try again later.", code=400)
             
         raise ValidationError(detail=serializer.errors, code=400)
+
+class GuestRegistrationView(APIView):
+    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self,request,format=None):
+        serializer = acc_serializers.GuestUserRegistrationSerializer(data=request.data)
+        try:
+            user_obj = acc_models.User.objects.get(
+                    mobile_number=request.data['mobile_number']
+                    )
+            token = jwt_encode_handler(jwt_payload_handler(user_obj))
+            user_obj.is_logged_in = True
+            user_obj.last_logged_in_time = timezone.now()
+            user_obj.save()
+            return Response(
+                data={
+                    "status": True,
+                    "token": token,
+                    "user": {
+                        "id": user_obj.id,
+                        "mobile_number": user_obj.mobile_number,
+                        "full_name": user_obj.full_name,
+                        "email": user_obj.email,
+                        "hash_token": user_obj.hash_token,
+                        "is_consumer": user_obj.is_consumer,
+                        "is_creator": user_obj.is_creator,
+                        "followed_networks": user_obj.followed_networks,
+                        "is_logged_in": user_obj.is_logged_in,
+                        "is_admin": user_obj.is_admin,
+                        "is_working_profile": user_obj.is_working_profile,
+                        "is_mobile_verified": user_obj.is_mobile_verified,
+                        "is_email_verified": user_obj.is_email_verified,
+                    },
+                    "message": "User logged in Successfully",
+                },
+                status=200,
+            )
+            
+        except:
+            if serializer.is_valid():
+                is_guest = serializer.validated_data["is_guest"]
+                is_agreed_to_terms = serializer.validated_data["is_agreed_to_terms"]
+                if is_agreed_to_terms:
+                    user_obj = serializer.save()
+                    string = "MONO{}".format(
+                        str(serializer.validated_data["mobile_number"])
+                    )
+                    # Generating unique hash token for each user
+                    user_obj.hash_token = tools.label_gen(string)
+                    token = jwt_encode_handler(jwt_payload_handler(user_obj))
+                    user_obj.is_logged_in = True
+                    user_obj.last_logged_in_time = timezone.now()
+                    user_obj.save()
+                    return Response(
+                        data={
+                            "status": True,
+                            "token": token,
+                            "user": {
+                                "id": user_obj.id,
+                                "mobile_number": user_obj.mobile_number,
+                                "full_name": user_obj.full_name,
+                                "email": user_obj.email,
+                                "hash_token": user_obj.hash_token,
+                                "is_consumer": user_obj.is_consumer,
+                                "is_creator": user_obj.is_creator,
+                                "followed_networks": user_obj.followed_networks,
+                                "is_logged_in": user_obj.is_logged_in,
+                                "is_admin": user_obj.is_admin,
+                                "is_working_profile": user_obj.is_working_profile,
+                                "is_mobile_verified": user_obj.is_mobile_verified,
+                                "is_email_verified": user_obj.is_email_verified,
+                            },
+                            "message": "User logged in Successfully",
+                        },
+                        status=200,
+                    )
+                else:
+                    raise ValidationError(detail="You have to accept the terms and conditions", code=400)
+            elif not serializer.is_valid():
+                try:
+                    raise ValidationError(detail="{}".format(
+                                str(serializer.errors["non_field_errors"][0])
+                            ), code=400)
+                except:
+                    for i in serializer.errors:
+                        raise ValidationError(detail="{} - Error in {}".format(
+                                    str(serializer.errors[i][0]), str(i)
+                                ), code=400)
+            else:
+                raise ValidationError(detail="Some unknown Error occured. Please try again later.", code=400)
+                
+            raise ValidationError(detail=serializer.errors, code=400)
+
 
 
 class VerifyOTPView(APIView):

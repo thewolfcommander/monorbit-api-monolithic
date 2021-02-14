@@ -14,6 +14,8 @@ urlpatterns = [
     path('user-info/<slug:mobile_number>/', GetUserInfo.as_view(), name='user_info'),
     path('delete-user/<slug:mobile_number>/', DeleteAccount.as_view(), name='delete_user'),
     path('register/', RegisterView.as_view(), name='register_view'),
+    path('guestregister/', GuestRegistrationView.as_view(), name='guest_register_view'),
+
     path('verify-mobile/', VerifyOTPView.as_view(), name='verify_mobile'),
     path('resend-mobile-otp/', ResendMobileVerifyOTPView.as_view(), name='resend_mobile_otp'),
 
