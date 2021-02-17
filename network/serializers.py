@@ -36,6 +36,7 @@ class NetworkImageShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkImage
         fields = [
+            'id',
             'image',
         ]
 
@@ -44,6 +45,7 @@ class NetworkVideoShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkVideo
         fields = [
+            'id',
             'video',
         ]
 
@@ -52,6 +54,7 @@ class NetworkDocumentShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkDocument
         fields = [
+            'id',
             'doc',
         ]
 
@@ -60,6 +63,7 @@ class NetworkOperationTimingShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkOperationTiming
         fields = [
+            'id',
             'day',
             'opening',
             'closing',
@@ -71,6 +75,7 @@ class NetworkOperationLocationShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkOperationLocation
         fields = [
+            'id',
             'pincode'
         ]
 
@@ -440,6 +445,7 @@ class NetworkImageCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkImage
         fields = [
+            'id',
             'network',
             'image',
         ]
@@ -449,6 +455,7 @@ class NetworkVideoCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkVideo
         fields = [
+            'id',
             'network',
             'video',
         ]
@@ -458,6 +465,7 @@ class NetworkDocumentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkDocument
         fields = [
+            'id',
             'network',
             'doc',
         ]
@@ -467,6 +475,7 @@ class NetworkOperationTimingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkOperationTiming
         fields = [
+            'id',
             'network',
             'day',
             'opening',
@@ -478,6 +487,7 @@ class NetworkOperationLocationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = NetworkOperationLocation
         fields = [
+            'id',
             'network',
             'pincode'
         ]

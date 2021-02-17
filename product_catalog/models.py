@@ -347,6 +347,17 @@ class ProductReview(models.Model):
         """
         return str(self.id)
 
+class ProductTopping(models.Model):
+    id = models.CharField(max_length=10,primary_key=True,unique=True,blank=True,help_text="Primary key of the Product topping")
+    topping = models.CharField(max_length=255,blank=True,null=True,help_text="Topping name")
+    description = models.TextField(blank=True,null=True,help_text="Description of the product's topping.")
+    price_change = models.DecimalField(max_digits=3,decimal_places=2,help_text="Price of toppins")
+    up_down_side = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.topping)
+
+
 """
 
 RECIEVERS FOR SPECIAL TASKS RELATED TO INSTANCES
@@ -419,6 +430,8 @@ pre_save.connect(instance_id_generator, sender=ProductColor)
 pre_save.connect(instance_id_generator, sender=ProductSpecification)
 pre_save.connect(instance_id_generator, sender=ProductExtra)
 pre_save.connect(instance_id_generator, sender=ProductReview)
+pre_save.connect(instance_id_generator, sender=ProductTopping)
+
 
 pre_save.connect(product_datainit_generator, sender=Product)
 pre_save.connect(image_label_generator, sender=ProductImage)
