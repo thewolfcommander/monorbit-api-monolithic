@@ -352,7 +352,7 @@ class ProductTopping(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, help_text="Reference to the Product for which the topping have given")
     topping = models.CharField(max_length=255,blank=True,null=True,help_text="Topping name")
     description = models.TextField(blank=True,null=True,help_text="Description of the product's topping.")
-    price_change = models.DecimalField(max_digits=3,decimal_places=2,help_text="Price of toppins")
+    price_change = models.DecimalField(default=0.00,max_digits=12,decimal_places=2,help_text="Price of toppins")
     up_down_side = models.BooleanField(default=False)
 
     def __str__(self):
