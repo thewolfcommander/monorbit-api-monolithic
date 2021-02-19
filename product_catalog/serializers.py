@@ -183,6 +183,16 @@ class ProductExtraShowSerializer(serializers.ModelSerializer):
             'price_change'
         ]
 
+class ProductToppingShowSerializer(serializers.ModelSerializer):
+    model = ProductTopping
+    fields = [
+        'id',
+        'topping',
+        'description',
+        'price_change',
+        'up_down_side'   
+    ]
+
 
 class ProductCreateSerializer(serializers.ModelSerializer):
     images = ProductImageShowSerializer(many=True, required=False)
@@ -193,6 +203,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
     colors = ProductColorShowSerializer(many=True, required=False)
     specifications = ProductSpecificationShowSerializer(many=True, required=False)
     extras = ProductExtraShowSerializer(many=True, required=False)
+    toppings = ProductToppingShowSerializer(many=True,required=False)
     class Meta:
         model = Product
         fields = [
@@ -234,7 +245,8 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             'sizes',
             'colors',
             'specifications',
-            'extras'
+            'extras',
+            'toppings'
         ]
 
     def create(self, validated_data):
@@ -281,6 +293,9 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         if extras is not None:
             for i in extras:
                 ProductExtra.objects.create(**i, product=product)
+        if toppings is not None:
+            for i in toppings:
+                ProductTopping.objects.create(**i,product=product)
 
         return product
 
@@ -294,6 +309,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
     colors = ProductColorShowSerializer(many=True, required=False)
     specifications = ProductSpecificationShowSerializer(many=True, required=False)
     extras = ProductExtraShowSerializer(many=True, required=False)
+    toppings = ProductToppingShowSerializer(many=True,required=False)
     class Meta:
         model = Product
         fields = [
@@ -335,7 +351,8 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
             'sizes',
             'colors',
             'specifications',
-            'extras'
+            'extras',
+            'toppings'
         ]
 
     def update(self, instance, validated_data):
@@ -347,6 +364,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         colors = validated_data.pop('colors', None)
         specifications = validated_data.pop('specifications', None)
         extras = validated_data.pop('extras', None)
+        toppings = validated_data.pop('toppings',None)
 
         images_data = (instance.images).all()
         images_data = list(images_data)
@@ -364,6 +382,8 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         specifications_data = list(specifications_data)
         extras_data = (instance.extras).all()
         extras_data = list(extras_data)
+        toppings_data = (instance.toppings).all()
+        toppings_data = list(toppings_data)
 
         instance.default_category = validated_data.get('default_category', instance.default_category)
         instance.custom_category = validated_data.get('custom_category', instance.custom_category)
@@ -447,6 +467,15 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
                 j.change_side = i.get('change_side', j.change_side)
                 j.price_change = i.get('price_change', j.price_change)
                 j.save()
+        
+        if toppings is not None:
+            for i in toppings:
+                j = toppings_data.pop(0)
+                j.topping = i.get('topping',j.topping)
+                j.description = i.get('description',j.description)
+                j.price_change = i.get('price_change',j.price_change)
+                j.up_down_side = i.get('up_down_side',j.up_down_side)
+                j.save()
 
         return instance
 
@@ -466,6 +495,7 @@ class ProductShowSerializer(serializers.ModelSerializer):
     colors = ProductColorShowSerializer(many=True, required=True)
     specifications = ProductSpecificationShowSerializer(many=True, required=True)
     extras = ProductExtraShowSerializer(many=True, required=True)
+    toppings = ProductToppingShowSerializer(many=True,required=True)
     class Meta:
         model = Product
         fields = [
@@ -507,7 +537,8 @@ class ProductShowSerializer(serializers.ModelSerializer):
             'sizes',
             'colors',
             'specifications',
-            'extras'
+            'extras',
+            'toppings'
         ]
 
 
@@ -664,4 +695,16 @@ class ProductReviewShowSerializer(serializers.ModelSerializer):
             'is_spam',
             'created',
             'is_active'
+        ]
+
+class ProductToppingCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductTopping
+        fields = [
+            'id',
+            'product',
+            'topping',
+            'description',
+            'price_change',
+            'up_down_side'
         ]

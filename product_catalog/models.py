@@ -349,6 +349,7 @@ class ProductReview(models.Model):
 
 class ProductTopping(models.Model):
     id = models.CharField(max_length=10,primary_key=True,unique=True,blank=True,help_text="Primary key of the Product topping")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, help_text="Reference to the Product for which the topping have given")
     topping = models.CharField(max_length=255,blank=True,null=True,help_text="Topping name")
     description = models.TextField(blank=True,null=True,help_text="Description of the product's topping.")
     price_change = models.DecimalField(max_digits=3,decimal_places=2,help_text="Price of toppins")

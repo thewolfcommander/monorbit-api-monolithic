@@ -35,6 +35,7 @@ urlpatterns = [
     path('product/size/create/', CreateProductSize.as_view(), name='size_create'),
     path('product/color/create/', CreateProductColor.as_view(), name='color_create'),
     path('product/extra/create/', CreateProductExtra.as_view(), name='extra_create'),
+    path('product/topping/create/',CreateProductTopping.as_view(),name='topping_create'),
 
     path('product/image/update/<slug:id>/', UpdateProductImage.as_view(), name='image_update'),
     path('product/video/update/<slug:id>/', UpdateProductVideo.as_view(), name='video_update'),
@@ -44,6 +45,7 @@ urlpatterns = [
     path('product/size/update/<slug:id>/', UpdateProductSize.as_view(), name='size_update'),
     path('product/color/update/<slug:id>/', UpdateProductColor.as_view(), name='color_update'),
     path('product/extra/update/<slug:id>/', UpdateProductExtra.as_view(), name='extra_update'),
+    path('product/topping/update/<slug:id>/',UpdateProductTopping.as_view(),name='topping_update'),
 
     path('product/review/create/', CreateProductReview.as_view(), name='review_create'),
     path('product/review/all/', ListProductReview.as_view(), name='review_all'),

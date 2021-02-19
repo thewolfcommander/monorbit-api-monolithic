@@ -316,6 +316,14 @@ class CreateProductExtra(generics.CreateAPIView):
     serializer_class = ProductExtraCreateSerializer
     queryset = ProductExtra.objects.all()
 
+class CreateProductTopping(generics.CreateAPIView):
+    """
+    Toppings for product. 
+    """
+    permission_classes = []
+    serializer_class = ProductToppingCreateSerializer
+    queryset = ProductTopping.objects.all()
+
 
 class UpdateProductImage(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -419,6 +427,18 @@ class UpdateProductExtra(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+class UpdateProductTopping(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Toppings will update here.
+    """
+    permission_classes = []
+    serializer_class = ProductToppingCreateSerializer
+    queryset = ProductTopping.objects.all()
+    lookup_field = 'id'
+
+    def patch(self,request,*args,**kwargs):
+        return self.partial_update(request,*args,**kwargs)
 
 
 class CreateProductReview(generics.CreateAPIView):
