@@ -184,14 +184,15 @@ class ProductExtraShowSerializer(serializers.ModelSerializer):
         ]
 
 class ProductToppingShowSerializer(serializers.ModelSerializer):
-    model = ProductTopping
-    fields = [
-        'id',
-        'topping',
-        'description',
-        'price_change',
-        'up_down_side'   
-    ]
+    class Meta:
+        model = ProductTopping
+        fields = [
+            'id',
+            'topping',
+            'description',
+            'price_change',
+            'up_down_side'   
+        ]
 
 
 class ProductCreateSerializer(serializers.ModelSerializer):
@@ -258,6 +259,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         colors = validated_data.pop('colors', None)
         specifications = validated_data.pop('specifications', None)
         extras = validated_data.pop('extras', None)
+        toppings = validated_data.pop('toppings',None)
 
         product = Product.objects.create(**validated_data)
 

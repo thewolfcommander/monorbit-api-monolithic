@@ -194,6 +194,15 @@ class Product(models.Model):
         """
         return self.productextra_set.all()
 
+    @property
+    def toppings(self):
+        """
+        Mapping the extra available options for the product to product instance
+        """
+        return self.producttopping_set.all()
+    
+
+
 
 class ProductImage(models.Model):
     """
