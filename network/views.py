@@ -177,6 +177,20 @@ class CreateNetworkImage(generics.CreateAPIView):
     serializer_class = NetworkImageCreateSerializer
 
 
+class UpdateNetworkImage(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Network owner can update an image for thier network.
+    """
+    permission_classes = [permissions.AllowAny]
+    queryset = NetworkImage.objects.all()
+    serializer_class = NetworkImageCreateSerializer
+    lookup_field = 'id'
+
+    def patch(self,request,*args,**kwargs):
+        return self.partial_update(request,*args,**kwargs)
+
+
+
 class CreateNetworkVideo(generics.CreateAPIView):
     """
     Network owner can create video for thier network.
