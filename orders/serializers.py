@@ -61,6 +61,9 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         cart = validated_data.get('cart')
+        billing_address = validated_data.pop('billing_address',None)
+        shipping_address = validated_data.pop('shipping_address',None)
+
         if cart.is_active:
             instance = Order.objects.create(**validated_data)
             instance.day_id = 3
@@ -78,6 +81,19 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                 p.product.available_in_stock = int(p.product.available_in_stock) - 1
                 p.product.save()
                 p.save()
+
+                if p.is_pickup == True:
+                    instance.billing_address=None
+                    instance.shipping_address=None
+                    instance.save()
+                elif p.is_pickup == False:
+                    if billing_address is None:
+                        raise Exception("Enter billing address or is_pickup=True")
+                    else:
+                        instance.billing_address = billing_address
+                        instance.shipping_address = shipping_address
+                        instance.save()
+
                 NetworkOrder.objects.create(
                     network=p.product.network,
                     order=instance

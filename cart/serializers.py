@@ -24,7 +24,8 @@ class ProductEntryCreateSerializer(serializers.ModelSerializer):
             'size',
             'extra',
             'quantity',
-            'cost'
+            'cost',
+            'is_pickup',
         ]
 
     def create(self, validated_data):
@@ -62,7 +63,8 @@ class ProductEntryTinyCreateSerializer(serializers.ModelSerializer):
             'size',
             'extra',
             'quantity',
-            'cost'
+            'cost',
+            'is_pickup',
         ]
 
     
@@ -85,7 +87,8 @@ class ProductEntryShowSerializer(serializers.ModelSerializer):
             'size',
             'extra',
             'quantity',
-            'cost'
+            'cost',
+            'is_pickup',
         ]
 
     
@@ -104,7 +107,8 @@ class ProductEntryTinySerializer(serializers.ModelSerializer):
             'size',
             'extra',
             'quantity',
-            'cost'
+            'cost',
+            'is_pickup',
         ]
 
     
@@ -123,7 +127,8 @@ class ProductEntryUpdateSerializer(serializers.ModelSerializer):
             'size',
             'extra',
             'quantity',
-            'cost'
+            'cost',
+            'is_pickup'
         ]
 
     def update(self, instance, validated_data):
