@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'product_catalog',
     'transactions',
     'services',
+    'fcm_message',
     
 ]
 
