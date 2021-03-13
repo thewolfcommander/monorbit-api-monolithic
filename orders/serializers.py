@@ -48,6 +48,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             'billing_address',
             'shipping_address',
             'is_billing_shipping_same',
+            'is_pickup',
             'cart',
             'status',
             'shipping_total',
@@ -75,24 +76,23 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             instance.cart.save()
             instance.cart.user.order_count += 1
             instance.cart.user.save()
+            
+            # Customized for pickup orders
+            if instance.is_pickup == True:
+                instance.billing_address=None
+                instance.shipping_address=None
+            elif instance.is_pickup == False:
+                if billing_address is None:
+                    raise Exception("Enter billing address or is_pickup=True")
+                else:
+                    instance.billing_address = billing_address
+                    instance.shipping_address = shipping_address
             instance.save()
             for p in instance.cart.productentry_set.all():
                 p.product_status = 'order_created'
                 p.product.available_in_stock = int(p.product.available_in_stock) - 1
                 p.product.save()
                 p.save()
-
-                if p.is_pickup == True:
-                    instance.billing_address=None
-                    instance.shipping_address=None
-                    instance.save()
-                elif p.is_pickup == False:
-                    if billing_address is None:
-                        raise Exception("Enter billing address or is_pickup=True")
-                    else:
-                        instance.billing_address = billing_address
-                        instance.shipping_address = shipping_address
-                        instance.save()
 
                 NetworkOrder.objects.create(
                     network=p.product.network,
@@ -114,6 +114,7 @@ class ListOrderSerializer(serializers.ModelSerializer):
             'billing_address',
             'shipping_address',
             'is_billing_shipping_same',
+            'is_pickup',
             'cart',
             'status',
             'shipping_total',
@@ -138,6 +139,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             'billing_address',
             'shipping_address',
             'is_billing_shipping_same',
+            'is_pickup',
             'cart',
             'status',
             'shipping_total',
@@ -159,6 +161,7 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
             'billing_address',
             'shipping_address',
             'is_billing_shipping_same',
+            'is_pickup',
             'cart',
             'status',
             'shipping_total',

@@ -30,6 +30,7 @@ class ListAllOrders(generics.ListAPIView):
         'billing_address',
         'shipping_address',
         'is_billing_shipping_same',
+        'is_pickup',
         'cart',
         'cart__user',
         'active',

@@ -78,7 +78,6 @@ class ProductEntry(models.Model):
     color = models.ForeignKey(ProductColor, on_delete=models.CASCADE, null=True, blank=True)
     extra = models.ForeignKey(ProductExtra, on_delete=models.CASCADE, null=True, blank=True)
     cost = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
-    is_pickup = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)

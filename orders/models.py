@@ -42,6 +42,7 @@ class Order(models.Model):
     billing_address = models.ForeignKey(Address, on_delete=models.DO_NOTHING, related_name="billing_address",null=True, blank=True, help_text="Reference to the Address added by the user. This will be used as billing address for the user")
     shipping_address = models.ForeignKey(Address, on_delete=models.DO_NOTHING, related_name="shipping_address", null=True, blank=True, help_text="Reference to the Address added by the user. This will be used as shipping address for the user")
     is_billing_shipping_same = models.BooleanField(default=False, help_text="If true, it means billing address and shipping address are both same. Shipping address can be copied from billing address or can be null.")
+    is_pickup = models.BooleanField(default=False, null=True, blank=True, help_text="If this is true then the order have been opted for pickup. Don't need to take the address from the user and can be passed null.")
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, help_text="Reference to the Cart instance of the user which have been userd to place the order")
     status = models.CharField(max_length=255, default='Created', choices=ORDER_STATUS_CHOICES, null=True, blank=True, help_text="Order Status")
     shipping_total = models.DecimalField(default=0.00, max_digits=100, decimal_places=2, help_text="Shipping total of the order. It means how much user have to pay as shipping charges. Will be copied from cart")
