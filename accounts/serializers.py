@@ -114,6 +114,20 @@ class GuestUserRegistrationSerializer(serializers.ModelSerializer):
             'is_agreed_to_terms',
         ]
 
+    def validate(self,attrs):
+        """
+        validating for in case of guest user.
+        """
+        is_guest = attrs.get("is_guest",None)
+        is_agreed_to_terms = attrs.get("is_agreed_to_terms")
+        if is_guest is not None:
+            if is_guest == False:
+                raise serializers.ValidationError("is_guest value should be true.")
+        else:
+            raise serializers.ValidationError("You will have to provide is_guest(true).")
+
+        return attrs
+
 
     
 class UserLocalizationSerializer(serializers.ModelSerializer):
