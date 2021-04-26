@@ -27,6 +27,15 @@ class ProductEntryCreateSerializer(serializers.ModelSerializer):
             'cost',
         ]
 
+    def validate(self,attrs):
+        cart = attrs.get("cart")
+        product = attrs.get("product")
+        if cart is None:
+             raise serializers.ValidationError("Cart Id should be provided")
+        if product is None:
+            raise serializers.ValidationError("Product Id should be provided")
+        return attrs
+
     def create(self, validated_data):
         # getting cart and product id from requested data(validated_data)
         product = validated_data.get('product')

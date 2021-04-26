@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from .models import Network
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -7,6 +8,15 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.user == request.user
+
+class IsNetworkOwner(permissions.BasePermission):
+    """
+    Checking whether requesting is the same as network user or not.
+    """
+    def has_permission(self,request,view):
+        id = request.data.get("network")
+        net_obj = Network.objects.filter(id=id).first()
+        return net_obj.user == request.user
 
     
 class IsSubPartOwner(permissions.BasePermission):
