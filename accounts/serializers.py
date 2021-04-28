@@ -89,6 +89,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         mobile_number = attrs.get('mobile_number')
         password = attrs.get('password')
+        is_agreed_to_terms = attrs.get("is_agreed_to_terms")
+        if not is_agreed_to_terms:
+            raise serializers.ValidationError("Please set is_agreed_to_terms=True to register")
         if not mobile_number:
             raise serializers.ValidationError("You should enter your mobile number")
 
@@ -113,6 +116,22 @@ class GuestUserRegistrationSerializer(serializers.ModelSerializer):
             'is_guest',
             'is_agreed_to_terms',
         ]
+
+    def validate(self,attrs):
+        """
+        validating for in case of guest user.
+        """
+        is_guest = attrs.get("is_guest",None)
+        is_agreed_to_terms = attrs.get("is_agreed_to_terms")
+        if not is_agreed_to_terms:
+            raise serializers.ValidationError("Please set is_agreed_to_terms=True to register")
+        if is_guest is not None:
+            if is_guest == False:
+                raise serializers.ValidationError("is_guest value should be true.")
+        else:
+            raise serializers.ValidationError("You will have to provide is_guest(true).")
+
+        return attrs
 
 
     

@@ -70,7 +70,7 @@ class NetworkCreateView(generics.CreateAPIView):
 
 class FindNetwork(APIView):
     """
-    Anyone can find network (search for network), if they have username(urlid) of network.
+    Picking the username for network and checking username is available or not.
     """
     permission_classes = [permissions.AllowAny,]
 
@@ -172,7 +172,7 @@ class CreateNetworkImage(generics.CreateAPIView):
     """
     Network owner can create an image for thier network.
     """
-    permission_classes = [permissions.AllowAny, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsNetworkOwner]
     queryset = NetworkImage.objects.all()
     serializer_class = NetworkImageCreateSerializer
 
@@ -181,7 +181,7 @@ class UpdateNetworkImage(generics.RetrieveUpdateDestroyAPIView):
     """
     Network owner can update an image for thier network.
     """
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny,IsSubPartOwner]
     queryset = NetworkImage.objects.all()
     serializer_class = NetworkImageCreateSerializer
     lookup_field = 'id'
@@ -195,7 +195,7 @@ class CreateNetworkVideo(generics.CreateAPIView):
     """
     Network owner can create video for thier network.
     """
-    permission_classes = [permissions.AllowAny, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsNetworkOwner]
     queryset = NetworkVideo.objects.all()
     serializer_class = NetworkVideoCreateSerializer
 
@@ -204,7 +204,7 @@ class CreateNetworkDocument(generics.CreateAPIView):
     """
     Network owner can upload document(pamplet, parcha etc) of their network.
     """
-    permission_classes = [permissions.AllowAny, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsNetworkOwner]
     queryset = NetworkDocument.objects.all()
     serializer_class = NetworkDocumentCreateSerializer
 
@@ -213,7 +213,7 @@ class CreateNetworkOperationTiming(generics.CreateAPIView):
     """
     Network owner can decide timing of network.
     """
-    permission_classes = [permissions.AllowAny, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsNetworkOwner]
     queryset = NetworkOperationTiming.objects.all()
     serializer_class = NetworkOperationTimingCreateSerializer
 
@@ -222,7 +222,7 @@ class CreateNetworkOperationLocation(generics.CreateAPIView):
     """
     Network owner can decide where(location) they are able to deliver thier product and services.
     """
-    permission_classes = [permissions.AllowAny, IsSubPartOwner]
+    permission_classes = [permissions.AllowAny, IsNetworkOwner]
     queryset = NetworkOperationLocation.objects.all()
     serializer_class = NetworkOperationLocationCreateSerializer
 

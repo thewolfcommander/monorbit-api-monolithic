@@ -36,7 +36,7 @@ class AddressCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         is_default = validated_data.get('is_default', False)
-        user = validated_data.pop('user')
+        # user = validated_data.pop('user')
 
         if is_default:
             queryset = Address.objects.filter(user=self.context['request'].user)
